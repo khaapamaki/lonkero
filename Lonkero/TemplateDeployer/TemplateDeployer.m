@@ -286,6 +286,7 @@
         
         [metadataItem setCreationMasterFolder:[folders lastObject]];
         [metadataItem setDeploymentID:deploymentId];
+        [metadataItem setParentFolders:folders];
         
         if (folder.isTarget) {
             [metadataItem setAsTargetFolder];

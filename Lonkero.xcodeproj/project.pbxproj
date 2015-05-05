@@ -190,6 +190,7 @@
 				422C3540184BE09400212999 /* Definitions.m */,
 				422C3534184BE09400212999 /* AppDelegate.h */,
 				422C3535184BE09400212999 /* AppDelegate.m */,
+				422C3588184BE1AF00212999 /* ClassExtension */,
 				422C3538184BE09400212999 /* DataStructures */,
 				422C3545184BE09400212999 /* LMWindow.h */,
 				422C3546184BE09400212999 /* LMWindow.m */,
@@ -287,7 +288,6 @@
 			children = (
 				422C3549184BE09400212999 /* main.m */,
 				422C3547184BE09400212999 /* Lonkero-Info.plist */,
-				422C3588184BE1AF00212999 /* ClassExtension */,
 				422C3548184BE09400212999 /* Lonkero-Prefix.pch */,
 				422C3541184BE09400212999 /* Credits.rtf */,
 				422C3543184BE09400212999 /* InfoPlist.strings */,
@@ -305,8 +305,7 @@
 				422C3589184BE1AF00212999 /* NSString+Extras.h */,
 				422C358A184BE1AF00212999 /* NSString+Extras.m */,
 			);
-			name = ClassExtension;
-			path = Lonkero/ClassExtension;
+			path = ClassExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

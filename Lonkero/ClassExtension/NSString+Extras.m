@@ -167,8 +167,9 @@
 +(NSString *)generateRandomStringOfLength:(short)len {
     NSMutableString *result = [NSMutableString stringWithString:@""];
     
-    NSString *validCharacters = @"aeiouyaeiouyaeiouyabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCEDEFGHIJKLMNOPQRSTUVVXYZ012345678901234567890123456789";
-    
+    NSString *validCharacters = @"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //NSString *validCharacters = @"aeiouyaeiouyaeiouyabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCEDEFGHIJKLMNOPQRSTUVVXYZ012345678901234567890123456789";
+
     for (int index = 0; index < len; index++) {
         NSInteger rnd = random() % [validCharacters length];
         [result appendString:[validCharacters substringWithRange:NSMakeRange(rnd, 1)]];

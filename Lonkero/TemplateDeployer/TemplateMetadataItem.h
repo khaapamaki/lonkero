@@ -30,7 +30,7 @@
 @property NSString *templateID;
 @property NSString *groupID;
 @property NSString *metadataVersion;
-
+@property NSArray *parentFolders;
 @property NSNumber *isArchived;
 @property NSNumber *markedToBeArchived;
 @property NSNumber *isRemoved;

@@ -233,6 +233,9 @@
     [coder encodeObject:_ownerName forKey:@"ownerName"];
     [coder encodeObject:_groupId forKey:@"groupID"];
     [coder encodeObject:_groupName forKey:@"groupName"];
+    [coder encodeObject:@(_isMaster) forKey:@"isMaster"];
+    [coder encodeObject:@(_isParent) forKey:@"isParent"];
+    [coder encodeObject:@(_isTarget) forKey:@"isTarget"];
 }
 
 -(id) initWithCoder:(NSCoder *) coder {
@@ -257,6 +260,10 @@
     _ownerName = [coder decodeObjectForKey:@"ownerName"];
     _groupId = [coder decodeObjectForKey:@"groupID"];
     _groupName = [coder decodeObjectForKey:@"groupName"];
+    _isMaster = [[coder decodeObjectForKey:@"isMaster"] boolValue];
+    _isParent = [[coder decodeObjectForKey:@"isTarget"] boolValue];
+    _isTarget = [[coder decodeObjectForKey:@"isParent"] boolValue];
+    
     return self;
 }
 

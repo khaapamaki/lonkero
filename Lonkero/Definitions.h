@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 #define APPNAME @"Lonkero"
-#define APPVERSION @"0.6 beta"
+#define APPVERSION @"0.7.2"
 #define APPDESC @"Folder Template Manager"
 
 #define PREFEFENCES_VERSION @"0.2"
@@ -15,11 +15,11 @@
 #define TEMPLATE_VERSION @"0.2"
 #define USERPREFERENCES_VERSION @"0.1"
 #define USERPREFERENCES_FILENAME @"User Preferences.plist"
-#define METADATA_VERSION @"0.4";
+#define METADATA_VERSION @"0.5";
 #define TEMPLATE_SETTINGS_FILENAME @"Template Settings.plist"
 #define METADATA_FILENAME @".Template Metadata.plist"
-#define DEFAULT_ID_LENGTH 8
-#define DEFAULT_GROUP_ID @"Jlkjes12"
+#define DEFAULT_ID_LENGTH 12
+#define DEFAULT_GROUP_ID @"ZZZZZZZZZZZZ"
 
 
 #if DEBUG
