@@ -81,6 +81,10 @@
 +(NSArray *)parentFolderParametersInvolved:(Template *)aTemplate;
 +(NSDictionary *)dictionaryWithInvolvedParametersTillLevel:(NSInteger)level withTemplate:(Template *)aTemplate;
 
+
++(short)combinePosixForTargetFolder:(short)targetPosix andSourceFile:(short)sourcePosix;
++(short)combinePosixForTargetFolder:(short)targetPosix andSourceFolder:(short)sourcePosix;
+
 #pragma mark -
 #pragma mark INIT
 

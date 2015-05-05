@@ -10,6 +10,7 @@
 #import "Definitions.h"
 #import "NSString+Extras.h"
 
+
 @interface FileSystemItem : NSObject <NSCopying>
 
 @property (strong) NSString *path;
@@ -69,6 +70,8 @@
 
 +(NSArray *) getDirectoryContentForFolder:(FileSystemItem *)folder includeFiles:(BOOL)includeFiles includeFolders:(BOOL)includeFolders
 includeSubDirectories:(BOOL)includeSubDirectories;
+
++(NSArray *)getFoldersContainingMetadataForFolder:(FileSystemItem *)folder parentFolders:(BOOL)includeParents masterFolders:(BOOL)includeMasters;
 
 +(BOOL)isURLDirectory:(NSURL *)URL;
 -(void)setPropertiesByURL:(NSURL *) URL;

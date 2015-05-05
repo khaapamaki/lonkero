@@ -30,11 +30,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "421055938.809248"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1258"
-            endingLineNumber = "1258"
+            startingLineNumber = "1395"
+            endingLineNumber = "1395"
             landmarkName = "-targetFolderPopUpAction:"
             landmarkType = "5">
          </BreakpointContent>
@@ -46,11 +46,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "421057423.618627"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1078"
-            endingLineNumber = "1078"
+            startingLineNumber = "1215"
+            endingLineNumber = "1215"
             landmarkName = "-updateTargetFolderViews"
             landmarkType = "5">
          </BreakpointContent>
@@ -62,13 +62,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "421057474.894279"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1076"
-            endingLineNumber = "1076"
-            landmarkName = "-updateTargetFolderViews"
-            landmarkType = "5">
+            startingLineNumber = "1213"
+            endingLineNumber = "1213"
+            landmarkName = "@implementation AppDelegate"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -78,13 +78,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "421057481.873987"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1075"
-            endingLineNumber = "1075"
-            landmarkName = "-updateTargetFolderViews"
-            landmarkType = "5">
+            startingLineNumber = "1212"
+            endingLineNumber = "1212"
+            landmarkName = "@implementation AppDelegate"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -126,11 +126,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "445423709.93922"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1295"
-            endingLineNumber = "1295"
+            startingLineNumber = "1432"
+            endingLineNumber = "1432"
             landmarkName = "-contextMenuCopyParameters:"
             landmarkType = "5">
          </BreakpointContent>
@@ -158,13 +158,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/AppDelegate.m"
-            timestampString = "445429074.713842"
+            timestampString = "445456577.519772"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
-            landmarkName = "-populateTemplatePopUpButton"
-            landmarkType = "5">
+            startingLineNumber = "371"
+            endingLineNumber = "371"
+            landmarkName = "@implementation AppDelegate"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -206,12 +206,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/DataStructures/FileSystemItem.m"
-            timestampString = "445436254.183672"
+            timestampString = "445442852.830151"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "530"
-            endingLineNumber = "530"
-            landmarkName = "-initWithPath:andNickName:"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
+            landmarkName = "-init"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -222,13 +222,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/DataStructures/FileSystemItem.m"
-            timestampString = "445436249.261922"
+            timestampString = "445442852.830151"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "507"
-            endingLineNumber = "507"
-            landmarkName = "-initWithPath:andNickName:"
-            landmarkType = "5">
+            startingLineNumber = "524"
+            endingLineNumber = "524"
+            landmarkName = "@implementation FileSystemItem"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -244,6 +244,38 @@
             startingLineNumber = "60"
             endingLineNumber = "60"
             landmarkName = "-initWithCoder:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
+            timestampString = "445441227.621246"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "@implementation TemplateMetadata"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/AppDelegate.m"
+            timestampString = "445449648.552849"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "-recreateMissingFolders:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

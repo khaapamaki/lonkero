@@ -170,6 +170,12 @@
                                     <action selector="rewriteMetadataMenuItem:" target="494" id="3vz-4N-GTs"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Recreate All Missing Folders" id="E9E-Zr-Kke">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="recreateMissingFolders:" target="494" id="paz-eg-1tJ"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="4cr-49-vlD"/>
                             <menuItem title="Cut" enabled="NO" keyEquivalent="x" id="199">
                                 <connections>
@@ -685,7 +691,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="831" y="452" width="1000" height="648"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
             <value key="minSize" type="size" width="900" height="300"/>
             <view key="contentView" id="372" customClass="CustomViewForWindow">
                 <rect key="frame" x="0.0" y="0.0" width="1000" height="648"/>
@@ -723,7 +729,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="175" id="1sE-w8-MCi"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.9.1 BETA" id="LJp-Tk-nFB">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.9.2 alpha" id="LJp-Tk-nFB">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" red="0.73237941576086962" green="0.18136127937235871" blue="0.16027643664650632" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -1314,7 +1320,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="167" y="107" width="413" height="121"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1050"/>
             <view key="contentView" id="s1k-bv-3sc">
                 <rect key="frame" x="0.0" y="0.0" width="413" height="121"/>
                 <autoresizingMask key="autoresizingMask"/>

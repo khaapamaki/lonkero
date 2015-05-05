@@ -22,7 +22,6 @@
 		422C3573184BE09400212999 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 422C3541184BE09400212999 /* Credits.rtf */; };
 		422C3574184BE09400212999 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 422C3543184BE09400212999 /* InfoPlist.strings */; };
 		422C3575184BE09400212999 /* LMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3546184BE09400212999 /* LMWindow.m */; };
-		422C3576184BE09400212999 /* Lonkero-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 422C3547184BE09400212999 /* Lonkero-Info.plist */; };
 		422C3577184BE09400212999 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3549184BE09400212999 /* main.m */; };
 		422C3579184BE09400212999 /* FileBrowserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C354E184BE09400212999 /* FileBrowserHelper.m */; };
 		422C357A184BE09400212999 /* Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3551184BE09400212999 /* Merge.m */; };
@@ -395,7 +394,7 @@
 		421783CE181C1CD5000FDB81 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Kati Haapamäki";
 				TargetAttributes = {
 					421783F6181C1CD5000FDB81 = {
@@ -430,7 +429,6 @@
 				42A9305818560C4B00C1C4DA /* MetadataBrowserWindow.xib in Resources */,
 				422C358D184BE7CA00212999 /* PreferencesWindow.xib in Resources */,
 				42502A9F1854E4F900F593E9 /* lonkero_icon.iconset in Resources */,
-				422C3576184BE09400212999 /* Lonkero-Info.plist in Resources */,
 				42FD4E431850E4F700FEFB57 /* Images.xcassets in Resources */,
 				422C3585184BE09400212999 /* TemplateManagerWindow.xib in Resources */,
 				422C3574184BE09400212999 /* InfoPlist.strings in Resources */,

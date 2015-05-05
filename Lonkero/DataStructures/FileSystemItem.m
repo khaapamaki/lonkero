@@ -7,6 +7,7 @@
 //
 
 #import "FileSystemItem.h"
+#import "TemplateMetadata.h"
 
 @implementation FileSystemItem
 
@@ -173,6 +174,60 @@
     return [NSArray arrayWithArray:result];
 }
 
++(NSArray *)getFoldersContainingMetadataForFolder:(FileSystemItem *)folder parentFolders:(BOOL)includeParents masterFolders:(BOOL)includeMasters {
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    NSFileManager *fileMgr = [[NSFileManager alloc] init];
+    int dirEnumOptions = (NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles );
+    
+    NSInteger depthOfRootFolder = [[[folder fileURL] pathComponents] count];
+    
+    NSDirectoryEnumerator *dirEnum = [fileMgr enumeratorAtURL:[folder fileURL]
+                                   includingPropertiesForKeys:@[NSURLNameKey,
+                                                                NSURLIsDirectoryKey,
+                                                                NSURLIsAliasFileKey,
+                                                                NSURLIsPackageKey,
+                                                                NSURLFileSizeKey,
+                                                                NSURLCreationDateKey,
+                                                                NSURLLabelNumberKey,
+                                                                NSURLLocalizedLabelKey,
+                                                                NSURLLocalizedNameKey,
+                                                                NSURLContentModificationDateKey]
+                                                      options:dirEnumOptions
+                                                 errorHandler:nil];
+    
+    for (NSURL *currentURL in dirEnum) {
+        BOOL isDir = [FileSystemItem isURLDirectory:currentURL];
+        
+        if (isDir) {
+            
+            FileSystemItem *entryItem = [[FileSystemItem alloc] initWithURL:currentURL];
+            if ([TemplateMetadata metadataExisistAtFolder:entryItem]) {
+                BOOL choose = includeParents;
+                TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:entryItem];
+                
+                if ([metadata count]==1) {
+                    TemplateMetadataItem *metaItem = [[metadata metadataArray] objectAtIndex:0];
+                    if ([[metaItem isMasterFolder] boolValue] && includeMasters) {
+                        choose = YES;
+                    }
+                    if ([[metaItem isMasterFolder] boolValue] && !includeMasters) {
+                        choose = NO;
+                    }
+
+                }
+                if (choose) {
+                    NSMutableArray *relativePathComponents = [NSMutableArray arrayWithArray:[currentURL pathComponents]];
+                    [relativePathComponents removeObjectsInRange:NSMakeRange(0, depthOfRootFolder)];
+                    entryItem.relativePath = [NSString pathWithComponents:relativePathComponents];
+                    [result addObject:entryItem];
+                }
+            }
+        }
+    }
+    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"itemName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    [result sortUsingDescriptors:@[sortDesc]];
+    return [NSArray arrayWithArray:result];
+}
 
 
 /** Creates folders with all intermediate folders that doesn't allready exist.

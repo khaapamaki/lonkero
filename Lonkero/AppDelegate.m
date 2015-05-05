@@ -115,7 +115,120 @@
     }
 }
 
+/**
+ * Scan target location throughout, find all deployment masters, then find folders that are missing, and finally remake them
+ *
+ *  @param sender A sender
+ */
 
+-(IBAction)recreateMissingFolders:(id)sender {
+    
+    NSInteger err = [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    
+    if (err!=0) {
+        [self errorPanelForErrCode:err andParameter:nil];
+        return;
+    }
+    
+    NSInteger answer = NSRunAlertPanel(@"Warning! You are about to recreate all missing folders in the whole directory tree. This should be done only in very specific situation. Are you absolutely sure?", _selectedTargetFolder.path, @"Proceed", @"Cancel", nil);
+    if (answer == NSCancelButton) return;
+    
+    NSMutableArray *missingFolders = [[NSMutableArray alloc] init];
+    
+    FileSystemItem *targetFolder = [self parsedTargetFolder];
+    NSArray *foldersToBeScanned = [FileSystemItem getFoldersContainingMetadataForFolder:targetFolder parentFolders:NO masterFolders:YES];
+   
+    
+    // Scan for folders that have masterfolder metadata in it
+    
+    for (FileSystemItem *currentFolder in foldersToBeScanned) {
+        TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:currentFolder];
+        if ([metadata count] == 1) {
+            TemplateMetadataItem *metadataItem = [[metadata metadataArray] objectAtIndex:0];
+            if ([metadataItem isMasterFolder]) {
+                NSString *basepath = currentFolder.pathByExpandingTildeInPath;
+                NSNumber *currentDeploymentMasterPosix = currentFolder.posix;
+                // Scan for missing folders based on metadata from previous deployment
+                
+                for (FileSystemItem *deployedItem in [metadataItem deployedContents]) {
+                    if ([deployedItem isDirectory]) {
+                        NSString *pathToDeployedFolder = [NSString stringWithFormat:@"%@/%@", basepath, deployedItem.relativePath];
+                        FileSystemItem *folderThatShouldExist = [deployedItem copy];
+                        
+                        folderThatShouldExist.path = pathToDeployedFolder;
+                        [folderThatShouldExist updateExistingStatus];
+                        //[[FileSystemItem alloc] initWithPathByAbbreviatingTildeInPath:pathToDeployedFolder andNickName:@""];
+
+                        if (![folderThatShouldExist itemExists]) {
+                            folderThatShouldExist.posix = currentDeploymentMasterPosix;
+                            [missingFolders addObject:folderThatShouldExist];
+#if DEBUG
+                            NSLog(@"%@", folderThatShouldExist.path);
+#endif
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    NSString *message = [NSString stringWithFormat:@"%lu missing folder%@. Recreate them?", [missingFolders count], ([missingFolders count]==1 ? @"" : @"s") ];
+    
+    NSInteger answer2 = NSRunAlertPanel(message, _selectedTargetFolder.path, @"Continue", @"Cancel", nil);
+    if (answer2 == NSCancelButton) return;
+    
+    // CREATE MISSING FOLDERS
+    
+    NSString *errStr = @"";
+   // NSDictionary *defaultPermissions = @{NSFilePosixPermissions: _selectedTargetFolder.posix};
+    NSDate *newDate = [NSDate date];
+    long successCounter = 0;
+    long failCounter = 0;
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    for (FileSystemItem *item in missingFolders) {
+        NSError *err = nil;
+        item.isCopied = NO;
+        BOOL folderCreated = NO;
+        if (item.isDirectory) {
+            NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:newDate, NSFileModificationDate, newDate, NSFileCreationDate, nil];
+            attributes[NSFilePosixPermissions] = item.posix;
+
+            folderCreated = [fm createDirectoryAtPath:item.pathByExpandingTildeInPath withIntermediateDirectories:YES attributes:attributes error:&err];
+            //NSAssert(err==nil, @"Cannot create folder");
+            if (err || !folderCreated ) {
+                errStr = [NSString stringWithString:item.path];
+                LOG(@"Could not create folder %@", item.path);
+                failCounter++;
+            } else {
+                successCounter++;
+            }
+
+            
+            // copy label color
+            [[NSURL fileURLWithPath:item.pathByExpandingTildeInPath] setResourceValue:@(item.labelNumber) forKey:NSURLLabelNumberKey error:nil];
+            
+            // hidden extension
+            [[NSURL fileURLWithPath:item.pathByExpandingTildeInPath] setResourceValue:[NSNumber numberWithInteger:item.hasHiddenExtension] forKey:NSURLHasHiddenExtensionKey error:nil];
+            
+            
+            [item updateExistingStatus];
+            item.isCopied = item.itemExists;
+            
+            if (folderCreated && !item.isCopied) {
+                failCounter++;
+                successCounter--;
+            }
+            
+            [self updateTargetFolderViews];
+        }
+        
+        
+    }
+    NSString *message2 = [NSString stringWithFormat:@"%lu folder%@ created. %lu folder%@ failed", successCounter, (successCounter==1 ? @"" : @"s"), failCounter, (failCounter==1 ? @"" : @"s") ];
+    
+    NSRunAlertPanel(message2, @"", @"Ok", nil, nil);
+}
 
 
 
@@ -213,6 +326,30 @@
         
         if ([_userPreferences.postDeploymentAction integerValue] & quitApp) {
             // QUIT APP
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            // IMPLEMENT
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
         }
     }
 }

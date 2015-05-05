@@ -110,12 +110,13 @@
 
 #pragma mark IB Actions
 
-- (IBAction)comboBoxAction:(id)sender;
-- (IBAction)checkBoxAction:(id)sender;
-- (IBAction)datePickerAction:(id)sender;
-- (IBAction)textFieldAction:(id)sender;
+-(IBAction)comboBoxAction:(id)sender;
+-(IBAction)checkBoxAction:(id)sender;
+-(IBAction)datePickerAction:(id)sender;
+-(IBAction)textFieldAction:(id)sender;
+-(IBAction)recreateMissingFolders:(id)sender;
 -(void)doubleClick:(id)nid;
-
+-(IBAction)rewriteMetadataMenuItem:(id)sender;
 
 #pragma mark -
 #pragma mark TARGET FOLDER SELECTION
@@ -146,8 +147,8 @@
 @property (unsafe_unretained) IBOutlet NSToolbarItem *templateManagerToolbarItem;
 @property (unsafe_unretained) IBOutlet NSToolbarItem *preferencesToolbarItem;
 @property (unsafe_unretained) IBOutlet NSMenuItem *templateManagerMenuItem;
-- (IBAction)deployMenuItem:(id)sender;
-- (IBAction)rewriteMetadataMenuItem:(id)sender;
+-(IBAction)deployMenuItem:(id)sender;
+
 
 #pragma mark -
 #pragma mark METADATA BROWSER
