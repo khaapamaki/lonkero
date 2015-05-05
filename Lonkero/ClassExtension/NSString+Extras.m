@@ -225,9 +225,10 @@
  
  */
 -(BOOL)isValidFileName {
-        NSMutableCharacterSet *alphabets= [NSCharacterSet lowercaseLetterCharacterSet];
-        [alphabets formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
-        [alphabets addCharactersInString:@"0123456789"];
+        NSMutableCharacterSet *alphabets= [NSCharacterSet alphanumericCharacterSet];
+//        NSMutableCharacterSet *alphabets= [NSCharacterSet lowercaseLetterCharacterSet];
+//        [alphabets formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
+//        [alphabets addCharactersInString:@"0123456789"];
 
         if (![self isEqualToString:@""]) {
             if ([self rangeOfCharacterFromSet:alphabets options:NSCaseInsensitiveSearch].length >0) {

@@ -1076,7 +1076,7 @@
     FileSystemItem *parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[_templateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath] andNickName:_selectedTargetFolder.nickName];
     
     [_pathControl setURL:[parsedTargetFolder fileURL]];
-    // [self populateTargetFolderPopUpButton]; // added later to combine stuff.. test that it works! DOESNT
+    // [self populateTargetFolderPopUpButton]; // added later to combine stuff.. test that it works! -DOESNT
     
     [_targetBrowserHelper updateWithFolder:parsedTargetFolder andTemplate:_selectedTemplate];
     
