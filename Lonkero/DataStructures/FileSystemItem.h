@@ -39,8 +39,6 @@
 @property BOOL isTarget;
 
 // extras, not to be archived:
-//@property NSString *parentPath;
-//@property NSString *parentNickName;
 
 @property BOOL isCopied;
 @property BOOL shouldCopy;
@@ -57,6 +55,8 @@
 
 -(id)initWithURL:(NSURL *)URL;
 -(id)initWithPath:(NSString *)path andNickName:(NSString *)name;
+-(id)initWithPathByAbbreviatingTildeInPath:(NSString *)path andNickName:(NSString *)name ;
+-(id)initWithOpenDialogForFolderSelection:(NSURL*) URL;
 -(id)initWithOpenDialogForFolderSelection;
 
 -(NSString *) itemName;
@@ -68,6 +68,7 @@
 
 +(NSArray *) getDirectoryContentForFolder:(FileSystemItem *)folder includeFiles:(BOOL)includeFiles includeFolders:(BOOL)includeFolders
 includeSubDirectories:(BOOL)includeSubDirectories;
+
 +(BOOL)isURLDirectory:(NSURL *)URL;
 -(void)setPropertiesByURL:(NSURL *) URL;
 -(void)updateExistingStatus;

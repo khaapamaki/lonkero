@@ -325,4 +325,31 @@
     }
     return result;
 }
+
+/**
+ *  Returns an arrays of semicolon separated items of the string
+ *
+ *  @return NSArray
+ */
+
+-(NSArray*)arrayFromSemicolonSeparatedList {
+    // Parses xx;yy;zz list
+
+    NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[self componentsSeparatedByString:@";"]];
+    for (long index = 0; index < [items count]; index++) {
+        NSString *string = items[index];
+        items[index] = [string stringByRemovingDoubleSpacesAndPunctuation];
+    }
+
+    BOOL firstItemIsEmpty = NO;
+    
+    
+    // remove all empty items but the possible one at index 0
+    if ([items[0] isEqualToString:@""]) firstItemIsEmpty = YES;
+    [items removeEmptyStringItems];
+    if (firstItemIsEmpty) [items insertObject:@"" atIndex:0];
+    
+    return items;
+}
+
 @end

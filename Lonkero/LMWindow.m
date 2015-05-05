@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2013 Micha Mazaheri
  * Released under the MIT License: http://opensource.org/licenses/MIT
  */

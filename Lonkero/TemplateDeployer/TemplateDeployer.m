@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 
+
 #import "TemplateDeployer.h"
 
 @implementation TemplateDeployer
@@ -641,8 +642,17 @@
     return [NSString stringWithString:[result stringByPerformingFullCleanUp]];
 }
 
--(NSString *)parsearametersForString:(NSString *)aString {
+-(NSString *)parseParametersForString:(NSString *)aString {
     return [self parseParametersForString:aString shouldUse:nil];
+}
+
++(FileSystemItem *) parsePathForFileSystemItem:(FileSystemItem*)aFileSystemItem {
+    TemplateDeployer *td = [[TemplateDeployer alloc] init];
+    NSString *path = aFileSystemItem.pathByExpandingTildeInPath;
+    
+    NSString *parsedPath = [td parseParametersForPath:path];
+
+    return [[FileSystemItem alloc] initWithPathByAbbreviatingTildeInPath:parsedPath andNickName:aFileSystemItem.nickName];
 }
 
 #pragma mark -

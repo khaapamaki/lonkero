@@ -13,8 +13,25 @@
 #pragma mark -
 #pragma mark IB ACTIONS
 
+/**
+ *  IBAction for showing the mainwindow
+ *
+ *  @param sender The sender
+ */
+
 - (IBAction)showMainWindow:(id)sender {
     [_mainWind makeKeyAndOrderFront:self];
+}
+
+- (IBAction)filterAction:(id)sender {
+    if ([_filterOnOffButton state] == 1) {
+        _filterOnOffButton.title = @"Filter On";
+        [self readParameterQueryTableToTemplate:_selectedTemplate];
+        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
+    } else {
+        _filterOnOffButton.title = @"Filter Off";
+        [_targetBrowserHelper stopFiltering];
+    }
 }
 
 -(IBAction)openTemplateManager:(id)sender {
@@ -37,14 +54,19 @@
     [_targetFolderOutlineView reloadData];
 }
 
-// -----------
-// DEPLOY
-// -----------
+
 
 - (IBAction)deployMenuItem:(id)sender {
     [self deployFolderStructure:sender];
 
 }
+
+
+/**
+ *  Rewrite metadata by preforming deployment process without actually deploying anything.
+ *
+ *  @param sender A sender
+ */
 
 - (IBAction)rewriteMetadataMenuItem:(id)sender {
     if (!_selectedTemplate) return;
@@ -54,7 +76,8 @@
         return;
     }
     
-    NSInteger err = [self updateTargetFolder];
+    // err code not implemented yet..
+    NSInteger err = [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
     
     if (err!=0) {
         [self errorPanelForErrCode:err andParameter:nil];
@@ -76,8 +99,21 @@
     }
 }
 
+// -----------
+// DEPLOY
+// -----------
 
-
+/**
+ *  Deploys the selected template with parameters set by user
+ *
+ *  Is cancelled if required parameters are missing. TemplateDeployer class is used for deployment process.
+ *  After deployment the target folder is opened in Finder and/or the main window is closed
+ *  depending on user preferences.
+ *
+ *  @see TemplateDeployer
+ *
+ *  @param sender A sender
+ */
 - (IBAction)deployFolderStructure:(id)sender {
     
     if (!_selectedTemplate) return;
@@ -88,8 +124,9 @@
         [self errorPanelForErrCode:ErrRequiredParametersMissing andParameter:nil] ;
         return;
     }
-
-    NSInteger err = [self updateTargetFolder];
+    
+    // err code not implemented yet..
+    NSInteger err = [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
     
     if (err!=0) {
         [self errorPanelForErrCode:err andParameter:nil];
@@ -115,7 +152,7 @@
         
         NSAssert(couldOpen, @"Could not open finder window");
         [self reloadParameterQueryTable];
-        [self updateTargetFolder];
+        [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
         [self updateTargetFolderViews];
        // [_mainWind close];
         
@@ -134,6 +171,10 @@
 #pragma mark -
 #pragma mark TEMPLATE SELECTION
 
+/**
+ *  Sets contents for template selection pop up button
+ */
+
 - (void)populateTemplatePopUpButton {
     [_templatePopUpButton removeAllItems];
     _templateArray = [TemplateManager getAvailableTemplatesAsFoldersWithPreferences:_preferences];
@@ -142,14 +183,31 @@
     }
 }
 
+/**
+ *  Selects a templete by user's choice
+ *
+ *  Sets selected template,initializes parameter query table and refresh target folder view.
+ *
+ */
+
 - (IBAction)templatePopUpAction:(id)sender {
     [self setSelectedTemplateByPopUp];
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
+    [self populateTargetFolderPopUpButton];
+    [self setTargetFolderPopUpButtonToIndex:0];
     [self updateTargetFolderViews];
 }
 
 #pragma mark -
 #pragma mark PARAMETER QUERY TABLE
+
+/**
+ *  Checks if parameter query table has missing required parameters
+ *
+ *  This is used before deployment to check if it's possible to proceed.
+ *
+ *  @return YES if parameters are missing
+ */
 
 -(BOOL)hasMissingParameters {
     BOOL result = NO;
@@ -188,6 +246,11 @@
     return result;
 }
 
+/**
+ *  Reads template selection popup button's value and set it to be the current template
+ *
+ *  Sets @a _selectedTemplate variable and initializes the template browser
+ */
 - (void)setSelectedTemplateByPopUp {
     if ([_templateArray count] > 0) {
         FileSystemItem *templateFolder = _templateArray[[_templatePopUpButton indexOfSelectedItem]];
@@ -202,49 +265,71 @@
     
 }
 
+/**
+ *  Initializes parameter query table for a given template
+ *  
+ *  Sets parameters values to the defaults as set in the template settings.
+ *  If parameter type is text or number, @a defaultValue is just copied to @a stringValue.
+ *  If parameter type is date, current date is used for @a dateValue.
+ *  If parameter type is userName or loginName, current user's name is used for @a stringValue.
+ *
+ *  Initializes @a _parameterQueryTableContents array with NSView objects (Refactor: could be own methdod)
+ *
+ *  Initializes target folder selection popup button and path control view object
+ *
+ *  @param aTemplate A template
+ */
+
 -(void)loadParameterQueryTableWithTemplate:(Template*)aTemplate {
     
-    // load template default values to query table and displays it
+    // loads template default values to query table and displays it
     
+    
+    [self setParameterValuesToDefaults:aTemplate];
+    
+    /*
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
-        if (currentParameter.parameterType != list) {
-            currentParameter.stringValue = [currentParameter.defaultValue copy];
-        }
-        
-        if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-            currentParameter.stringValue = NSUserName();
-        }
-        
-        if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-            currentParameter.stringValue = NSFullUserName();
-        }
-        if (currentParameter.parameterType == boolean) {
-
-            if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
-                currentParameter.booleanValue = NO;
-            } else {
-                currentParameter.booleanValue = YES;
+        if (!currentParameter.isHidden) {
+            if (currentParameter.parameterType != list) {
+                currentParameter.stringValue = [currentParameter.defaultValue copy];
             }
-            currentParameter.stringValue = @"";
+            
+            if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+                currentParameter.stringValue = NSUserName();
+            }
+            
+            if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+                currentParameter.stringValue = NSFullUserName();
+            }
+            if (currentParameter.parameterType == boolean) {
+                
+                if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
+                    currentParameter.booleanValue = NO;
+                } else {
+                    currentParameter.booleanValue = YES;
+                }
+                currentParameter.stringValue = @"";
+            }
+            if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
+            if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
         }
-        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
-        if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
     }
     
     // load hidden defaults also
     
     [self setHiddenParametersToTemplate:aTemplate];
-    
+    */
     
     //NSInteger rows = [self numberOfRowsInTableView:_parameterQueryTableView];
    // [_parameterQueryTableContents removeAllObjects];
-    _parameterQueryTableContents = nil;
+    
+    _parameterQueryTableContents = nil; 
     _parameterQueryTableContents = [NSMutableArray array];
     
     // Prepare array for parameter NSView objects
     long rowIndex=0;
-    for (NSInteger arrayIndex =0; arrayIndex<[_selectedTemplate.templateParameterSet count ]; arrayIndex++) {
-        if (![(_selectedTemplate.templateParameterSet)[arrayIndex] isHidden]) {
+    for (NSInteger arrayIndex =0; arrayIndex<[aTemplate.templateParameterSet count ]; arrayIndex++) {
+        if (![(aTemplate.templateParameterSet)[arrayIndex] isHidden]) {
             [_parameterQueryTableContents addObject:[self getNSViewForParameterQueryValueColumnForRow:rowIndex]];
             rowIndex++;
         }
@@ -252,43 +337,58 @@
     [_parameterQueryTableView reloadData];
     
     [self populateTargetFolderPopUpButton];
-    [_templateFileBrowserPathControl setURL:[_selectedTemplate.location fileURL]];
+    [self setTargetFolderPopUpButtonToIndex:0];
+    [_templateFileBrowserPathControl setURL:[aTemplate.location fileURL]];
 
 }
 
--(void)clearParameters:(id)sender {
+-(IBAction)clearParameters:(id)sender {
     [self reloadParameterQueryTable];
 }
+
+/**
+ *  Resets parameter query table to its default values
+ *
+ *  Very similar to loadParameterQueryTableWithTemplate. This doesn't set target folder popup button or path control.
+ *
+ *  @see loadParameterQueryTableWithTemplate:(Template*)aTemplate
+ */
 
 -(void)reloadParameterQueryTable {
     
     // loads template default values to query table and displays it
     
-    for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
-        if (currentParameter.parameterType != list) {
-            currentParameter.stringValue = [currentParameter.defaultValue copy];
-        }
-        
-        if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-            currentParameter.stringValue = NSUserName();
-        }
-        
-        if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-            currentParameter.stringValue = NSFullUserName();
-        }
-        if (currentParameter.parameterType == boolean) {
-            
-            if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
-                currentParameter.booleanValue = NO;
-            } else {
-                currentParameter.booleanValue = YES;
-            }
-            currentParameter.stringValue = @"";
-        }
-        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
-        if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
-    }
     
+    [self setParameterValuesToDefaults:_selectedTemplate];
+    
+    /*
+    for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
+        if (!currentParameter.isHidden) {
+            if (currentParameter.parameterType != list) {
+                currentParameter.stringValue = [currentParameter.defaultValue copy];
+            }
+            
+            if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+                currentParameter.stringValue = NSUserName();
+            }
+            
+            if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+                currentParameter.stringValue = NSFullUserName();
+            }
+            if (currentParameter.parameterType == boolean) {
+                
+                if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
+                    currentParameter.booleanValue = NO;
+                } else {
+                    currentParameter.booleanValue = YES;
+                }
+                currentParameter.stringValue = @"";
+            }
+            if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
+            if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
+        }
+    }
+    */
     _parameterQueryTableContents = nil;
     _parameterQueryTableContents = [NSMutableArray array];
     
@@ -304,6 +404,56 @@
     
 }
 
+/**
+ *  Sets parameter values for a given template to its default values
+ *
+ *  @param aTemplate A template
+ */
+
+-(void)setParameterValuesToDefaults:(Template *)aTemplate {
+    
+    for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
+        
+        switch (currentParameter.parameterType) {
+            case date:
+                currentParameter.dateValue = [NSDate date];
+                currentParameter.stringValue = [currentParameter.dateValue parsedDateWithFormat:aTemplate.dateFormatString];
+                break;
+            case loginName:
+                currentParameter.stringValue = NSUserName();
+                break;
+            case userName:
+                currentParameter.stringValue = NSFullUserName();
+                break;
+            case incremental:
+                currentParameter.stringValue = @"not_avail"; // IMPLEMENTOI
+                break;
+            case boolean:
+                if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
+                    currentParameter.booleanValue = NO;
+                } else {
+                    currentParameter.booleanValue = YES;
+                }
+                currentParameter.stringValue = @"";
+                break;
+            case list:
+                currentParameter.stringValue = [currentParameter.defaultValue arrayFromSemicolonSeparatedList][0];
+                break;
+            default:
+                currentParameter.stringValue = currentParameter.defaultValue;
+                break;
+        }
+        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
+    }
+}
+
+/**
+ *  Sets parameter values for hidden parameters of a given template to defaults
+ *
+ *  Deprecated. No need to set default values separately for hidden parameters.
+ *
+ *  @param aTemplate A template
+ */
 
 
 -(void)setHiddenParametersToTemplate:(Template *)aTemplate {
@@ -313,7 +463,7 @@
             switch (currentParameter.parameterType) {
                 case date:
                     currentParameter.dateValue = [NSDate date];
-                    currentParameter.stringValue = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
+                    currentParameter.stringValue =  [currentParameter.dateValue parsedDateWithFormat:aTemplate.dateFormatString];
                     break;
                 case loginName:
                     currentParameter.stringValue = NSUserName();
@@ -340,6 +490,12 @@
     }
 }
 
+/**
+ *  Reads user input from paramter query table and stores it to a given template.
+ *
+ *  @param aTemplate A template
+ */
+
 -(void)readParameterQueryTableToTemplate:(Template *)aTemplate {
 
     // reads user given parameters and set them and hidden parameters to template
@@ -348,6 +504,8 @@
     
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
         if (currentParameter.isHidden) {
+            
+            /*
             //automated parameters
             switch (currentParameter.parameterType) {
                 case date:
@@ -375,7 +533,7 @@
                     currentParameter.stringValue = [currentParameter.defaultValue copy];
                     break;
             }
-            
+            */
         } else {
             
             NSInteger column = [_parameterQueryTableView columnWithIdentifier:@"value"];
@@ -383,7 +541,7 @@
             
             if([cellView isKindOfClass:[NSDatePicker class]]) {
                 currentParameter.dateValue = [cellView dateValue];
-                currentParameter.stringValue = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
+                currentParameter.stringValue = [currentParameter.dateValue parsedDateWithFormat:aTemplate.dateFormatString];
             } else {
                 currentParameter.dateValue = nil;
             }
@@ -410,6 +568,18 @@
     }
 }
 
+/**
+ *  Cleans up parameter values in given template
+ *
+ *  This is used before deployment to remove illegal characters and bad formatting
+ *  from string values of template's parameters.
+ *
+ *  Method used is stringByPerformingFullCleanUp.
+ *
+ *  @see stringByPerformingFullCleanUp
+ *  @param aTemplate A template
+ */
+
 -(void)cleanUpParametersForTemplate:(Template *) aTemplate {
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
         if (!currentParameter.isHidden) {
@@ -417,6 +587,16 @@
         }
     }
 }
+
+/**
+ *  Converts index of template parameter array to table view row index
+ *
+ *  Conversion is calulcated by skipping hidden parameters in a template parameter set.
+ *
+ *  @param row Index value of an parameter in a template parameter set
+ *
+ *  @return Row index of a parameter query table
+ */
 
 -(long)calculateArrayRowFromTableRow:(long)row {
     long arrayIndex = 0;
@@ -445,6 +625,11 @@
     return [_parameterQueryTableContents count];
 
 }
+/**
+ *  TableView protocol method. Also sets nextKeyViews for correct tabbing. This may be unusual place to do
+ *  that, but it seems to work.
+ *
+ */
 
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSTableCellView *result;
@@ -476,6 +661,16 @@
 
 #pragma mark Generate Views
 
+/**
+ *  Generates NSView object for any cell in parameter name column of parameter query table
+ *
+ *  NSView can include icons among text.
+ *
+ *  @param row Row index
+ *
+ *  @return NSView object for parameter key cell
+ */
+
 -(NSView*)getNSViewForParameterQueryTitleColumnForRow:(NSInteger)row {
 
     NSTableCellView *result;
@@ -500,6 +695,16 @@
     }
     return result;
 }
+
+/**
+ *  Generates NSView object for any cell in parameter value column of parameter query table
+ *
+ *  Selects from predefined NSViews stored in the view object declare in the nib file by the parameter type
+ *
+ *  @param row Row index
+ *
+ *  @return NSView object for parameter key cell
+ */
 
 -(NSView*)getNSViewForParameterQueryValueColumnForRow:(NSInteger)row {
     
@@ -573,20 +778,54 @@
 
 #pragma mark Path Control
 
+/**
+ *  Changes target folder popup button's value by given folder
+ *
+ *  If the given folder is among the presets, then correnponding preset value is selected.
+ *  If it's not among the presets, the last object that is always @b custom, is selected.
+ *
+ *  @note Comparison for paths is made case-insensitively, thus this in not working with casesensitive file ops.
+ *
+ *  @param folder FileSystemItem pointing to currently selected target folder, thus usually @a _selectedTargetFolder
+ */
+
 -(void)setTargetFolderPopUpToFolder:(FileSystemItem*)folder {
     NSInteger index=0;
     for (FileSystemItem *targetPreset in _selectedTemplate.targetFolderPresets) {
-        if ([targetPreset.pathByExpandingTildeInPath isEqualToString:folder.pathByExpandingTildeInPath]) {
+        NSString *parsedPresetFolder = [[_templateDeployer parseParametersForPath:targetPreset.pathByExpandingTildeInPath] lowercaseString];
+        NSString *parsedSelectedFolder = [[_templateDeployer parseParametersForPath:folder.pathByExpandingTildeInPath] lowercaseString];
+        if ([parsedPresetFolder isEqualToString:parsedSelectedFolder]) {
             [_targetFolderPopUpButton selectItemAtIndex:index];
             lastSelectedTargetFolderIndex = index;
             return;
         }
         index++;
     }
+    // not found -> set button to 'custom' (last object)
+    [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+    lastSelectedTargetFolderIndex = -1;
 }
 
+/**
+ *  Shows open dialog and let user to select a new target folder.
+ *
+ *  @param sender A sender
+ */
 
--(void)browseForNewTargetFolder:(id)sender {
+-(IBAction)browseForNewTargetFolder:(id)sender {
+    
+    FileSystemItem *newTargetFolder = [[FileSystemItem alloc] initWithOpenDialogForFolderSelection:_selectedTargetFolder.fileURL];
+    
+    if (newTargetFolder != nil) {
+        _selectedTargetFolder = newTargetFolder;
+        [self updateTargetFolderViews];
+        [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc postNotificationName:@"targetPathChanged" object:self];
+    }
+    return;
+    
+    /*
     NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
     [openDlg setCanChooseFiles:NO];
     [openDlg setAllowsMultipleSelection:NO];
@@ -606,7 +845,14 @@
         [nc postNotificationName:@"targetPathChanged" object:self];
 
     }
+     */
 }
+
+/**
+ *  Performs action when user has double clicked folder in target browser
+ *
+ *  This selects clicked folder to a new target folder.
+ */
 
 -(void)doubleClick:(id)nid {
     NSOutlineView *theView = nid;
@@ -616,8 +862,8 @@
     // TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:folder];
     
     _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:item.fileURL];
-    lastSelectedTargetFolderIndex = -1;
-    [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+//    lastSelectedTargetFolderIndex = -1;
+//    [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
     [self updateTargetFolderViews];
     [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -625,7 +871,11 @@
 }
 
 
-
+/**
+ *  Performs action when user has clicked path control
+ *
+ *  Clicking last component (current folder) does not do anything. Clicking others will change target folder correspondingly.
+ */
 
 - (IBAction)userSelectedPath:(id)sender {
     NSPathComponentCell *clickedPathCell = [sender clickedPathComponentCell];
@@ -637,8 +887,8 @@
 		if (!isLastPathComponent) {
 			[sender setURL:clickedPathURL];
             _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:clickedPathURL];
-            lastSelectedTargetFolderIndex = -1;
-            [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+//            lastSelectedTargetFolderIndex = -1;
+//            [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
             [self updateTargetFolderViews];
             [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
             NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -647,13 +897,18 @@
 	}
 }
 
+/**
+ *  Performs action when user has clicked 'go up' button
+ *
+ */
+
 - (IBAction)selectParentFolder:(id)sender {
     if ([[_selectedTargetFolder.pathByExpandingTildeInPath pathComponents] count] > 1) {
         NSURL *newTargetURL = [[_pathControl URL] URLByDeletingLastPathComponent];
         
         _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:newTargetURL];
-        lastSelectedTargetFolderIndex = -1;
-        [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+//        lastSelectedTargetFolderIndex = -1;
+//        [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
         [self updateTargetFolderViews];
         [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -664,12 +919,19 @@
 
 #pragma mark Common
 
+/**
+ *  Updates view objects that are related to the target folder, except target folder selection popup button
+ *
+ *  Objects updated: path control, target browser
+ */
+
 -(void)updateTargetFolderViews {
     
     FileSystemItem *parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[_templateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath] andNickName:_selectedTargetFolder.nickName];
     
     [_pathControl setURL:[parsedTargetFolder fileURL]];
-
+    // [self populateTargetFolderPopUpButton]; // added later to combine stuff.. test that it works! DOESNT
+    
     [_targetBrowserHelper updateWithFolder:parsedTargetFolder andTemplate:_selectedTemplate];
     
     [_targetBrowserHelper refresh];
@@ -677,7 +939,18 @@
     [_targetFolderOutlineView deselectAll:_targetFolderOutlineView];
 }
 
--(NSInteger)updateTargetFolder {
+/**
+ *  Updates target folder view and repopulates target folder popup button if needed
+ *
+ *  Parses target folder for any parameters that may exist in a target path.
+ *  If target folder has changed, repopulates target folder selection popup button and
+ *  updates target folder views.
+ *
+ *
+ *  @return 0 always. Should be removed if there's no need for errcode feedback.
+ */
+
+-(NSInteger)checkIfTargetFolderHasChangedDueParsingAndUpdate {
     NSInteger err = 0;
 
     FileSystemItem *previousParsedTargetFolder = [self parsedTargetFolder];
@@ -689,20 +962,32 @@
     BOOL targetFolderHasChanged = NO;
     targetFolderHasChanged = ![parsedTargetFolder.pathByExpandingTildeInPath isEqualToString:previousParsedTargetFolder.pathByExpandingTildeInPath];
     
-    if ([_filterOnOffButton state] == 1) {
-        [self readParameterQueryTableToTemplate:_selectedTemplate];
-        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
-    }
-    
     if (targetFolderHasChanged) {
-
+     //   NSInteger lastIndex = lastSelectedTargetFolderIndex;
         [self populateTargetFolderPopUpButton];
+     //   [_targetFolderPopUpButton selectItemAtIndex:lastIndex];
+        [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
         [self updateTargetFolderViews];
-
+        NSRunAlertPanel(@"Note: Target folder has changed due to parameter change.", _selectedTargetFolder.path, @"Ok", nil, nil);
     }
     return err;
 }
 
+/**
+ *  Reads user input from parameter table, if filtering mode is on
+ */
+-(void)prepareForFilteringIfNeeded {
+    if ([_filterOnOffButton state] == 1) {
+        [self readParameterQueryTableToTemplate:_selectedTemplate];
+        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
+    }
+}
+
+/**
+ *  Returns parameter-parsed value of currently selected target folder
+ *
+ *  @return FileSystemItem of parsed target folder.
+ */
 -(FileSystemItem *) parsedTargetFolder {
     FileSystemItem *parsedTargetFolder;
 
@@ -717,26 +1002,57 @@
 
 #pragma mark PopUpButton
 
+/**
+ *  Populates target folder selection popup button with preset target folder's
+ *
+ *  In addition to preset values, @b custom item is added as last object to indicate when
+ *  non-preset target folder is in use.
+ *
+ *  Nick name of preset is in used when available. If not available the path will be shown instead.
+ *  The path is parsed with parameters in case they are used in path.
+ */
+
 -(void)populateTargetFolderPopUpButton {
     [_targetFolderPopUpButton removeAllItems];
     for (FileSystemItem *currentFolder in _selectedTemplate.targetFolderPresets) {
-        if ([currentFolder.nickName isEqualToString:@""]) {
-            [_targetFolderPopUpButton addItemWithTitle:[NSString stringWithString:currentFolder.path]];
+        if ([NSString isEmptyString:currentFolder.nickName]) {
+            NSString *parsedPath = [_templateDeployer parseParametersForPath:currentFolder.pathByExpandingTildeInPath];
+            
+            [_targetFolderPopUpButton addItemWithTitle:[parsedPath stringByAbbreviatingWithTildeInPath]];
         } else {
             [_targetFolderPopUpButton addItemWithTitle:[NSString stringWithString:currentFolder.nickName]];
         }
     }
     [_targetFolderPopUpButton addItemWithTitle:@"Custom"];
+    }
+
+/**
+ *  Selects target folder preset by given index of target folder popup button
+ *
+ *  @param index A index value of the popup button
+ */
+-(void)setTargetFolderPopUpButtonToIndex:(NSInteger)index {
     if ([_selectedTemplate.targetFolderPresets count] > 0) {
-        _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[0];
-        [self readParameterQueryTableToTemplate:_selectedTemplate];
+        _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[index];
+        [self readParameterQueryTableToTemplate:_selectedTemplate];  // miksi?
         
     } else {
         _selectedTargetFolder = [FileSystemItem systemRootFolder];
     }
-    [_pathControl setURL:[_selectedTargetFolder fileURL]];
+    //[_pathControl setURL:[_selectedTargetFolder fileURL]];
     lastSelectedTargetFolderIndex = 0;
+
 }
+
+/**
+ *  Responder of target folder popup button change
+ *
+ *  Selects target folder by preset corresponding the popup button value.
+ *  If last item is selected, that means @b custom folder and open dialog is shown
+ *  to let user select a new target folder.
+ *
+ *  @param sender A sender
+ */
 
 - (IBAction)targetFolderPopUpAction:(id)sender {                                        // REFACTOR
     long selectedIndex = [_targetFolderPopUpButton indexOfSelectedItem];
@@ -744,6 +1060,19 @@
     if (selectedIndex == lastIndex) { // means always custom selection
         
         // CUSTOM FOLDER
+
+        FileSystemItem *newTargetFolder = [[FileSystemItem alloc] initWithOpenDialogForFolderSelection:_selectedTargetFolder.fileURL];
+        
+        if (newTargetFolder != nil) {
+            _selectedTargetFolder = newTargetFolder;
+            [self updateTargetFolderViews];
+            [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
+            NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+            [nc postNotificationName:@"targetPathChanged" object:self];
+        }
+
+       // [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
+        /*
         
         NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
         [openDlg setCanChooseFiles:NO];
@@ -766,6 +1095,8 @@
         } else {
             if (lastSelectedTargetFolderIndex >=0) [_targetFolderPopUpButton selectItemAtIndex:lastSelectedTargetFolderIndex]; // cancel reverts to previous selection
         }
+        
+        */
     } else {
         
         // FOLDER PRESET
@@ -773,7 +1104,7 @@
         _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[selectedIndex];
         lastSelectedTargetFolderIndex = selectedIndex;
         [self updateTargetFolderViews];
-
+        
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc postNotificationName:@"targetPathChanged" object:self];
     }
@@ -859,8 +1190,14 @@
 
 #pragma mark -
 #pragma mark METADATA BROWSER
-
--(void)openMetadataBrowser:(id)sender {
+/**
+ *  Opens metadata browser window
+ *
+ *  Creates an instance of metadata browser window controller if not already exists.
+ *
+ *  @param sender A sender
+ */
+-(IBAction)openMetadataBrowser:(id)sender {
     if (!metadataBrowser) {
         metadataBrowser = [[MetadataBrowser alloc] init];
     }
@@ -870,7 +1207,13 @@
 
 #pragma mark -
 #pragma mark NOTIFICATIONS AND EVENTS
-
+/**
+ *  Notification responder for preferences change
+ *
+ *  Reloads template selection, selects first template and resets about everything
+ *
+ *  @param aNotification A notification
+ */
 -(void)preferencesDidChange:(NSNotification*)aNotification {
     [_templateManagerToolbarItem setAutovalidates:NO];
     [_templateManagerMenuItem setEnabled:[_preferences.templateSetLocations count]>0];
@@ -884,13 +1227,19 @@
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
     [self updateTargetFolderViews];
 }
-
+/**
+ *  Notification responder for template selection change
+ *
+ *  Resets parameter query table and target folder view items
+ *
+ *  @param aNotification A notification
+ */
 -(void)templatesDidChange:(NSNotification*)aNotification {
     [_viewMenuItem setHidden:YES];
     [self populateTemplatePopUpButton];
     [self setSelectedTemplateByPopUp];
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
-    [self updateTargetFolder];
+   // [self checkIfTargetFolderHasChangedDueParsingAndUpdate];  // check!
     [self updateTargetFolderViews];
 }
 
@@ -899,25 +1248,36 @@
     
 }
 - (IBAction)comboBoxAction:(id)sender {
-    [self updateTargetFolder];
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    [self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)checkBoxAction:(id)sender {
-    [self updateTargetFolder];
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    [self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)datePickerAction:(id)sender {
-    [self updateTargetFolder];
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    [self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)textFieldAction:(id)sender {
-    [self updateTargetFolder];
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    [self prepareForFilteringIfNeeded];
 }
 
 
 #pragma mark -
 #pragma mark SUPPORTING METHODS
-
+/**
+ *  Reads parameters from TemplateMetadata object and sets them to the parameter query table
+ *
+ *  When there are multiple metadata items, only parameters that has the same value in
+ *  all of them are copied to parameter table.
+ *
+ *  @param metadata TemplateMetadata
+ */
 -(void)readParametersFromMetadata:(TemplateMetadata*)metadata {
     NSInteger tableIndex=0;
     NSInteger arrayIndex=0;
@@ -978,11 +1338,18 @@
     
 }
 
-
+/**
+ *  Updates parameter query combobox items by templates default semicolon separated list
+ *
+ *  @param comboBox                 NSComboBox object
+ *  @param semicolonSeparatedString A string with semicolon separated items
+ */
 -(void)updateParameterQueryComboBox:(NSComboBox *)comboBox withString:(NSString *)semicolonSeparatedString {
     // Parses xx;yy;zz list
-    [comboBox removeAllItems];
-        long defaultIndex = 0;
+    
+    long defaultIndex = 0;
+    
+    /*
     NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[semicolonSeparatedString componentsSeparatedByString:@";"]];
     for (long index = 0; index < [items count]; index++) {
         NSString *string = items[index];
@@ -996,7 +1363,17 @@
         defaultIndex = -1;
     }
     [self removeEmptyStringsFromMutableArray:items];
-
+     */
+    
+    
+    // checks if there the first item (default value) is occurred later second time
+    // action is then to remove the first item an just set combobox's value pointing to index of second occurrence
+    NSMutableArray *items = [NSMutableArray arrayWithArray:[semicolonSeparatedString arrayFromSemicolonSeparatedList]];
+    
+    if ([items[0] isEqualToString:@""]) {
+        defaultIndex = -1;
+        [items removeObjectAtIndex:0];
+    }
     if ([items count] > 1 && defaultIndex >= 0) {
         for (long index = 1; index < [items count]; index++) {
             if ([items[0] isEqualToString:items[index]]) {
@@ -1006,6 +1383,7 @@
             }
         }
     }
+
     [comboBox removeAllItems];
     [comboBox addItemsWithObjectValues:items];
     if (defaultIndex >= 0) {
@@ -1016,30 +1394,17 @@
     }
 }
 
-// used only(?) for list type parameter default list parser
--(void)removeEmptyStringsFromMutableArray:(NSMutableArray *)mutableArray {
-    if ([mutableArray count] > 0) {
-        for (long index = [mutableArray count] - 1; index >= 0; index--) {
-            if ([mutableArray[index] isEqualToString:@""]) {
-                [mutableArray removeObjectAtIndex:index];
-            }
-        }
-    }
-}
-
--(NSString *)parseDate:(NSDate *)date withFormat:(NSString *)formatString {
-    NSMutableString *fixedFormatString = [NSMutableString stringWithString:[formatString stringByPerformingFullCleanUp]];
-    [fixedFormatString replaceOccurrencesOfString:@"Y" withString:@"y" options:0 range:NSMakeRange(0, [fixedFormatString length])];
-    [fixedFormatString replaceOccurrencesOfString:@"D" withString:@"d" options:0 range:NSMakeRange(0, [fixedFormatString length])];
-    [fixedFormatString replaceOccurrencesOfString:@"m" withString:@"M" options:0 range:NSMakeRange(0, [fixedFormatString length])];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:fixedFormatString];
-    return [dateFormatter stringFromDate:date];
-}
-
 
 #pragma mark Errors
 
+/**
+ *  Show alert panel for error code.
+ *
+ *  @Note Error code masking bit will determine if it's error or warning. To be implemeted...
+ *
+ *  @param errCode  Error code as NSInteger
+ *  @param paramStr Description string
+ */
 -(void)errorPanelForErrCode:(NSInteger)errCode andParameter:(NSString*)paramStr {
     NSString *errMsg;
     BOOL isError = NO;
@@ -1141,7 +1506,7 @@
     [self populateTemplatePopUpButton];
     [self setSelectedTemplateByPopUp];
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
-    [self updateTargetFolder];
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
     [self updateTargetFolderViews];
     [_targetFolderOutlineView setTarget:self];
     [_targetFolderOutlineView setDoubleAction:@selector(doubleClick:)];
@@ -1177,17 +1542,6 @@
 
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (IBAction)filterAction:(id)sender {
-    if ([_filterOnOffButton state] == 1) {
-        _filterOnOffButton.title = @"Filter On";
-        [self readParameterQueryTableToTemplate:_selectedTemplate];
-        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
-    } else {
-        _filterOnOffButton.title = @"Filter Off";
-        [_targetBrowserHelper stopFiltering];
-    }
 }
 
 

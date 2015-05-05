@@ -10,13 +10,36 @@
 
 @implementation TemplateMetadata
 
+
+/**
+ *  Returns number of items in the metadata array
+ *
+ *  @return NSInteger
+ */
+
 -(NSInteger)count {
     return [_metadataArray count];
     
 }
+
+/**
+ *  Adds a new metadata item to the metadata array
+ *
+ *  @param item A metadata item to be added
+ */
+
 -(void)addItem:(TemplateMetadataItem *)item {
     [_metadataArray addObject:item];
 }
+
+/**
+ *  Writes metadata to given folder
+ *
+ *  Uses METADATA_FILENAME as file name.
+ *
+ *  @param folder A folder to write metadata to
+ */
+
 -(void)writeToFolder:(FileSystemItem*)folder {
     NSString *path = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, METADATA_FILENAME];
     [NSKeyedArchiver archiveRootObject:self toFile:path];
@@ -38,6 +61,15 @@
     return self;
 }
 
+/**
+ *  Initializes the template object with the data read form a folder
+ *
+ *  Metadata is stored to @a _metadataArray mutable array. Array is empty if no metadata file is found from a folder.
+ *
+ *  @param folder A folder to search for a metadata
+ *
+ *  @return self
+ */
 -(id) initByReadingFromFolder:(FileSystemItem*)folder {
     NSString *path = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, METADATA_FILENAME];
     NSFileManager *fm = [[NSFileManager alloc] init];
@@ -48,7 +80,6 @@
                     TemplateMetadata *newMetadata = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
                     self = newMetadata;
 
-
             } else {
                 _metadataArray = [[NSMutableArray alloc] init];
             }
@@ -56,6 +87,11 @@
         return self;
 }
 
+/**
+ *  Removes a metadata item from metadata array by its deployment id
+ *
+ *  @param deploymentId A deployment id
+ */
 -(void)removeMetadataItemWithId:(NSString *)deploymentId {
     NSMutableArray *newArray = [NSMutableArray array];
     for (TemplateMetadataItem *currentItem in _metadataArray) {
@@ -66,6 +102,13 @@
     _metadataArray = newArray;
 }
 
+/**
+ *  Returns a metadata item by its deployment id
+ *
+ *  @param deploymentId A deployment id
+ *
+ *  @return A metadata item (of the metadata array)
+ */
 -(TemplateMetadataItem *)metadataItemWithId:(NSString *)deploymentId {
     for (TemplateMetadataItem *currentItem in _metadataArray) {
         if ([currentItem.deploymentID isEqualToString:deploymentId]) {
@@ -75,6 +118,11 @@
     return nil;
 }
 
+/**
+ *  Returns YES is any metadata item of the metadata array is set as master
+ *
+ */
+
 -(BOOL)hasAnyMaster {
     BOOL result = NO;
     for (TemplateMetadataItem *metaItem in _metadataArray) {
@@ -82,6 +130,11 @@
     }
     return result;
 }
+
+/**
+ *  Returns YES is any metadata item of the metadata array is set as parent
+ *
+ */
 
 -(BOOL)hasAnyParent {
     BOOL result = NO;

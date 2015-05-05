@@ -55,7 +55,7 @@
  @Note In this app, tilde format is often used for storing paths to be interchangable with other users.
         Thus expanding tilde is neccessary before file operations.
  
- @see setPathByAbbreviatingTildeInPath
+ @see setPathByAbbreviatingTildeInPath:(NSString *)path
  
  */
 
@@ -64,15 +64,15 @@
 }
 
 
-/** Sets path property of the object by converting it to 'tilded' format before.
- 
- @param path A path to be converted and stored to the object
- 
- @Note In this app, tilde format is often used for storing paths to be interchangable with other users.
- Converting back to 'full' format is neccessary before file operations.
- 
- @see pathByExpandingTildeInPath
- 
+/** Sets path property of the object by first converting it to 'tilded' format.
+ *
+ * @param path A path to be converted and stored to the object
+ *
+ * @Note In this app, tilde format is often used for storing paths to be interchangable with other users.
+ * Converting back to 'full' format is neccessary before file operations.
+ *
+ * @see pathByExpandingTildeInPath
+ *
  */
 
 -(void)setPathByAbbreviatingTildeInPath:(NSString *)path {
@@ -348,6 +348,33 @@
 
 /** Initializes a FileSystemItem object by letting user to select a folder in open dialog.
  
+ @param URL First folder to open in the dialog.
+ @return self if successful.
+ @return nil if user cancels the operation.
+ 
+ */
+
+-(id)initWithOpenDialogForFolderSelection:(NSURL*) URL {
+    NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
+    [openDlg setCanChooseFiles:NO];
+    [openDlg setAllowsMultipleSelection:NO];
+    [openDlg setCanChooseDirectories:YES];
+    [openDlg setCanCreateDirectories:YES];
+    [openDlg setDirectoryURL:URL];
+    [openDlg setAnimationBehavior:NSWindowAnimationBehaviorNone];
+    if ([openDlg runModal] == NSOKButton) {
+        self = [super init];
+        if (self) {
+            [self setPropertiesByURL:[openDlg URL]];
+            _path = [[[openDlg URL] path] stringByAbbreviatingWithTildeInPath];
+            _nickName = @"";
+        }
+        return self;
+    }
+    return nil;
+}
+/** Initializes a FileSystemItem object by letting user to select a folder in open dialog.
+ 
  @return self if successful.
  @return nil if user cancels the operation.
  
@@ -372,6 +399,7 @@
     }
     return nil;
 }
+
 
 #pragma mark -
 #pragma mark INIT AND CODING
@@ -494,6 +522,32 @@ Initialises the object and also reads file/folder parameters from the file syste
     }
     return self;
 }
+
+-(id) initWithPathByAbbreviatingTildeInPath:(NSString *)path andNickName:(NSString *)name {
+    self = [super init];
+    if (self) {
+        if ([NSString isNotEmptyString:path]) {
+            [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
+        }
+        _nickName = name;
+        _isExpanded = NO;
+        _isLocked = NO;
+        _createdBy = @"";
+        _lockedBy = @"";
+        _isCopied = NO;
+        _pathToCopy = nil;
+        _isPathToCopyValid = NO;
+        _relativePath = nil;
+        _pathToCopyIsDirectory = NO;
+        _isMaster = NO;
+        _isParent = NO;
+        _isTarget = NO;
+        _shouldCopy = NO;
+        [self setPathByAbbreviatingTildeInPath:_path];
+    }
+    return self;
+}
+
 /** Initializes a FileSystemItem with given URL
 
  Initialises the object and also reads file/folder parameters from the file system.

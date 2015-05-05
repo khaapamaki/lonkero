@@ -6,7 +6,6 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 
-
 #import <Cocoa/Cocoa.h>
 #import "Definitions.h"
 #import "Preferences.h"
@@ -14,10 +13,21 @@
 #import "TemplateManager.h"
 #import "PreferencesController.h"
 #import "NSString+Extras.h"
+#import "NSDate+Extras.h"
 #import "FileBrowserHelper.h"
 #import "TemplateMetadata.h"
 #import "TemplateDeployer.h"
 #import "MetadataBrowser.h"
+
+/**
+ *  @brief Handler for the main window
+ *
+ *  AppDelegate is also NSTableView data source and delegate for parameter query table
+ *
+ *  @copyright Kati Haapamäki
+ *  @date 2013-2014
+ */
+
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate> {
 @private
@@ -29,7 +39,7 @@
     FileSystemItem *_selectedTargetFolder;
     long lastSelectedTargetFolderIndex;
     FileBrowserHelper *_targetBrowserHelper;
-    NSMutableArray *_parameterQueryTableContents;
+    NSMutableArray *_parameterQueryTableContents; ///< Holds the data for the table view
     FileBrowserHelper *_templateBrowserHelper;
     MetadataBrowser *metadataBrowser;
     TemplateDeployer *_templateDeployer;
@@ -90,7 +100,7 @@
 -(void)setHiddenParametersToTemplate:(Template *)aTemplate;
 -(NSView*)getNSViewForParameterQueryTitleColumnForRow:(NSInteger)row;
 -(NSView*)getNSViewForParameterQueryValueColumnForRow:(NSInteger)row;
-- (IBAction)clearParameters:(id)sender;
+-(IBAction)clearParameters:(id)sender;
 
 #pragma mark IB Actions
 
@@ -109,7 +119,7 @@
 @property (unsafe_unretained) IBOutlet NSPathControl *pathControl;
 - (IBAction)targetFolderPopUpAction:(id)sender;
 - (IBAction)userSelectedPath:(id)sender;
--(NSInteger)updateTargetFolder;
+-(NSInteger)checkIfTargetFolderHasChangedDueParsingAndUpdate;
 -(void)updateTargetFolderViews;
 - (IBAction)selectParentFolder:(id)sender;
 - (IBAction)browseForNewTargetFolder:(id)sender;
@@ -119,7 +129,7 @@
 @property (weak) IBOutlet NSMenu *contextMenu;
 
 - (IBAction)filterAction:(id)sender;
-
+-(void)setTargetFolderPopUpButtonToIndex:(NSInteger)index;
 
 @property (weak) IBOutlet NSButton *filterOnOffButton;
 
@@ -149,8 +159,6 @@
 #pragma mark -
 #pragma mark SUPPORTING METHODS
 
--(void)removeEmptyStringsFromMutableArray:(NSMutableArray *)mutableArray;
--(NSString*)parseDate:(NSDate*)date withFormat:(NSString*)formatString;
 -(void)errorPanelForErrCode:(NSInteger)errCode andParameter:(NSString*)paramStr;
 
 #pragma mark -

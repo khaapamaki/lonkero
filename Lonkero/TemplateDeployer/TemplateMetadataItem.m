@@ -11,26 +11,60 @@
 
 @implementation TemplateMetadataItem
 
+/**
+ *  Reads directory contents form the original template location and stores it
+ *
+ *  Is used for master level metadata items to store extra data about deployed templete
+ *
+ *  @see readDeployedDirectoryContents
+ */
 -(void)readTemplateDirectoryContents {
     _templateContents = [FileSystemItem getDirectoryContentForFolder:_usedTemplate.location includeFiles:YES includeFolders:YES includeSubDirectories:YES];
 }
 
+/**
+ *  Reads directory contents form the used deployment target folder and stores it
+ *
+ *  Is used for master level metadata items to store extra data about deployed content
+ *
+ *  @see readTemplateDirectoryContents
+ */
+
 -(void)readDeployedDirectoryContents {
     _deployedContents = [FileSystemItem getDirectoryContentForFolder:_creationMasterFolder includeFiles:YES includeFolders:YES includeSubDirectories:YES];
 }
+
+/**
+ *  Sets master folder flag to YES and parent folder flag to NO, and sets depth to a given value.
+ *
+ *  @param depth A depth
+ */
 
 -(void)setAsMasterFolderAsDepthOf:(NSInteger) depth {
     _isMasterFolder = @YES;
     _isParentFolder = @NO;
     _depth = @(depth);
 }
-
+/**
+ *  Sets parent folder flag to YES and master folder flag to NO, and sets depth to a given value.
+ *
+ *  @param depth A depth
+ */
 -(void)setAsParenFolderAsDepthOf:(NSInteger)depth {
     _isMasterFolder = @NO;
     _isParentFolder = @YES;
     _isTargetFolder = @NO;
     _depth = @(depth);
 }
+
+/**
+ *  Sets target folder flag to YES and parent folder flag to NO, and sets depth to 0.
+ *
+ *  @note Target folder can also be a master folder at the same time, but not a parent.
+ *
+ *  Target folder simply means the root folder of the whole deployment process. Folder above parent folders.
+ *  Master folder is the root for the template structure, below parent folders
+ */
 
 -(void)setAsTargetFolder {
     // don't get confused here, target can be master but not a parent.

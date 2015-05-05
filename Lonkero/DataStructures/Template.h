@@ -6,15 +6,26 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 
+
+/** @class Template
+
+ @brief Template is a class to store template
+ 
+ */
+
+
+
 #import <Foundation/Foundation.h>
 #import "Definitions.h"
 #import "TemplateParameter.h"
 #import "FileSystemItem.h"
 #import "NSString+Extras.h"
 
+
 @interface Template : NSObject {
     
 }
+
 @property NSString *version;
 @property NSString *name;
 @property FileSystemItem *location;
@@ -29,6 +40,8 @@
 -(id) initWithURL:(NSURL *)URL;
 -(void) saveTemplate;
 
-+(NSString*)generateRandomIDString;  // deprecated -> moved to NSString+Extras
+
+
 
 @end
+

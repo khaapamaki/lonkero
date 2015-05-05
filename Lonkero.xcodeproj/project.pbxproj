@@ -12,6 +12,7 @@
 		421783DA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783D9181C1CD5000FDB81 /* Cocoa.framework */; };
 		421783F9181C1CD5000FDB81 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783F8181C1CD5000FDB81 /* XCTest.framework */; };
 		421783FA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783D9181C1CD5000FDB81 /* Cocoa.framework */; };
+		421AD1AD1880462A00EE03C8 /* NSMutableArray+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 421AD1AC1880462A00EE03C8 /* NSMutableArray+Extras.m */; };
 		422C356D184BE09400212999 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3535184BE09400212999 /* AppDelegate.m */; };
 		422C356E184BE09400212999 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422C3536184BE09400212999 /* MainMenu.xib */; };
 		422C356F184BE09400212999 /* FileSystemItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C353A184BE09400212999 /* FileSystemItem.m */; };
@@ -23,7 +24,6 @@
 		422C3575184BE09400212999 /* LMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3546184BE09400212999 /* LMWindow.m */; };
 		422C3576184BE09400212999 /* Lonkero-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 422C3547184BE09400212999 /* Lonkero-Info.plist */; };
 		422C3577184BE09400212999 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3549184BE09400212999 /* main.m */; };
-		422C3578184BE09400212999 /* PathControlHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C354C184BE09400212999 /* PathControlHelper.m */; };
 		422C3579184BE09400212999 /* FileBrowserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C354E184BE09400212999 /* FileBrowserHelper.m */; };
 		422C357A184BE09400212999 /* Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3551184BE09400212999 /* Merge.m */; };
 		422C357B184BE09400212999 /* NSDictionary-Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3554184BE09400212999 /* NSDictionary-Merge.m */; };
@@ -73,6 +73,8 @@
 		421783DE181C1CD5000FDB81 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		421783F7181C1CD5000FDB81 /* LonkeroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LonkeroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		421783F8181C1CD5000FDB81 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		421AD1AB1880462A00EE03C8 /* NSMutableArray+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+Extras.h"; sourceTree = "<group>"; };
+		421AD1AC1880462A00EE03C8 /* NSMutableArray+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+Extras.m"; sourceTree = "<group>"; };
 		422C3534184BE09400212999 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		422C3535184BE09400212999 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		422C3537184BE09400212999 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -91,8 +93,6 @@
 		422C3547184BE09400212999 /* Lonkero-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Lonkero-Info.plist"; path = "Lonkero/Lonkero-Info.plist"; sourceTree = "<group>"; };
 		422C3548184BE09400212999 /* Lonkero-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Lonkero-Prefix.pch"; path = "Lonkero/Lonkero-Prefix.pch"; sourceTree = "<group>"; };
 		422C3549184BE09400212999 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Lonkero/main.m; sourceTree = "<group>"; };
-		422C354B184BE09400212999 /* PathControlHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathControlHelper.h; sourceTree = "<group>"; };
-		422C354C184BE09400212999 /* PathControlHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathControlHelper.m; sourceTree = "<group>"; };
 		422C354D184BE09400212999 /* FileBrowserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileBrowserHelper.h; sourceTree = "<group>"; };
 		422C354E184BE09400212999 /* FileBrowserHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileBrowserHelper.m; sourceTree = "<group>"; };
 		422C3550184BE09400212999 /* Merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Merge.h; sourceTree = "<group>"; };
@@ -243,8 +243,6 @@
 			isa = PBXGroup;
 			children = (
 				422C3536184BE09400212999 /* MainMenu.xib */,
-				422C354B184BE09400212999 /* PathControlHelper.h */,
-				422C354C184BE09400212999 /* PathControlHelper.m */,
 				422C354D184BE09400212999 /* FileBrowserHelper.h */,
 				422C354E184BE09400212999 /* FileBrowserHelper.m */,
 			);
@@ -325,6 +323,8 @@
 				420B592F185330EB00DA0E8B /* CustomViewForWindow.m */,
 				422C3589184BE1AF00212999 /* NSString+Extras.h */,
 				422C358A184BE1AF00212999 /* NSString+Extras.m */,
+				421AD1AB1880462A00EE03C8 /* NSMutableArray+Extras.h */,
+				421AD1AC1880462A00EE03C8 /* NSMutableArray+Extras.m */,
 				4233149D185A11B100E65DD0 /* NSNumber+Extras.h */,
 				4233149E185A11B100E65DD0 /* NSNumber+Extras.m */,
 				422E109F185DF1D600D12915 /* NSDate+Extras.h */,
@@ -464,7 +464,6 @@
 				422C3575184BE09400212999 /* LMWindow.m in Sources */,
 				420B592D18532BBA00DA0E8B /* CustomViewForParameterTable.m in Sources */,
 				422C3570184BE09400212999 /* Template.m in Sources */,
-				422C3578184BE09400212999 /* PathControlHelper.m in Sources */,
 				422C358B184BE1AF00212999 /* NSString+Extras.m in Sources */,
 				422C3583184BE09400212999 /* CreateNewTemplateHelperWindowController.m in Sources */,
 				420B5930185330EB00DA0E8B /* CustomViewForWindow.m in Sources */,
@@ -475,6 +474,7 @@
 				422C3579184BE09400212999 /* FileBrowserHelper.m in Sources */,
 				422C3577184BE09400212999 /* main.m in Sources */,
 				422C357D184BE09400212999 /* Preferences.m in Sources */,
+				421AD1AD1880462A00EE03C8 /* NSMutableArray+Extras.m in Sources */,
 				425F1B181858948600B3A94C /* MetadataBrowserDeployment.m in Sources */,
 				422E10A4185E2A9C00D12915 /* MetadataRepairer.m in Sources */,
 				422C3586184BE09400212999 /* TemplateSelectorOutlineViewController.m in Sources */,

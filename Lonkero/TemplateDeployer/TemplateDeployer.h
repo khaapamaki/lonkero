@@ -6,6 +6,14 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 
+/** @class TemplateDeployer
+ 
+ Deployes a template, parses parameters and saves metadata.
+ 
+ Deploying includes folder creation and copying the files in the template
+ 
+ */
+
 #import <Foundation/Foundation.h>
 #import "Definitions.h"
 #import "Template.h"

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Definitions.h"
+#import "NSMutableArray+Extras.h"
 
 @interface NSString (Extras)
 
@@ -29,5 +30,5 @@
 -(NSString*)stringByInsertingHyphensEvery:(short)number;
 +(NSString *)convertWildCardToRegExp:(NSString *)WildCardString;
 +(NSString *)generateRandomStringOfLength:(short)len;
-
+-(NSArray*)arrayFromSemicolonSeparatedList;
 @end

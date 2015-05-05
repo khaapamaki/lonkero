@@ -726,7 +726,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="175" id="1sE-w8-MCi"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.8.1 ALPHA" id="LJp-Tk-nFB">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.8.2 ALPHA" id="LJp-Tk-nFB">
                             <font key="font" size="13" name="LucidaGrande"/>
                             <color key="textColor" red="0.73237941576086962" green="0.18136127937235871" blue="0.16027643664650632" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
