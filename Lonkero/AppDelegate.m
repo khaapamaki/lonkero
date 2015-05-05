@@ -22,6 +22,9 @@
         if (!templateManager) {
             templateManager = [[TemplateManager alloc] initWithPreferences:_preferences];
         }
+        [_viewMenuItem setHidden:NO];
+        [_viewMenuItem setEnabled:YES];
+        [templateManager turnOnIdEditorMenuItem:_showIdEditorMenuItem];
         [templateManager openWindow];
         [_toolBar setSelectedItemIdentifier:nil];
         
@@ -38,10 +41,49 @@
 // DEPLOY
 // -----------
 
+- (IBAction)deployMenuItem:(id)sender {
+    [self deployFolderStructure:sender];
+
+}
+
+- (IBAction)rewriteMetadataMenuItem:(id)sender {
+    if (!_selectedTemplate) return;
+    
+    if ([self hasMissingParameters]) {
+        [self errorPanelForErrCode:ErrRequiredParametersMissing andParameter:nil] ;
+        return;
+    }
+    
+    NSInteger err = [self updateTargetFolder];
+    
+    if (err!=0) {
+        [self errorPanelForErrCode:err andParameter:nil];
+        return;
+    }
+    
+    NSString *errString = @"";
+    NSInteger errCode = 0;
+    
+    // DO
+    FileSystemItem *targetFolder = [self parsedTargetFolder];
+    
+    errCode = [_templateDeployer rewriteMetadataToTargetFolder:targetFolder errString:&errString];
+    if (errCode != 0) {
+        if (errCode <= 128) {
+            [self updateTargetFolderViews];
+            [self errorPanelForErrCode:errCode andParameter:errString];
+        }
+    }
+}
+
+
+
 - (IBAction)deployFolderStructure:(id)sender {
     
     if (!_selectedTemplate) return;
-
+    
+    [self cleanUpParametersForTemplate:_selectedTemplate];
+    
     if ([self hasMissingParameters]) {
         [self errorPanelForErrCode:ErrRequiredParametersMissing andParameter:nil] ;
         return;
@@ -54,12 +96,11 @@
         return;
     }
     
-    TemplateDeployer *deployer = [[TemplateDeployer alloc] initWithTemplate:_selectedTemplate];
     NSString *errString = @"";
     NSInteger errCode = 0;
     
     // DEPLOY
-    errCode = [deployer deployToTargetFolder:[self parsedTargetFolder] errString:&errString];
+    errCode = [_templateDeployer deployToTargetFolder:[self parsedTargetFolder] errString:&errString];
     
     // Deploy results
     if (errCode != 0) {
@@ -69,7 +110,7 @@
         }
     } else {
         // Show in Finder
-        FileSystemItem *masterfolder = [[TemplateDeployer parentFoldersForTemplate:_selectedTemplate withTargetFolder:_selectedTargetFolder error:nil] lastObject];
+        FileSystemItem *masterfolder = [[_templateDeployer getParentFoldersWithError:nil] lastObject];
         BOOL couldOpen = [[NSWorkspace sharedWorkspace] openURL:[masterfolder fileURL]];
         
         NSAssert(couldOpen, @"Could not open finder window");
@@ -157,6 +198,8 @@
     [_templateBrowserHelper updateWithFolder:_selectedTemplate.location andTemplate:_selectedTemplate];
     [_templateBrowserHelper refresh];
     [_templateFileBrowserOutlineView reloadData];
+    _templateDeployer = [[TemplateDeployer alloc] initWithTemplate:_selectedTemplate];
+    
 }
 
 -(void)loadParameterQueryTableWithTemplate:(Template*)aTemplate {
@@ -213,9 +256,13 @@
 
 }
 
+-(void)clearParameters:(id)sender {
+    [self reloadParameterQueryTable];
+}
+
 -(void)reloadParameterQueryTable {
     
-    // load template default values to query table and displays it
+    // loads template default values to query table and displays it
     
     for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
         if (currentParameter.parameterType != list) {
@@ -359,7 +406,15 @@
         }
         arrayIndex++;
         if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
+         //   currentParameter.stringValue = [currentParameter.stringValue stringByPerformingFullCleanUp];
+    }
+}
+
+-(void)cleanUpParametersForTemplate:(Template *) aTemplate {
+    for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
+        if (!currentParameter.isHidden) {
             currentParameter.stringValue = [currentParameter.stringValue stringByPerformingFullCleanUp];
+        }
     }
 }
 
@@ -610,7 +665,8 @@
 #pragma mark Common
 
 -(void)updateTargetFolderViews {
-    FileSystemItem *parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[TemplateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath withTemplate:_selectedTemplate] andNickName:_selectedTargetFolder.nickName];
+    
+    FileSystemItem *parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[_templateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath] andNickName:_selectedTargetFolder.nickName];
     
     [_pathControl setURL:[parsedTargetFolder fileURL]];
 
@@ -633,18 +689,25 @@
     BOOL targetFolderHasChanged = NO;
     targetFolderHasChanged = ![parsedTargetFolder.pathByExpandingTildeInPath isEqualToString:previousParsedTargetFolder.pathByExpandingTildeInPath];
     
+    if ([_filterOnOffButton state] == 1) {
+        [self readParameterQueryTableToTemplate:_selectedTemplate];
+        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
+    }
+    
     if (targetFolderHasChanged) {
+
         [self populateTargetFolderPopUpButton];
         [self updateTargetFolderViews];
+
     }
     return err;
 }
 
 -(FileSystemItem *) parsedTargetFolder {
     FileSystemItem *parsedTargetFolder;
-    
+
     if (lastSelectedTargetFolderIndex >= 0) { // parse only if target is a preset
-        parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[TemplateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath withTemplate:_selectedTemplate] andNickName:_selectedTargetFolder.nickName];
+        parsedTargetFolder = [[FileSystemItem alloc] initWithPath:[_templateDeployer parseParametersForPath:_selectedTargetFolder.pathByExpandingTildeInPath] andNickName:_selectedTargetFolder.nickName];
     } else {
         parsedTargetFolder = _selectedTargetFolder;
     }
@@ -723,10 +786,14 @@
     if (metadataBrowser) {
         NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
         id item = [_targetFolderOutlineView itemAtRow:rowIndex];
-        FileSystemItem *clickedItem = item;
+        FileSystemItem *clickedItem;
+        if (item == nil) {
+            clickedItem = _selectedTargetFolder;
+        } else {
+            clickedItem = item;
+        }
         TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:clickedItem];
- 
-            [metadataBrowser setMetadata:metadata];
+        [metadataBrowser setMetadata:metadata];
     }
   
 }
@@ -742,10 +809,8 @@
     if (fileSystemItem.isDirectory) {
         TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:fileSystemItem];
         if (metadata==nil || [metadata.metadataArray count]==0) {
-            LOG(@"non template folder");
             return;
         }
-        LOG(@"going to find some good stuff");
         if (_selectedTemplate!=nil) {
             [self readParametersFromMetadata:metadata];
         }
@@ -756,21 +821,39 @@
 - (IBAction)contextMenuShowInFinder:(id)sender {
     NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
     id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+    FileSystemItem *clickedItem;
+    if (item==nil) {
+        clickedItem = _selectedTargetFolder;
+    } else {
+        clickedItem = item;
+    }
+    [clickedItem updateExistingStatus];
+    if (clickedItem.isDirectory) {
+        BOOL couldOpen = [[NSWorkspace sharedWorkspace] openURL:[clickedItem fileURL]];
+    }
+
 }
 
 - (IBAction)showMetadataContextMenuAction:(id)sender {
     NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
     id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+    FileSystemItem *fileSystemItem;
+    if (item==nil) {
+        fileSystemItem = _selectedTargetFolder;
+    } else {
+        fileSystemItem = item;
+    }
+    [fileSystemItem updateExistingStatus];
+
+    
     if (!metadataBrowser) {
         metadataBrowser = [[MetadataBrowser alloc] init];
     }
-    FileSystemItem *clickedItem = item;
-    TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:clickedItem];
+    TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:fileSystemItem];
     if ([metadata.metadataArray count] > 0) {
         [metadataBrowser openWindow];
         [metadataBrowser setMetadata:metadata];
     }
-
 }
 
 
@@ -803,6 +886,7 @@
 }
 
 -(void)templatesDidChange:(NSNotification*)aNotification {
+    [_viewMenuItem setHidden:YES];
     [self populateTemplatePopUpButton];
     [self setSelectedTemplateByPopUp];
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
@@ -959,77 +1043,79 @@
 -(void)errorPanelForErrCode:(NSInteger)errCode andParameter:(NSString*)paramStr {
     NSString *errMsg;
     BOOL isError = NO;
-   // BOOL isWargning = NO;
-    
-    switch (errCode) {
-        case ErrMasterFolderExists:
-            errMsg = @"Project folder already exists";
-            isError = YES;
-            break;
-        case ErrCouldntCreateFolder:
-            errMsg = @"Cannot create folder";
-            isError = YES;
-            break;
-        case ErrFolderOccupiedByFile:
-            errMsg = @"Cannot create folder. Folder's name is in use";
-            isError = YES;
-            break;
-        case ErrInvalidParentFolderName:
-            errMsg = @"Invalid parent folder name";
-            isError = YES;
-            break;
-        case ErrTargetFolderDoesntExist:
-            errMsg = @"Target folder does not exist";
-            isError = YES;
-            break;
-        case ErrFileExistsAtTarget:
-            errMsg = @"File already exists";
-            isError = YES;
-            break;
-        case ErrFileCopyError:
-            errMsg = @"Cannot write file";
-            isError = YES;
-            break;
-        case ErrParameterTagsYieldedEmptyString:
-            errMsg = @"Empty parent folder name";
-            isError = YES;
-            break;
-        case ErrRequiredParametersMissing:
-            errMsg = @"Required parameter missing";
-            isError = YES;
-            break;
-        case ErrInvalidMasterFolderName:
-            errMsg = @"Invalid master folder name";
-            isError = YES;
-            break;
-        case ErrInvalidFileOrFolderName:
-            errMsg = @"Invalid file or folder name";
-            isError = YES;
-            break;
-        case ErrSettingPosix:
-            errMsg = @"Could not set permissions";
-            isError = YES;
-            break;
-        case WarnSkippedExistingFiles:
-            errMsg = @"Skipped existing file(s)";
-            isError = NO;
-            break;
-            
-        default:
-            errMsg = [NSString stringWithFormat:@"General error with code: %li", errCode];
-            isError = YES;
-            break;
+    // BOOL isWargning = NO;
+    if (errCode>0) {
+        
+        switch (errCode) {
+            case ErrMasterFolderExists:
+                errMsg = @"Project folder already exists";
+                isError = YES;
+                break;
+            case ErrCouldntCreateFolder:
+                errMsg = @"Cannot create folder";
+                isError = YES;
+                break;
+            case ErrFolderOccupiedByFile:
+                errMsg = @"Cannot create folder. Folder's name is in use";
+                isError = YES;
+                break;
+            case ErrInvalidParentFolderName:
+                errMsg = @"Invalid parent folder name";
+                isError = YES;
+                break;
+            case ErrTargetFolderDoesntExist:
+                errMsg = @"Target folder does not exist";
+                isError = YES;
+                break;
+            case ErrFileExistsAtTarget:
+                errMsg = @"File already exists";
+                isError = YES;
+                break;
+            case ErrFileCopyError:
+                errMsg = @"Cannot write file";
+                isError = YES;
+                break;
+            case ErrParameterTagsYieldedEmptyString:
+                errMsg = @"Empty parent folder name";
+                isError = YES;
+                break;
+            case ErrRequiredParametersMissing:
+                errMsg = @"Required parameter missing";
+                isError = YES;
+                break;
+            case ErrInvalidMasterFolderName:
+                errMsg = @"Invalid master folder name";
+                isError = YES;
+                break;
+            case ErrInvalidFileOrFolderName:
+                errMsg = @"Invalid file or folder name";
+                isError = YES;
+                break;
+            case ErrSettingPosix:
+                errMsg = @"Could not set permissions";
+                isError = YES;
+                break;
+            case WarnSkippedExistingFiles:
+                errMsg = @"Skipped existing file(s)";
+                isError = NO;
+                break;
+                
+            default:
+                errMsg = [NSString stringWithFormat:@"General error with code: %li", errCode];
+                isError = YES;
+                break;
+        }
+        if (isError) {
+            errMsg = [NSString stringWithFormat:@"Error:\n%@", errMsg];
+        } else {
+            errMsg = [NSString stringWithFormat:@"Warning:\n%@", errMsg];
+        }
+        if (!paramStr) {
+            paramStr = @"";
+        }
+        NSRunAlertPanel(errMsg, paramStr, nil, nil, nil);
+        
     }
-    if (isError) {
-        errMsg = [NSString stringWithFormat:@"Error:\n%@", errMsg];
-    } else {
-        errMsg = [NSString stringWithFormat:@"Warning:\n%@", errMsg];
-    }
-    if (!paramStr) {
-        paramStr = @"";
-    }
-    NSRunAlertPanel(errMsg, paramStr, nil, nil, nil);
-    
 }
 
 #pragma mark -
@@ -1094,9 +1180,8 @@
 }
 
 - (IBAction)filterAction:(id)sender {
-    LOG(@"%li", [_filterOnOffButton state]);
-    if ([_filterOnOffButton state] ==1) {
-        _filterOnOffButton.title    = @"Filter On";
+    if ([_filterOnOffButton state] == 1) {
+        _filterOnOffButton.title = @"Filter On";
         [self readParameterQueryTableToTemplate:_selectedTemplate];
         [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
     } else {

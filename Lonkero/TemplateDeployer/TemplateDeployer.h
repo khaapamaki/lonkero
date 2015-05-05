@@ -13,16 +13,20 @@
 #import "NSString+Extras.h"
 #import "FileSystemItem.h"
 #import "NSMutableDictionary-Merge.h"
+#import "NSDate+Extras.h"
 
 @interface TemplateDeployer : NSObject {
     Template *_theTemplate;
     FileSystemItem *_theTargetFolder;
+    NSDate *_deploymentStartDate;
 }
 
 @property Template* theTemplate;
 @property FileSystemItem *theTargetFolder;
 
 -(NSInteger)deployToTargetFolder:(FileSystemItem*)targetFolder errString:(NSString**)errStr;
+-(NSInteger)rewriteMetadataToTargetFolder:(FileSystemItem*)targetFolder errString:(NSString**)errStr;
+-(NSArray*)processWithTargetFolder:(FileSystemItem*)targetFolder options:(NSInteger)options deploymentId:(NSString*)deploymentId err:(NSNumber**)errNumCode errString:(NSString**)errStr;
 
 #pragma mark -
 #pragma mark FILESYSTEM OP
@@ -35,10 +39,10 @@
 #pragma mark -
 #pragma mark PARAMETER PARSING
 
-+(NSArray *) parentFoldersForTemplate:(Template *)aTemplate withTargetFolder:(FileSystemItem *)targetFolder error:(NSNumber **)err;
-+(NSString *) parseParametersForString:(NSString*)aString withTemplate:(Template*)aTemplate;
-+(NSArray *) parseParametersForPathComponents:(NSArray*)pathComponents withTemplate:(Template*)aTemplate error:(NSNumber**)err;
-
+-(NSArray *) getParentFoldersWithError:(NSNumber **)err;
+-(NSString *) parseParametersForString:(NSString*)aString;
+-(NSArray *) parseParametersForPathComponents:(NSArray*)pathComponents error:(NSNumber**)err;
+-(NSString *)parseSystemParametersForString:(NSString *)aString;
 
 /* +(FileSystemItem *)masterFolderForTemplate:(Template*)aTemplate andTargetFolder:(FileSystemItem*)aTargetFolder;
 -(NSString *) masterFolderNameByParsingTags;
@@ -46,12 +50,14 @@
 +(FileSystemItem *)generateMasterFolderUsingParentArray:(NSArray *)array withTemplate:(Template*)aTemplate withTargetFolder:(FileSystemItem*)targetFolder;
 */
 
-+(NSString*) parseParametersForPath:(NSString *)path withTemplate:(Template *)aTemplate;
+-(NSString*) parseParametersForPath:(NSString *)path;
+-(NSString*) parseFileName:(NSString*)filename error:(NSNumber **)err;
 
 #pragma mark -
 #pragma mark METADATA
 
--(void)writeMetadataToFolders:(NSArray *)folders involvedParametersArray:(NSArray *)parametersArray deploymentId:(NSString*)deploymentId;
+-(void)writeMetadataTo:(NSArray *)folders withMetadataItems:(NSArray*)metadataItemArray deploymentId:(NSString*)deploymentId options:(NSInteger)options;
+-(NSArray*)generateMetadataItemArrayForFolders:(NSArray *)folders involvedParametersArray:(NSArray *)parametersArray deploymentId:(NSString*)deploymentId;
 
 // these methods generate dictionaries of tags(=parameters) until any parameter that creates a parent folder
 // the array will have parameter dictionaries to all parent folders to be created

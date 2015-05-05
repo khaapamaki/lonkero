@@ -21,4 +21,10 @@
 +(NSColor *)controlPathBackgroundColor {
     return [NSColor colorWithSRGBRed:0.88f green:0.886f blue:0.912f alpha:1.0f];
 }
+
++(NSArray *)reservedTags {
+    NSArray* tags = @[@"today", @"creator", @"creator-fullname"];
+    return tags;
+}
+
 @end

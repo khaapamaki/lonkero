@@ -18,6 +18,11 @@
 //-------------------------------------
 
 -(void)windowWillClose:(NSNotification *)notification {
+    if (_idEditorMenuItem) {
+        [_idEditorMenuItem setEnabled:NO];
+        [_idEditorMenuItem setHidden:YES];
+    }
+    
     NSApplication *me = [NSApplication sharedApplication];
     [me stopModal];
     [_selectedTemplate saveTemplate];
@@ -41,7 +46,17 @@
     if (_selectedTemplate.location == nil) {
         [self loadTemplateAtFolder:nil];
     }
+    [self hideIdEditor];
     [_templateListOutlineView reloadData];
+    
+    if (!_selectedTemplate) {
+        NSArray *availableTemplates = [TemplateManager getAvailableTemplatesAsFoldersWithPreferences:_preferences];
+        if ([availableTemplates count] > 0)
+        {
+            [self loadTemplateAtFolder:availableTemplates[0]];
+        }
+    }
+
     [_templateManagerWindow makeKeyAndOrderFront:self];
     NSApplication *me = [NSApplication sharedApplication];
     [_templateManagerWindow setPreventsApplicationTerminationWhenModal:NO];
@@ -49,6 +64,7 @@
 }
 
 -(void)closeWindow {
+
     [_templateManagerWindow close];
 }
 
@@ -113,6 +129,34 @@
     }
     [_templateListOutlineView reloadData];
  }
+
+#pragma mark -
+#pragma mark TEMPLATE AND GROUP ID
+
+-(void)turnOnIdEditorMenuItem:(NSMenuItem *)idEditorMenuItem {
+    _idEditorMenuItem = idEditorMenuItem;
+    [_idEditorMenuItem setAction:@selector(showOrHideIdEditor)];
+    [_idEditorMenuItem setEnabled:YES];
+    [_idEditorMenuItem setHidden:NO];
+    
+    
+}
+
+-(void)showOrHideIdEditor {
+    [_idEditorBox setHidden:!_idEditorBox.isHidden];
+    [_idEditorMenuItem setState:!_idEditorBox.isHidden];
+
+}
+-(void)showIdEditor {[_idEditorMenuItem setState:!_idEditorBox.isHidden];
+    [_idEditorBox setHidden:NO];
+    [_idEditorMenuItem setState:!_idEditorBox.isHidden];
+}
+
+-(void)hideIdEditor {
+    [_idEditorBox setHidden:YES];
+    [_idEditorMenuItem setState:!_idEditorBox.isHidden];
+}
+
 
 #pragma mark -
 #pragma mark IB ACTIONS
@@ -272,6 +316,8 @@
     // template = NSMutableArray *templates (sis. Folder *)
     //
     
+
+    
     NSMutableArray *newTemplateList = [[NSMutableArray alloc] init];
     for (FileSystemItem *currentFolder in _preferences.templateSetLocations) {
         
@@ -284,12 +330,15 @@
         // check if exists
         NSMutableArray *templatesInCurrentTemplateFolder = [[NSMutableArray alloc] initWithArray:
                                                             [TemplateManager getFoldersAtURL:[newFolder fileURL] filter:templatesOnly]];
+        
         NSMutableDictionary *templateFolderEntry = [[NSMutableDictionary alloc] initWithObjectsAndKeys:newFolder, @"templateSet", templatesInCurrentTemplateFolder, @"templates", nil];
         [newTemplateList addObject:templateFolderEntry];
     }
     
     return newTemplateList;
 }
+
+
 
 +(NSMutableArray *) getAvailableTemplatesAsFoldersWithPreferences:(Preferences *)prefs  {
 
@@ -501,8 +550,7 @@
     
 }
 -(void)awakeFromNib {
-  
-  
+    [self hideIdEditor];
 }
 -(id)initWithPreferences:(Preferences *) appPreferences {
     self = [super initWithWindowNibName:@"TemplateManagerWindow"];
@@ -510,12 +558,12 @@
         _preferences = appPreferences;
         _parametersArray =  [[NSMutableArray alloc] init];
         _targetFoldersArray = [[NSMutableArray alloc] init];
-        _selectedTemplate = [[Template alloc] init];
+        _selectedTemplate = nil;
         _templateList = [self generateContentArrayForTemplateListOutlineView];
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(handleTemplateListChange:) name:@"newTemplateCreated" object:nil];
         [nc addObserver:self selector:@selector(createNewTemplatePanelClose:) name:@"createNewTemplatePanelClose" object:nil];
-        
+
     }
     return self;
 }

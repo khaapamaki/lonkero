@@ -68,6 +68,7 @@
     [coder encodeObject:_isAdditionalDeployment forKey:@"isAdditionalDeployment"];
     [coder encodeObject:_archiveLocation forKey:@"archiveLocation"];
     [coder encodeObject:_archiveDescription forKey:@"archiveDescription"];
+    [coder encodeObject:_parentFolders forKey:@"parentFolders"];
 
 }
 
@@ -96,6 +97,7 @@
     _isAdditionalDeployment = [coder decodeObjectForKey:@"isAdditionalDeployment"];
     _archiveLocation = [coder decodeObjectForKey:@"archiveLocation"];
     _archiveDescription = [coder decodeObjectForKey:@"archiveDescription"];
+    _parentFolders = [coder decodeObjectForKey:@"parentFolders"];
 
     return self;
 }
@@ -121,6 +123,7 @@
         _creator = NSUserName();
         _creatorFullName = NSFullUserName();
         _parametersForParentLevel = [[NSDictionary alloc] init];
+        _parentFolders = [NSArray array];
         _isMasterFolder = @NO;
         _isParentFolder = @NO;
         _isTargetFolder = @NO;

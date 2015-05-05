@@ -10,6 +10,10 @@
 
 @implementation TemplateMetadata
 
+-(NSInteger)count {
+    return [_metadataArray count];
+    
+}
 -(void)addItem:(TemplateMetadataItem *)item {
     [_metadataArray addObject:item];
 }
@@ -52,11 +56,23 @@
         return self;
 }
 
--(id) init {
-    if (self = [super init]) {
-        _metadataArray = [[NSMutableArray alloc] init];
+-(void)removeMetadataItemWithId:(NSString *)deploymentId {
+    NSMutableArray *newArray = [NSMutableArray array];
+    for (TemplateMetadataItem *currentItem in _metadataArray) {
+        if (![currentItem.deploymentID isEqualToString:deploymentId]) {
+            [newArray addObject:currentItem];
+        }
     }
-    return self;
+    _metadataArray = newArray;
+}
+
+-(TemplateMetadataItem *)metadataItemWithId:(NSString *)deploymentId {
+    for (TemplateMetadataItem *currentItem in _metadataArray) {
+        if ([currentItem.deploymentID isEqualToString:deploymentId]) {
+            return currentItem;
+        }
+    }
+    return nil;
 }
 
 -(BOOL)hasAnyMaster {
@@ -73,5 +89,12 @@
         if  ([metaItem.isParentFolder boolValue]) result = YES;
     }
     return result;
+}
+
+-(id) init {
+    if (self = [super init]) {
+        _metadataArray = [[NSMutableArray alloc] init];
+    }
+    return self;
 }
 @end

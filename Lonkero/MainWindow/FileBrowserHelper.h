@@ -1,5 +1,5 @@
 //
-//  TargetFolderOutlineViewHelper.h
+//  FileBrowserHelper.h
 //  Lonkero
 //
 //  Created by Kati Haapamäki on 17.11.2013.
@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Template.h"
 #import "FileSystemItem.h"
+#import "TemplateMetadata.h"
 
 @interface FileBrowserHelper : NSObject <NSOutlineViewDataSource, NSOutlineViewDelegate, NSMenuDelegate> {
 @private
@@ -22,19 +23,23 @@
     Template *_filteringTemplate;
     BOOL _isFilteringOn;
 }
+
 @property (weak) IBOutlet NSMenu *contextMenu;
 
-
-//@property (unsafe_unretained) IBOutlet NSOutlineView *targetBrowserOutlineView;
 @property BOOL showFiles;
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
+
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
+
 - (NSView *)outlineView:(NSOutlineView *)outlineView viewForTableColumn:(NSTableColumn *)tableColumn item:(id)item ;
+
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 
 -(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata;
+
 -(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata filteringTemplate:(Template*) filterTemplate;
 
 -(void)updateWithFolder:(FileSystemItem *)rootFolder andTemplate:(Template *) currentTemplate;
@@ -42,9 +47,11 @@
 -(void)expandOrCollapseBySavedStatus;
 
 -(void)refresh;
-
 -(void)setFilteringTemplate:(Template*)filteringTemplate;
+
 -(void)stopFiltering;
+
+-(BOOL)filterMetadata:(TemplateMetadata*) metadata withTemplate:(Template*)filter;
 
 
 -(id)initWithOutlineView:(NSOutlineView*)outlineView folder:(FileSystemItem*)rootFolder showFiles:(BOOL)showFiles;

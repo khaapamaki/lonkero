@@ -22,6 +22,7 @@
 }
 
 
+
 @property (unsafe_unretained) IBOutlet NSTableView *parameterTableView;
 
 // Self Management
@@ -73,15 +74,21 @@
 - (IBAction)moveDownTargetFolder:(id)sender;
 @property (unsafe_unretained) IBOutlet NSTableView *targetFoldersTableView;
 
+
 // Template and Group ID
 @property (unsafe_unretained) IBOutlet NSTextField *groupIdTextField;
 @property (unsafe_unretained) IBOutlet NSTextField *templateIdtTextField;
+@property NSMenuItem *idEditorMenuItem;
+-(void)turnOnIdEditorMenuItem:(NSMenuItem *)idEditorMenuItem;
+@property (weak) IBOutlet NSBox *idEditorBox;
+
 
 // CREATE NEW TEMPLATE PANEL
 // Outlets and Actions For Create New Template Panel
 @property (strong) IBOutlet NSPanel *createNewTemplatePanel;
 @property (strong) IBOutlet CreateNewTemplateHelperWindowController *createNewTemplateHelper;
-
+-(void)showIdEditor;
+-(void)hideIdEditor;
 
 #pragma mark -
 #pragma mark SUPPORTING METHODS

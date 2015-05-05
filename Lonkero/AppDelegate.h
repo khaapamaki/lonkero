@@ -32,6 +32,7 @@
     NSMutableArray *_parameterQueryTableContents;
     FileBrowserHelper *_templateBrowserHelper;
     MetadataBrowser *metadataBrowser;
+    TemplateDeployer *_templateDeployer;
 }
 
 @property (unsafe_unretained) IBOutlet NSWindow *mainWind;
@@ -82,12 +83,14 @@
 -(NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 -(long) calculateArrayRowFromTableRow:(long)row;
 -(void) updateParameterQueryComboBox:(NSComboBox *)comboBox withString:(NSString *)semicolonSeparatedString;
--(void)loadParameterQueryTableWithTemplate:(Template*)aTemplate;
--(void)readParameterQueryTableToTemplate:(Template*)aTemplate;
+-(void)loadParameterQueryTableWithTemplate:(Template*) aTemplate;
+-(void)readParameterQueryTableToTemplate:(Template*) aTemplate;
+-(void)cleanUpParametersForTemplate:(Template *) aTemplate;
 -(BOOL)hasMissingParameters;
 -(void)setHiddenParametersToTemplate:(Template *)aTemplate;
 -(NSView*)getNSViewForParameterQueryTitleColumnForRow:(NSInteger)row;
 -(NSView*)getNSViewForParameterQueryValueColumnForRow:(NSInteger)row;
+- (IBAction)clearParameters:(id)sender;
 
 #pragma mark IB Actions
 
@@ -127,6 +130,8 @@
 @property (unsafe_unretained) IBOutlet NSToolbarItem *templateManagerToolbarItem;
 @property (unsafe_unretained) IBOutlet NSToolbarItem *preferencesToolbarItem;
 @property (unsafe_unretained) IBOutlet NSMenuItem *templateManagerMenuItem;
+- (IBAction)deployMenuItem:(id)sender;
+- (IBAction)rewriteMetadataMenuItem:(id)sender;
 
 #pragma mark -
 #pragma mark METADATA BROWSER
@@ -147,6 +152,12 @@
 -(void)removeEmptyStringsFromMutableArray:(NSMutableArray *)mutableArray;
 -(NSString*)parseDate:(NSDate*)date withFormat:(NSString*)formatString;
 -(void)errorPanelForErrCode:(NSInteger)errCode andParameter:(NSString*)paramStr;
+
+#pragma mark -
+#pragma mark MENU ITEMS
+
+@property (weak) IBOutlet NSMenuItem *showIdEditorMenuItem;
+@property (weak) IBOutlet NSMenuItem *viewMenuItem;
 
 #pragma mark -
 #pragma mark DEBUG

@@ -6,24 +6,25 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 #define APPNAME @"Lonkero"
-#define APPVERSION @"0.6 beta"
+#define APPVERSION @"0.8 beta"
 #define APPDESC @"Folder Template Manager"
 
 #define PREFEFENCES_VERSION @"0.3"
 #define PREFERENCES_FILENAME @"Preferences.plist"
 
-#define TEMPLATE_VERSION @"0.2"
+#define TEMPLATE_VERSION @"0.3"
 #define USERPREFERENCES_VERSION @"0.1"
 #define USERPREFERENCES_FILENAME @"User Preferences.plist"
-#define METADATA_VERSION @"0.4";
+#define METADATA_VERSION @"0.5";
 #define TEMPLATE_SETTINGS_FILENAME @"Template Settings.plist"
 #define METADATA_FILENAME @".Template Metadata.plist"
-#define DEFAULT_ID_LENGTH 16
-#define DEFAULT_GROUP_ID @"FFFFFFFFFFFFFFFF"
+#define DEFAULT_ID_LENGTH 12
+#define DEFAULT_GROUP_ID @"000000000000"
 #define TAGCHAR_INNER_1 @"["
 #define TAGCHAR_INNER_2 @"]"
 #define TAGCHAR_OUTER_1 @"{"
 #define TAGCHAR_OUTER_2 @"}"
+#define TAGCHAR_EXTRACTING_INNER_1 @"[-"
 
 #if DEBUG
 #   define LOG(fmt, ...) NSLog(fmt, ##__VA_ARGS__)
@@ -46,8 +47,13 @@ enum {
     ErrInvalidMasterFolderName = 10,
     ErrSettingPosix = 11,
     ErrInvalidFileOrFolderName = 12,
+    ErrNoExistingMetadata = 13,
+    ErrMasterFolderDoesNotExist = 14,
     WarnSkippedExistingFiles = 65,
-    SkippedByUser = 129
+    SkippedByUser = 129,
+    UserCancelled = -1,
+    ExitOnly = -2,
+    NoError = 0
 } ErrCodes;
 
 typedef enum {
@@ -61,12 +67,19 @@ typedef enum {
     boolean = 7
 } TemplateParameterType;
 
+typedef enum {
+    deployTemplate = 1,
+    writeMetadata = 2,
+    replaceExisitingMetadata = 4,
+    generateNewId = 8
+} deploymentModes;
 
 typedef enum {
     lowercase,
     uppercase,
     capitalcase,
-    customcase
+    customcase,
+    noCaseChange
 } Case;
 
 // typedef enum { isNotParentFolder = 0, isParentFolderOptional = 1, isParentFolderRequired = 2 } templateParentFolderSetting;
@@ -77,4 +90,6 @@ typedef enum { templatesOnly = 1, nonTemplatesOnly = 0, bothTemplatesAndNonTempl
 +(NSColor*)windowBackgroundColor;
 +(NSColor*)parameterTableBackgroundColor;
 +(NSColor *)controlPathBackgroundColor;
++(NSArray*)reservedTags;
+
 @end

@@ -19,7 +19,6 @@
 @property NSString *name;
 @property FileSystemItem *location;
 
-//@property NSString *masterFolderNamingRule; // deprecated
 @property NSMutableArray *templateParameterSet;
 @property NSMutableArray *targetFolderPresets;
 @property NSString *dateFormatString;
@@ -29,6 +28,7 @@
 
 -(id) initWithURL:(NSURL *)URL;
 -(void) saveTemplate;
-+(NSString*)generateRandomIDString;
+
++(NSString*)generateRandomIDString;  // deprecated -> moved to NSString+Extras
 
 @end

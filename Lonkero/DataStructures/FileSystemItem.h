@@ -34,21 +34,23 @@
 @property NSString *ownerName;
 @property NSNumber *groupId;
 @property NSNumber *ownerId;
+@property BOOL isParent;
+@property BOOL isMaster;
+@property BOOL isTarget;
 
 // extras, not to be archived:
 //@property NSString *parentPath;
 //@property NSString *parentNickName;
 
 @property BOOL isCopied;
+@property BOOL shouldCopy;
 @property BOOL isPathToCopyValid;
 @property BOOL pathToCopyExists;
 @property BOOL pathToCopyIsDirectory;
 @property BOOL itemExists;
 @property NSString *pathToCopy;
-@property BOOL isParent;
-@property BOOL isMaster;
-@property BOOL isTarget;
 @property NSImage *icon;
+
 
 -(NSURL *) URL;
 -(NSURL *) fileURL;

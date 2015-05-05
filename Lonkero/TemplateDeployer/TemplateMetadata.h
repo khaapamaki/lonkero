@@ -19,5 +19,8 @@
 -(id) initByReadingFromFolder:(FileSystemItem*)folder;
 -(BOOL) hasAnyMaster;
 -(BOOL) hasAnyParent;
+-(void) removeMetadataItemWithId:(NSString*)deploymentId;
+-(NSInteger)count;
+-(TemplateMetadataItem*)metadataItemWithId:(NSString*)deploymentId;
 
 @end

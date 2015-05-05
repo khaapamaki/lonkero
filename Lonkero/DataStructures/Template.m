@@ -11,8 +11,8 @@
 @implementation Template
 
 
--(void)convertFromVersion:(NSString*)version1 {
-    if ([version1 isEqualToString:@"0.2"] && [TEMPLATE_VERSION isEqualToString:@"0.3"]) {
+-(void)convertFromVersion:(NSString*)version {
+    if ([version isEqualToString:@"0.2"] && [TEMPLATE_VERSION isEqualToString:@"0.3"]) {
         for (TemplateParameter *currentParameter in self.templateParameterSet) {
             if ([NSString isNotEmptyString:currentParameter.parentFolderNamingRule]) {
                 NSMutableString *parentName = [NSMutableString stringWithString:currentParameter.parentFolderNamingRule];
@@ -27,7 +27,7 @@
 
 -(void)saveTemplate {
     NSString *templatePath = [NSString stringWithString:[_location.path stringByExpandingTildeInPath]];
-    NSString *templateSettingsFilePath = [NSString stringWithFormat:@"%@/Template Settings.plist", templatePath];
+    NSString *templateSettingsFilePath = [NSString stringWithFormat:@"%@/%@", templatePath, TEMPLATE_SETTINGS_FILENAME];
     [NSKeyedArchiver archiveRootObject:self toFile:templateSettingsFilePath];
 }
 
@@ -36,6 +36,9 @@
 }
 
 -(void) encodeWithCoder: (NSCoder *) coder {
+    if ([_version isEqualToString:@"0.2"]) {
+        _version = @"0.3";
+    }
     [coder encodeObject:_version forKey:@"version"];
     [coder encodeObject:_name forKey:@"templateName"];
     [coder encodeObject:_location.path forKey:@"templatePath"];
@@ -71,9 +74,7 @@
     if ([NSString isEmptyString:_templateId]) {
         _templateId = [Template generateRandomIDString];
     }
-    if ([_version isEqualToString:@"0.2"]) {
-        [self convertFromVersion:_version];
-    }
+
     return self;
 }
 

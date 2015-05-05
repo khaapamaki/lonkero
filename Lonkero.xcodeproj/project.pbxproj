@@ -40,6 +40,8 @@
 		422C3586184BE09400212999 /* TemplateSelectorOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C356C184BE09400212999 /* TemplateSelectorOutlineViewController.m */; };
 		422C358B184BE1AF00212999 /* NSString+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C358A184BE1AF00212999 /* NSString+Extras.m */; };
 		422C358D184BE7CA00212999 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422C358C184BE7CA00212999 /* PreferencesWindow.xib */; };
+		422E10A1185DF1D600D12915 /* NSDate+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 422E10A0185DF1D600D12915 /* NSDate+Extras.m */; };
+		422E10A4185E2A9C00D12915 /* MetadataRepairer.m in Sources */ = {isa = PBXBuildFile; fileRef = 422E10A3185E2A9C00D12915 /* MetadataRepairer.m */; };
 		4233149F185A11B100E65DD0 /* NSNumber+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 4233149E185A11B100E65DD0 /* NSNumber+Extras.m */; };
 		42502A9F1854E4F900F593E9 /* lonkero_icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 42502A9E1854E4F900F593E9 /* lonkero_icon.iconset */; };
 		425F1B151858919100B3A94C /* MetadataBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 425F1B141858919100B3A94C /* MetadataBrowser.m */; };
@@ -122,6 +124,10 @@
 		422C3589184BE1AF00212999 /* NSString+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extras.h"; sourceTree = "<group>"; };
 		422C358A184BE1AF00212999 /* NSString+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extras.m"; sourceTree = "<group>"; };
 		422C358C184BE7CA00212999 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
+		422E109F185DF1D600D12915 /* NSDate+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Extras.h"; sourceTree = "<group>"; };
+		422E10A0185DF1D600D12915 /* NSDate+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Extras.m"; sourceTree = "<group>"; };
+		422E10A2185E2A9C00D12915 /* MetadataRepairer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetadataRepairer.h; path = Lonkero/Metadata/MetadataRepairer.h; sourceTree = SOURCE_ROOT; };
+		422E10A3185E2A9C00D12915 /* MetadataRepairer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetadataRepairer.m; path = Lonkero/Metadata/MetadataRepairer.m; sourceTree = SOURCE_ROOT; };
 		4233149D185A11B100E65DD0 /* NSNumber+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+Extras.h"; sourceTree = "<group>"; };
 		4233149E185A11B100E65DD0 /* NSNumber+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+Extras.m"; sourceTree = "<group>"; };
 		42502A9E1854E4F900F593E9 /* lonkero_icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = lonkero_icon.iconset; sourceTree = "<group>"; };
@@ -321,6 +327,8 @@
 				422C358A184BE1AF00212999 /* NSString+Extras.m */,
 				4233149D185A11B100E65DD0 /* NSNumber+Extras.h */,
 				4233149E185A11B100E65DD0 /* NSNumber+Extras.m */,
+				422E109F185DF1D600D12915 /* NSDate+Extras.h */,
+				422E10A0185DF1D600D12915 /* NSDate+Extras.m */,
 			);
 			path = ClassExtension;
 			sourceTree = "<group>";
@@ -335,6 +343,8 @@
 				425F1B171858948600B3A94C /* MetadataBrowserDeployment.m */,
 				425F1B19185894A100B3A94C /* MetadataBrowserParameter.h */,
 				425F1B1A185894A100B3A94C /* MetadataBrowserParameter.m */,
+				422E10A2185E2A9C00D12915 /* MetadataRepairer.h */,
+				422E10A3185E2A9C00D12915 /* MetadataRepairer.m */,
 			);
 			name = "Metadata Browser";
 			path = MainWindow;
@@ -447,6 +457,7 @@
 				422C3572184BE09400212999 /* Definitions.m in Sources */,
 				422C357B184BE09400212999 /* NSDictionary-Merge.m in Sources */,
 				422C3584184BE09400212999 /* TemplateManager.m in Sources */,
+				422E10A1185DF1D600D12915 /* NSDate+Extras.m in Sources */,
 				422C3582184BE09400212999 /* TemplateMetadataItem.m in Sources */,
 				422C357F184BE09400212999 /* UserPreferences.m in Sources */,
 				422C357A184BE09400212999 /* Merge.m in Sources */,
@@ -465,6 +476,7 @@
 				422C3577184BE09400212999 /* main.m in Sources */,
 				422C357D184BE09400212999 /* Preferences.m in Sources */,
 				425F1B181858948600B3A94C /* MetadataBrowserDeployment.m in Sources */,
+				422E10A4185E2A9C00D12915 /* MetadataRepairer.m in Sources */,
 				422C3586184BE09400212999 /* TemplateSelectorOutlineViewController.m in Sources */,
 				422C3580184BE09400212999 /* TemplateDeployer.m in Sources */,
 				422C3581184BE09400212999 /* TemplateMetadata.m in Sources */,

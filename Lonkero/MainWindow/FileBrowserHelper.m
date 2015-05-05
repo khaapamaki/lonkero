@@ -1,5 +1,5 @@
 //
-//  TargetFolderOutlineViewHelper.m
+//  FileBrowserHelper.m
 //  Lonkero
 //
 //  Created by Kati Haapamäki on 17.11.2013.
@@ -7,9 +7,10 @@
 //
 
 #import "FileBrowserHelper.h"
-#import "TemplateMetadata.h"
+
 
 @implementation FileBrowserHelper
+
 -(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata {
     return [self getFoldersAtFolder:folder readMetadata:readMetadata filteringTemplate:nil];
 }
@@ -32,6 +33,7 @@
                                                       options:dirEnumOptions
                                                  errorHandler:nil];
     
+    
     for (NSURL *currentURL in dirEnum) {
         
         if ([FileBrowserHelper isURLDirectory:currentURL]) {
@@ -45,22 +47,17 @@
                     
                     if (_isFilteringOn && _filteringTemplate!=nil) {
                         
+                        // FILTERING
                         
-                        // FILTERING CODE
-                        NSArray* metaarray = metadata.metadataArray;
-                        
-                        NSArray *tempparam = [metaarray[0] usedTemplate].templateParameterSet;
-                        TemplateParameter *oneParam = tempparam[0];
-                        
-                        if ([oneParam.stringValue isEqualToString:@"Urheilu"]) {
-                            //pass
+                        if ([self filterMetadata:metadata withTemplate:filterTemplate]) {
+                            
                         } else {
-                            //no pass
                             entryFolder = nil;
                         }
+                        
                     }
                 } else {
-                    if (_isFilteringOn && _filteringTemplate!=nil) entryFolder = nil;
+                   //  if (selfLevelMetadata && !selfLevelMetadataPassed && _isFilteringOn && _filteringTemplate!=nil) entryFolder = nil;
                 }
             }
             
@@ -70,6 +67,7 @@
             }
 
         } else {
+            // is file, not folder
             if (_showFiles) {
                 FileSystemItem *entryFolder = [[FileSystemItem alloc] initWithURL:currentURL];
                 entryFolder.isExpandable = NO;
@@ -82,6 +80,50 @@
     [result sortUsingDescriptors:@[sortDesc]];
     return result;
 }
+
+-(BOOL)filterMetadata:(TemplateMetadata *)metadata withTemplate:(Template *)filter {
+    BOOL result = YES;
+    unsigned int searchOptions = (NSCaseInsensitiveSearch | NSRegularExpressionSearch);
+    
+    for (TemplateParameter *currentParameter in filter.templateParameterSet) {
+        if (!currentParameter.isHidden) {
+            
+            NSString *testParameterTag = [currentParameter.tag lowercaseString];
+            NSString *testParameterName = [currentParameter.name lowercaseString];
+            NSString *testParameterValue = [currentParameter.stringValue lowercaseString];
+            
+            for (TemplateMetadataItem* currentMetadataItem in metadata.metadataArray) {
+                for (TemplateParameter *currentMetadataParameter in currentMetadataItem.usedTemplate.templateParameterSet) {
+                    
+                    NSString *metadataParameterTag = [currentMetadataParameter.tag lowercaseString];
+                    NSString *metadataParameterName = [currentMetadataParameter.name lowercaseString];
+                    NSString *metadataParameterValue = [currentMetadataParameter.stringValue lowercaseString];
+                    
+                    if ([NSString isNotEmptyString:testParameterValue] ) {
+                        
+                        if ( ([metadataParameterTag isEqualToString:testParameterTag] || [metadataParameterName isEqualToString:testParameterName]) && [NSString isNotEmptyString:testParameterValue] ) {
+                            if ([NSString isNotEmptyString:metadataParameterValue]) {
+                                
+                                NSString *regularExpressionTestString = [NSString convertWildCardToRegExp:testParameterValue];
+                                NSRange range = [metadataParameterValue rangeOfString:regularExpressionTestString options:searchOptions];
+
+                                result = result && (range.location != NSNotFound);
+
+                                //result = result && [testParameterValue isEqualToString:metadataParameterValue];
+                            } else {
+                                result = result && NO;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+
+
 
 +(BOOL)isURLDirectory:(NSURL *)URL {
     NSNumber *isDirectory = @0;

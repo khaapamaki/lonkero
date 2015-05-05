@@ -10,39 +10,130 @@
 
 @implementation FileSystemItem
 
+
+#pragma mark GETTING AND SETTING PROPERTIES
+
+/** Returns URL of the FileSystemItem
+
+ @Note This cannot be used for many methods. Use fileURL intead.
+ 
+ @See fileURL
+ 
+ */
+
 -(NSURL *) URL {
     return [NSURL URLWithString:[self.path stringByExpandingTildeInPath]];
 }
 
+
+/// Returns fileURL of the FileSystemItem
+
 -(NSURL *) fileURL {
+    if ([NSString isEmptyString:self.path]) {
+        return nil;
+    }
     return [NSURL fileURLWithPath:[self.path stringByExpandingTildeInPath]];
 }
+
+
+/// Returns last pathComponent (filename or foldername)
 
 -(NSString *)itemName {
     return [[_path stringByExpandingTildeInPath] lastPathComponent];
 }
+
+
+/// Returns the second last pathComponent (parent)
+
 -(NSString *)parentItemName {
     return [[[_path stringByExpandingTildeInPath] stringByDeletingLastPathComponent]  lastPathComponent];
 }
+
+
+/** Returns the path by expanding tilde
+ 
+ @Note In this app, tilde format is often used for storing paths to be interchangable with other users.
+        Thus expanding tilde is neccessary before file operations.
+ 
+ @see setPathByAbbreviatingTildeInPath
+ 
+ */
 
 -(NSString *)pathByExpandingTildeInPath {
     return [_path stringByExpandingTildeInPath];
 }
 
+
+/** Sets path property of the object by converting it to 'tilded' format before.
+ 
+ @param path A path to be converted and stored to the object
+ 
+ @Note In this app, tilde format is often used for storing paths to be interchangable with other users.
+ Converting back to 'full' format is neccessary before file operations.
+ 
+ @see pathByExpandingTildeInPath
+ 
+ */
+
 -(void)setPathByAbbreviatingTildeInPath:(NSString *)path {
     [self setPath:[path stringByAbbreviatingWithTildeInPath]];
 }
 
+
+/// Returns a string with URL style format of the path.
+
 -(NSString *)URLStylePath {
     return [[self fileURL] description];
 }
+
+
+/** Returns FileSystemItem object intialized with root folder '/'
+ 
+ */
 
 +(FileSystemItem *)systemRootFolder {
     FileSystemItem *newFolder = [[FileSystemItem alloc] initWithPath:@"/" andNickName:@""];
     return newFolder;
 }
 
-//
+
+/// Returns path property.
+
+-(NSString *) description {
+    return [NSString stringWithFormat:@"%@", self.path];
+}
+
+
+#pragma mark -
+#pragma mark FILE SYSTEM OPERATIONS
+
+
+/** Returns YES, if the given URL is a directory or a package.
+ 
+ @param URL An URL to be checked.
+ 
+ */
+
++(BOOL)isURLDirectory:(NSURL *)URL {
+    NSNumber *isDirectory = @0;
+    NSNumber *isPackage = @0;
+    [URL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+    [URL getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil];
+    return  ([isDirectory boolValue] && ![isPackage boolValue]);
+}
+
+
+/** Returns contents of a folder as an array of FileSystemItems.
+
+ Resulting array will be ordered alphabetically.
+ 
+ @param folder Folder as a FileSystemItem
+ @param includeFiles Include files (BOOL)
+ @param includeFolders Include folders (BOOL)
+ @param includeSubDirectories Recursively add the contents of all subdirectories (BOOL)
+ 
+ */
+
 +(NSArray *)getDirectoryContentForFolder:(FileSystemItem *)folder includeFiles:(BOOL)includeFiles includeFolders:(BOOL)includeFolders includeSubDirectories:(BOOL)includeSubDirectories {
     NSMutableArray *result = [[NSMutableArray alloc] init];
     NSFileManager *fileMgr = [[NSFileManager alloc] init];
@@ -83,14 +174,17 @@
 }
 
 
-+(BOOL)isURLDirectory:(NSURL *)URL {
-    NSNumber *isDirectory = @0;
-    NSNumber *isPackage = @0;
-    [URL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
-    [URL getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil];
-    return  ([isDirectory boolValue] && ![isPackage boolValue]);
-}
 
+/** Creates folders with all intermediate folders that doesn't allready exist.
+ 
+ Inherits permissions from the folder that is closest existing one.
+
+ @param aFolder A folder as a FileSystemItem
+ @param *errStr Pointer to the string for error description
+ 
+ @return errcode as NSInteger
+ 
+ */
 
 +(NSInteger)createDirectoryWithIntermediatesInheritingPermissions:(FileSystemItem *)aFolder errString:(NSString**)errStr {
     NSArray *pathComponets = [NSArray arrayWithArray:[aFolder.pathByExpandingTildeInPath pathComponents]];
@@ -115,6 +209,14 @@
     return 0;
 }
 
+/** Creates a folder
+ 
+ @param aFolder A folder to be created as a FileSystemItem
+ 
+ @return errcode as NSInteger, 0 if no error.
+ 
+ */
+
 +(NSInteger)createDirectory:(FileSystemItem*)aFolder {
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *fmError;
@@ -122,6 +224,15 @@
     if (fmError || !folderCreated ) return ErrCouldntCreateFolder;
     return 0;
 }
+
+/** Sets posix for a FileSystemItem
+ 
+ @param posix Posix mask as NSNumber
+ @param anItem An FileSystemItem to have posix set
+ 
+ @return errcode as NSInteger, 0 if no error.
+ 
+ */
 
 +(NSInteger)setPosix:(NSNumber*)posix toItem:(FileSystemItem*)anItem {
     NSDictionary *attributes = @{NSFilePosixPermissions: posix};
@@ -132,9 +243,28 @@
     return 0;
 }
 
+/** Reads file/folder's properties to already existing and initialized FileSystemItem
+
+ @note Assumes that @a path property is set already and file system item exists.
+ 
+ @see setPropertiesByURL
+ 
+ */
+
 -(void)readPropertiesFromFileSystem {
     [self setPropertiesByURL:[self fileURL]];
 }
+
+
+/** Set file/folder properties with given URL
+ 
+ Is used to initialize a FileSystemItem for the first time.
+ 
+ @param URL An URL for the FileSystemItem
+ 
+ @result If URL doens't exist the properties are not read, but @a itemExists property is set to NO.
+ 
+ */
 
 
 -(void)setPropertiesByURL:(NSURL *) URL {
@@ -205,6 +335,43 @@
     
 }
 
+/// Updates itemExists property by current state of file or folder
+
+-(void)updateExistingStatus {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    BOOL URLExists = [fm fileExistsAtPath:[self pathByExpandingTildeInPath] isDirectory:&isDir];
+    _itemExists = URLExists;
+    _isDirectory = isDir;
+}
+
+
+/** Initializes a FileSystemItem object by letting user to select a folder in open dialog.
+ 
+ @return self if successful.
+ @return nil if user cancels the operation.
+ 
+ 
+ */
+
+-(id)initWithOpenDialogForFolderSelection {
+    NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
+    [openDlg setCanChooseFiles:NO];
+    [openDlg setAllowsMultipleSelection:NO];
+    [openDlg setCanChooseDirectories:YES];
+    [openDlg setCanCreateDirectories:YES];
+    [openDlg setAnimationBehavior:NSWindowAnimationBehaviorNone];
+    if ([openDlg runModal] == NSOKButton) {
+        self = [super init];
+        if (self) {
+            [self setPropertiesByURL:[openDlg URL]];
+            _path = [[[openDlg URL] path] stringByAbbreviatingWithTildeInPath];
+            _nickName = @"";
+        }
+        return self;
+    }
+    return nil;
+}
 
 #pragma mark -
 #pragma mark INIT AND CODING
@@ -231,6 +398,10 @@
     [coder encodeObject:_ownerName forKey:@"ownerName"];
     [coder encodeObject:_groupId forKey:@"groupID"];
     [coder encodeObject:_groupName forKey:@"groupName"];
+    [coder encodeObject:@(_isMaster) forKey:@"isMaster"];
+    [coder encodeObject:@(_isParent) forKey:@"isParent"];
+    [coder encodeObject:@(_isTarget) forKey:@"isTarget"];
+    
 }
 
 -(id) initWithCoder:(NSCoder *) coder {
@@ -255,28 +426,15 @@
     _ownerName = [coder decodeObjectForKey:@"ownerName"];
     _groupId = [coder decodeObjectForKey:@"groupID"];
     _groupName = [coder decodeObjectForKey:@"groupName"];
+    _isMaster = [[coder decodeObjectForKey:@"isMaster"] boolValue];
+    _isParent = [[coder decodeObjectForKey:@"isParent"] boolValue];
+    _isTarget = [[coder decodeObjectForKey:@"isTarget"] boolValue];
+    _shouldCopy = NO;
+
+    
     return self;
 }
 
-
--(id)initWithOpenDialogForFolderSelection {
-    NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
-    [openDlg setCanChooseFiles:NO];
-    [openDlg setAllowsMultipleSelection:NO];
-    [openDlg setCanChooseDirectories:YES];
-    [openDlg setCanCreateDirectories:YES];
-    [openDlg setAnimationBehavior:NSWindowAnimationBehaviorNone];
-    if ([openDlg runModal] == NSOKButton) {
-        self = [super init];
-        if (self) {
-            [self setPropertiesByURL:[openDlg URL]];
-            _path = [[[openDlg URL] path] stringByAbbreviatingWithTildeInPath];
-            _nickName = @"";
-        }
-        return self;
-    }
-    return nil;
-}
 
 -(id) init {
     self = [super init];
@@ -296,19 +454,22 @@
         _isMaster = NO;
         _isParent = NO;
         _isTarget = NO;
+        _shouldCopy = NO;
+
     }
     return self;
 }
 
--(void)updateExistingStatus {
-    NSFileManager *fm = [NSFileManager defaultManager];
-    BOOL isDir = NO;
-    BOOL URLExists = [fm fileExistsAtPath:[self pathByExpandingTildeInPath] isDirectory:&isDir];
-    _itemExists = URLExists;
-    _isDirectory = isDir;
-}
+/** Initializes a FileSystemItem with given path and nick name
 
+Initialises the object and also reads file/folder parameters from the file system.
+ 
+ @param path    A path to a file system item
+ @param name    A nick name for the location. Is used for default locations.
 
+ @return self
+
+ */
 
 -(id) initWithPath:(NSString *)path andNickName:(NSString *)name {
     self = [super init];
@@ -317,15 +478,6 @@
             [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
         }
         _nickName = name;
-    }
-    return self;
-}
--(id) initWithURL:(NSURL *)URL {
-    self = [super init];
-    if (self) {
-        [self setPropertiesByURL:URL];
-        _nickName = @"";
-        _isExpanded = NO;
         _isExpanded = NO;
         _isLocked = NO;
         _createdBy = @"";
@@ -338,17 +490,44 @@
         _isMaster = NO;
         _isParent = NO;
         _isTarget = NO;
+        _shouldCopy = NO;
+    }
+    return self;
+}
+/** Initializes a FileSystemItem with given URL
+
+ Initialises the object and also reads file/folder parameters from the file system.
+ 
+ @param URL   An URL to a file system item
+
+ @return self
+
+ */
+
+-(id) initWithURL:(NSURL *)URL {
+    self = [super init];
+    if (self) {
+        [self setPropertiesByURL:URL];
+        _nickName = @"";
+        _isExpanded = NO;
+        _isLocked = NO;
+        _createdBy = @"";
+        _lockedBy = @"";
+        _isCopied = NO;
+        _pathToCopy = nil;
+        _isPathToCopyValid = NO;
+        _relativePath = nil;
+        _pathToCopyIsDirectory = NO;
+        _isMaster = NO;
+        _isParent = NO;
+        _isTarget = NO;
+        _shouldCopy = NO;
     }
     return self;
 }
 
--(NSString *) description {
-    return [NSString stringWithFormat:@"%@", self.path];
-}
-
 -(id) copyWithZone:(NSZone *)zone {
-    
-    
+  
     FileSystemItem *newFolder = [[FileSystemItem allocWithZone:zone] init];
     //newFolder = [self copy];
    
@@ -378,6 +557,7 @@
     newFolder.isParent = _isParent;
     newFolder.isMaster = _isMaster;
     newFolder.isTarget = _isTarget;
+    newFolder.shouldCopy = _shouldCopy;
     return newFolder;
 }
 

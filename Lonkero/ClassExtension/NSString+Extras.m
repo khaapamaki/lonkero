@@ -12,6 +12,18 @@
 @implementation NSString (Extras)
 
 
+#pragma mark Case conversion
+
+
+/** Analyzes if case has changed from first string to second string.
+ 
+ @param str1 First string
+ @param str2 Second string
+ 
+ @results The case of the second string if cases are different.
+ @result @a customcase if there is no differences.
+
+ */
 
 +(Case)analyzeCaseConversionBetweenString:(NSString*)str1 andString:(NSString*)str2 {
     Case originalCase = [str1 getCase];
@@ -23,6 +35,15 @@
     }
     return customcase;
 }
+
+
+/** Returns the string converted to given case.
+ 
+ @param newCase The case the string will be converted to.
+ 
+ @return Converted string.
+ 
+ */
 
 -(NSString*)convertToCase:(Case)newCase {
     
@@ -46,6 +67,11 @@
     return result;
 }
 
+/** Returns a string with capitalized first charater. Leaves other characters as they are.
+ 
+
+ */
+
 -(NSString*)capitalizeFirstCharacter {
     if ([self length]==0) {
         return [self copy];
@@ -55,8 +81,19 @@
     }
     NSString *firstCharacter = [self substringToIndex:1];
     NSString *body = [self substringFromIndex:1];
-    return [NSString stringWithFormat:@"%@%@", [firstCharacter uppercaseString], [body lowercaseString]];
+    return [NSString stringWithFormat:@"%@%@", [firstCharacter uppercaseString], body];
 }
+
+
+/** Returns the case of the string.
+ 
+ @return @a lowercase if the string has all charcters in lowercase.
+ @return @a uppercase if the string has all characters in uppercase.
+ @return @a capitalcase if the first character is uppercase and others are lowercase.
+ @return @a customcase for anything else.
+ 
+ */
+
 
 -(Case)getCase {
     if ([self length]==0) {
@@ -76,6 +113,12 @@
     return customcase;
     
 }
+
+#pragma mark String Cleaning
+
+/** Removes multiple successive spaces or punctuation marks from the string.
+ 
+ */
 
 -(NSString *)stringByRemovingDoubleSpacesAndPunctuation {
     NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
@@ -99,6 +142,10 @@
     return [NSString stringWithString:result];
 }
 
+/** Removes multiple successive spaces from the string.
+ 
+ */
+
 -(NSString *)stringByRemovingDoubleSpaces {
     NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
     
@@ -120,11 +167,19 @@
     return [NSString stringWithString:result];
 }
 
+/** Removes spaces from the beginning and the end of the string.
+ 
+ */
 
 -(NSString *)stringByTrimmingSpaces {
     NSMutableString *mutableString = [NSMutableString stringWithString:self];
     return [NSString stringWithString:[mutableString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
 }
+
+/** Removes spaces and punctuation from the beginning and the end of the string.
+ 
+ 
+ */
 
 -(NSString *)stringByTrimmingSpacesAndPunctuation {
     NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
@@ -132,10 +187,16 @@
     return [self stringByTrimmingCharactersInSet:mySet];
 }
 
+/** Replaces characters that are illegal for filenames with given replacement string.
+ 
+ @param replacementString   A string to replace illegal characters
+ 
+ 
+ */
 -(NSString *)stringByReplacingIllegalCharactersWith:(NSString *)replacementString {
 
     NSMutableString *mutableString = [NSMutableString stringWithString:self];
-    NSArray *illegalCharacters = @[@"/", @"\"", @":", @"*", @"?"];
+    NSArray *illegalCharacters = @[@"/", @"\"", @":", @"*", @"?", @"<", @">", @"|"];
     for (NSString *illegalCharacater in illegalCharacters)  {
         [mutableString replaceOccurrencesOfString:illegalCharacater
                                        withString:replacementString
@@ -145,12 +206,24 @@
     return [NSString stringWithString:mutableString];
 }
 
+/** Returns cleaned up version from the string.
+ 
+ Removes illegal characters, multiple successive spaces and heading and trailing spaces.
+ 
+ 
+ */
 -(NSString *)stringByPerformingFullCleanUp {
     NSString *useThis = [self copy];
     return [[[useThis stringByReplacingIllegalCharactersWith:@""] stringByTrimmingSpaces] stringByRemovingDoubleSpaces];
 }
 
-
+/** Checks if the string has at least one alphanumeric character.
+ 
+@return BOOL Yes if valid.
+ 
+ @note The name of method is misleading. It does not check illegal characters or anything else that can make a string invalid as a filename.
+ 
+ */
 -(BOOL)isValidFileName {
         NSMutableCharacterSet *alphabets= [NSCharacterSet lowercaseLetterCharacterSet];
         [alphabets formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
@@ -164,17 +237,13 @@
         return NO;
 }
 
-+(NSString *)generateRandomStringOfLength:(short)len {
-    NSMutableString *result = [NSMutableString stringWithString:@""];
-    NSString *validCharacters = @"0123456789ABCDEF";
-    //NSString *validCharacters = @"aeiouyaeiouyaeiouyabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCEDEFGHIJKLMNOPQRSTUVVXYZ012345678901234567890123456789";
-    
-    for (int index = 0; index < len; index++) {
-        NSInteger rnd = random() % [validCharacters length];
-        [result appendString:[validCharacters substringWithRange:NSMakeRange(rnd, 1)]];
-    }
-    return result;
-}
+#pragma mark Checks
+
+/** Check if the string is not @"" nor nil.
+ 
+ @see isEmptyString as opposite.
+ 
+ */
 
 +(BOOL)isNotEmptyString:(NSString *)str {
     if (str==nil) {
@@ -185,6 +254,13 @@
     }
     return YES;
 }
+
+/** Check if the string is @"" or nil.
+ 
+ @see isNotEmptyString as opposite.
+ 
+ */
+
 +(BOOL)isEmptyString:(NSString *)str {
     if (str==nil) {
         return YES;
@@ -194,6 +270,11 @@
     }
     return NO;
 }
+
+/** Inserts '-' to the string into every @a n th place.
+ 
+ 
+ */
 
 -(NSString *)stringByInsertingHyphensEvery:(short)number {
     NSMutableString *result = [self mutableCopy];
@@ -206,4 +287,42 @@
     
 }
 
+#pragma mark Generation and Conversion
+
+/** Converts wild card formatted string to regular expression format
+ 
+ 
+ @note Only simple conversion is made. Not to be used generally.
+ 
+ */
+
++(NSString *)convertWildCardToRegExp:(NSString *)WildCardString {
+    NSMutableString *result = [NSMutableString stringWithString:@"^"];
+    [result appendString: [NSString stringWithString:WildCardString]];
+    [result replaceOccurrencesOfString:@"." withString:@"\\." options:0 range:NSMakeRange(0, [result length])];
+    [result replaceOccurrencesOfString:@"*" withString:@".*" options:0 range:NSMakeRange(0, [result length])];
+    [result replaceOccurrencesOfString:@"?" withString:@"." options:0 range:NSMakeRange(0, [result length])];
+    [result appendString:@"$"];
+    return result;
+}
+
+/**  Returns a randomly generated alphanumeric string of given length.
+ 
+ Generated string will only have numbers and capital letters from A to Z.
+ 
+ @param len A legth of string.
+ 
+ */
+
++(NSString *)generateRandomStringOfLength:(short)len {
+    NSMutableString *result = [NSMutableString stringWithString:@""];
+    NSString *validCharacters = @"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //NSString *validCharacters = @"aeiouyaeiouyaeiouyabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCEDEFGHIJKLMNOPQRSTUVVXYZ012345678901234567890123456789";
+    
+    for (int index = 0; index < len; index++) {
+        NSInteger rnd = random() % [validCharacters length];
+        [result appendString:[validCharacters substringWithRange:NSMakeRange(rnd, 1)]];
+    }
+    return result;
+}
 @end
