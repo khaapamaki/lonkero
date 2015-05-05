@@ -11,14 +11,14 @@
 @implementation Definitions
 
 +(NSColor *)windowBackgroundColor {
-     return[NSColor colorWithSRGBRed:0.88f green:0.88f blue:0.88f alpha:1.0f];
+     return [NSColor colorWithSRGBRed:0.88f green:0.88f blue:0.88f alpha:1.0f];
 }
 
 +(NSColor *)parameterTableBackgroundColor {
-     return[NSColor colorWithSRGBRed:0.950f green:0.953f blue:0.965f alpha:1.0f];
+     return[ NSColor colorWithSRGBRed:0.950f green:0.953f blue:0.965f alpha:1.0f];
 }
 
 +(NSColor *)controlPathBackgroundColor {
-    return[NSColor colorWithSRGBRed:0.88f green:0.886f blue:0.912f alpha:1.0f];
+    return [NSColor colorWithSRGBRed:0.88f green:0.886f blue:0.912f alpha:1.0f];
 }
 @end

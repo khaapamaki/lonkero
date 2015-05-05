@@ -23,6 +23,7 @@
                 <outlet property="templateIdtTextField" destination="oDB-or-IX9" id="jZN-1Y-T10"/>
                 <outlet property="templateListOutlineView" destination="LzT-1X-Sko" id="HGl-BL-ytu"/>
                 <outlet property="templateManagerWindow" destination="Gut-Zx-BzO" id="GJ9-N9-DlO"/>
+                <outlet property="templateVersionLabel" destination="Iqj-W7-UHs" id="fiv-9S-4ki"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -31,7 +32,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="283" y="311" width="1218" height="556"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
             <view key="contentView" id="Va5-8u-iYj">
                 <rect key="frame" x="0.0" y="0.0" width="1218" height="556"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -129,7 +130,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="only" inset="2" id="Pg9-O1-ftw">
+                                            <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="only" toolTip="User cannot edit any text or date if this check box in not selected, but he/she can select from predefined list" inset="2" id="Pg9-O1-ftw">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -144,7 +145,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="only" inset="2" id="zVp-e7-cdx">
+                                            <buttonCell key="dataCell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="only" toolTip="User cannot deploy template, if required parameter is not entered" inset="2" id="zVp-e7-cdx">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -153,7 +154,7 @@
                                                 <binding destination="8EM-MH-o0z" name="value" keyPath="arrangedObjects.isRequired" id="fGp-iT-zwg"/>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn width="42.05078125" minWidth="10" maxWidth="3.4028234663852886e+38" id="ovw-X6-JEz">
+                                        <tableColumn width="42.05078125" minWidth="10" maxWidth="3.4028234663852886e+38" headerToolTip="Do not let user change default value and hide it from parameter query" id="ovw-X6-JEz">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Hidden">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -168,28 +169,13 @@
                                                 <binding destination="8EM-MH-o0z" name="value" keyPath="arrangedObjects.isHidden" id="LUS-hY-Z8A"/>
                                             </connections>
                                         </tableColumn>
-                                        <tableColumn width="78.53125" minWidth="10" maxWidth="3.4028234663852886e+38" id="745-oS-E0y">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Create Parent">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                            </tableHeaderCell>
-                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="only" alignment="left" inset="2" id="JyC-R5-XfM">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            <connections>
-                                                <binding destination="8EM-MH-o0z" name="value" keyPath="arrangedObjects.createParentFolder" id="04T-tt-MIc"/>
-                                            </connections>
-                                        </tableColumn>
-                                        <tableColumn width="230" minWidth="10" maxWidth="3.4028234663852886e+38" id="Bg9-CI-lGK">
+                                        <tableColumn width="246.03515625" minWidth="10" maxWidth="3.4028234663852886e+38" id="Bg9-CI-lGK">
                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Parent Folder Name">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="qZ7-ZM-Zmb">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" toolTip="Parent folder level will be created if this name field is set and user enters parameter value" title="Text Cell" id="qZ7-ZM-Zmb">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -199,10 +185,25 @@
                                                 <binding destination="8EM-MH-o0z" name="value" keyPath="arrangedObjects.parentFolderNamingRule" id="GoC-kw-ZOu"/>
                                             </connections>
                                         </tableColumn>
+                                        <tableColumn width="63" minWidth="10" maxWidth="3.4028234663852886e+38" id="745-oS-E0y">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Opt Above">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <buttonCell key="dataCell" type="check" bezelStyle="regularSquare" imagePosition="only" alignment="left" toolTip="Selecting this prevents user any but one of parameters marked to be optional" inset="2" id="JyC-R5-XfM">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                            <connections>
+                                                <binding destination="8EM-MH-o0z" name="value" keyPath="arrangedObjects.optionalWithAbove" id="ibd-1j-2NM"/>
+                                            </connections>
+                                        </tableColumn>
                                     </tableColumns>
                                     <connections>
                                         <action selector="parameterTableViewAction:" target="-2" id="IVe-I9-RQE"/>
-                                        <binding destination="8EM-MH-o0z" name="content" keyPath="arrangedObjects" id="gl5-Wd-MSL"/>
+                                        <binding destination="8EM-MH-o0z" name="content" keyPath="arrangedObjects" id="Gv0-K4-ax3"/>
                                     </connections>
                                 </tableView>
                             </subviews>
@@ -297,6 +298,7 @@
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YU0-DD-VKa">
                         <rect key="frame" x="219" y="61" width="756" height="94"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <string key="toolTip">Set default deployment target folders, that you can quickly select from pop-up button. You can give a nick name to be shown instead of full path.</string>
                         <clipView key="contentView" id="efa-nW-LTZ">
                             <rect key="frame" x="1" y="17" width="754" height="76"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -314,7 +316,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="KZa-dI-kqL">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" toolTip="Nick name for a deployment target folder." title="Text Cell" id="KZa-dI-kqL">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -330,7 +332,7 @@
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="xlZ-O1-LnI">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" toolTip="Path for deployment target folder. This can be edited by keyboard." title="Text Cell" id="xlZ-O1-LnI">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -384,9 +386,9 @@
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="put-ky-ZZj">
-                        <rect key="frame" x="216" y="163" width="159" height="17"/>
+                        <rect key="frame" x="216" y="163" width="138" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Default Target Locations" id="mDU-fw-umW">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Target Folder Presets" id="mDU-fw-umW">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -540,7 +542,7 @@ Gw
                             <action selector="moveDownTargetFolder:" target="-2" id="CBd-2a-Pn9"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qut-Ul-6wk">
+                    <textField toolTip="For example yyyy-mm-dd or yymmdd. Note that '/' is forbidden in the filesystem." verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qut-Ul-6wk">
                         <rect key="frame" x="992" y="133" width="206" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
@@ -556,6 +558,24 @@ Gw
                         <rect key="frame" x="989" y="163" width="107" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Date Formatting" id="gqM-fe-Tvo">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Iqj-W7-UHs">
+                        <rect key="frame" x="1160" y="517" width="38" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="x.x" id="aM3-Q4-lV4">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sT4-42-KJt">
+                        <rect key="frame" x="1036" y="517" width="119" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Template Version:" id="ld7-oY-Fo6">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -645,7 +665,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="272" y="172" width="563" height="576"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
             <view key="contentView" id="vK9-ei-GSU">
                 <rect key="frame" x="0.0" y="0.0" width="563" height="576"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -863,7 +883,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="167" y="107" width="173" height="174"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1440"/>
             <view key="contentView" id="7co-xV-4rO">
                 <rect key="frame" x="0.0" y="0.0" width="173" height="174"/>
                 <autoresizingMask key="autoresizingMask"/>

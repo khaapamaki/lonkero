@@ -10,4 +10,9 @@
 
 @interface UserPreferences : NSObject
 
+@property BOOL closeWindowAfterDeployment;
+@property BOOL closeApplicationAfterDeployment;
+@property BOOL openTargetFolderAfterDeployment;
+@property BOOL openMasterFolderAfterDeployment;
+
 @end

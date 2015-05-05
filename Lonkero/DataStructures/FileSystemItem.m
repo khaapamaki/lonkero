@@ -52,8 +52,7 @@
     NSInteger depthOfRootFolder = [[[folder fileURL] pathComponents] count];
     
     NSDirectoryEnumerator *dirEnum = [fileMgr enumeratorAtURL:[folder fileURL]
-                                   includingPropertiesForKeys:[NSArray arrayWithObjects:
-                                                               NSURLNameKey,
+                                   includingPropertiesForKeys:@[NSURLNameKey,
                                                                NSURLIsDirectoryKey,
                                                                NSURLIsAliasFileKey,
                                                                NSURLIsPackageKey,
@@ -62,8 +61,7 @@
                                                                NSURLLabelNumberKey,
                                                                NSURLLocalizedLabelKey,
                                                                NSURLLocalizedNameKey,
-                                                               NSURLContentModificationDateKey,
-                                                               nil]
+                                                               NSURLContentModificationDateKey]
                                                       options:dirEnumOptions
                                                  errorHandler:nil];
     
@@ -80,14 +78,14 @@
         }
     }
     NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"itemName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [result sortUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
+    [result sortUsingDescriptors:@[sortDesc]];
     return [NSArray arrayWithArray:result];
 }
 
 
 +(BOOL)isURLDirectory:(NSURL *)URL {
-    NSNumber *isDirectory = [NSNumber numberWithInt:0];
-    NSNumber *isPackage = [NSNumber numberWithInt:0];
+    NSNumber *isDirectory = @0;
+    NSNumber *isPackage = @0;
     [URL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
     [URL getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil];
     return  ([isDirectory boolValue] && ![isPackage boolValue]);
@@ -126,7 +124,7 @@
 }
 
 +(NSInteger)setPosix:(NSNumber*)posix toItem:(FileSystemItem*)anItem {
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:posix, NSFilePosixPermissions, nil];
+    NSDictionary *attributes = @{NSFilePosixPermissions: posix};
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err;
     [fm setAttributes:attributes ofItemAtPath:anItem.pathByExpandingTildeInPath error:&err];
@@ -156,10 +154,10 @@
         
         NSDate *modificationDate;
         NSDate *creationDate;
-        NSNumber *isPackage = [NSNumber numberWithInt:0];
-        NSNumber *hasHiddenExtendsion = [NSNumber numberWithInt:0];
-        NSNumber *fileSizeNSNumber = [NSNumber numberWithLongLong:0];
-        NSNumber *isAlias = [NSNumber numberWithInt:0];
+        NSNumber *isPackage = @0;
+        NSNumber *hasHiddenExtendsion = @0;
+        NSNumber *fileSizeNSNumber = @0LL;
+        NSNumber *isAlias = @0;
         NSNumber *labelNSNumber;
         NSString *labelText;
         NSImage *icon;
@@ -187,14 +185,14 @@
         }
         
         NSDictionary *attributes = [fm attributesOfItemAtPath:[URL path] error:nil];
-        _posix = [attributes objectForKey:NSFilePosixPermissions];
-        _groupId = [attributes objectForKey:NSFileOwnerAccountID];
-        _ownerId = [attributes objectForKey:NSFileGroupOwnerAccountID];
-        _groupName = [attributes objectForKey:NSFileOwnerAccountName];
-        _ownerName = [attributes objectForKey:NSFileGroupOwnerAccountName];
+        _posix = attributes[NSFilePosixPermissions];
+        _groupId = attributes[NSFileOwnerAccountID];
+        _ownerId = attributes[NSFileGroupOwnerAccountID];
+        _groupName = attributes[NSFileOwnerAccountName];
+        _ownerName = attributes[NSFileGroupOwnerAccountName];
         
         if (!_isDirectory && !_isPackage) {
-            NSNumber *fileSize = [NSNumber numberWithLongLong:0];
+            NSNumber *fileSize = @0LL;
             [URL getResourceValue:&fileSize forKey:NSURLFileSizeKey error:nil];
             _fileSize = [fileSizeNSNumber longLongValue];
         }
@@ -214,28 +212,25 @@
 -(void) encodeWithCoder:(NSCoder *) coder {
     [coder encodeObject:self.nickName forKey:@"name"];
     [coder encodeObject:self.path forKey:@"path"];
-    [coder encodeObject:[NSNumber numberWithBool:_isRootObject] forKey:@"isRoot"];
-    [coder encodeObject:[NSNumber numberWithBool:_isExpandable] forKey:@"isExpandable"];
-    [coder encodeObject:[NSNumber numberWithBool:_isDirectory] forKey:@"isDirectory"];
-    [coder encodeObject:[NSNumber numberWithLongLong:_fileSize] forKey:@"fileSize"];
+    [coder encodeObject:@(_isRootObject) forKey:@"isRoot"];
+    [coder encodeObject:@(_isExpandable) forKey:@"isExpandable"];
+    [coder encodeObject:@(_isDirectory) forKey:@"isDirectory"];
+    [coder encodeObject:@(_fileSize) forKey:@"fileSize"];
     [coder encodeObject:_createdBy forKey:@"createdBy"];
     [coder encodeObject:_lockedBy forKey:@"lockedBy"];
-    [coder encodeObject:[NSNumber numberWithBool:_isLocked] forKey:@"isLocked"];
-    [coder encodeObject:[NSNumber numberWithBool:_isAlias] forKey:@"isAlias"];
-    [coder encodeObject:[NSNumber numberWithBool:_isPackage] forKey:@"isPackage"];
+    [coder encodeObject:@(_isLocked) forKey:@"isLocked"];
+    [coder encodeObject:@(_isAlias) forKey:@"isAlias"];
+    [coder encodeObject:@(_isPackage) forKey:@"isPackage"];
     [coder encodeObject:_modificationDate forKey:@"modificationDate"];
     [coder encodeObject:_creationDate forKey:@"creationDate"];
     [coder encodeObject:_relativePath forKey:@"relativePath"];
-    [coder encodeObject:[NSNumber numberWithInteger:_labelNumber] forKey:@"label"];
-    [coder encodeObject:[NSNumber numberWithBool:_hasHiddenExtension] forKey:@"hiddenExtension"];
+    [coder encodeObject:@(_labelNumber) forKey:@"label"];
+    [coder encodeObject:@(_hasHiddenExtension) forKey:@"hiddenExtension"];
     [coder encodeObject:_posix forKey:@"posix"];
     [coder encodeObject:_ownerId forKey:@"ownerID"];
     [coder encodeObject:_ownerName forKey:@"ownerName"];
     [coder encodeObject:_groupId forKey:@"groupID"];
     [coder encodeObject:_groupName forKey:@"groupName"];
-    [coder encodeObject:@(_isMaster) forKey:@"isMaster"];
-    [coder encodeObject:@(_isParent) forKey:@"isParent"];
-    [coder encodeObject:@(_isTarget) forKey:@"isTarget"];
 }
 
 -(id) initWithCoder:(NSCoder *) coder {
@@ -260,10 +255,6 @@
     _ownerName = [coder decodeObjectForKey:@"ownerName"];
     _groupId = [coder decodeObjectForKey:@"groupID"];
     _groupName = [coder decodeObjectForKey:@"groupName"];
-    _isMaster = [[coder decodeObjectForKey:@"isMaster"] boolValue];
-    _isParent = [[coder decodeObjectForKey:@"isTarget"] boolValue];
-    _isTarget = [[coder decodeObjectForKey:@"isParent"] boolValue];
-    
     return self;
 }
 
@@ -322,7 +313,9 @@
 -(id) initWithPath:(NSString *)path andNickName:(NSString *)name {
     self = [super init];
     if (self) {
-        [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
+        if ([NSString isNotEmptyString:path]) {
+            [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
+        }
         _nickName = name;
     }
     return self;

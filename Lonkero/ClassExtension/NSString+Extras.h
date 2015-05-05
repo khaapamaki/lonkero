@@ -22,5 +22,8 @@
 -(NSString*)capitalizeFirstCharacter;
 -(NSString*)convertToCase:(Case)newCase;
 +(NSString *)generateRandomStringOfLength:(short)len;
++(BOOL)isNotEmptyString:(NSString*)str;
++(BOOL)isEmptyString:(NSString*)str;
+-(NSString*)stringByInsertingHyphensEvery:(short)number;
 
 @end

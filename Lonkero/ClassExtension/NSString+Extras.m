@@ -135,7 +135,7 @@
 -(NSString *)stringByReplacingIllegalCharactersWith:(NSString *)replacementString {
 
     NSMutableString *mutableString = [NSMutableString stringWithString:self];
-    NSArray *illegalCharacters = [NSArray arrayWithObjects:@"/", @"\"", @":", @"*", @"?" , nil];
+    NSArray *illegalCharacters = @[@"/", @"\"", @":", @"*", @"?"];
     for (NSString *illegalCharacater in illegalCharacters)  {
         [mutableString replaceOccurrencesOfString:illegalCharacater
                                        withString:replacementString
@@ -166,15 +166,44 @@
 
 +(NSString *)generateRandomStringOfLength:(short)len {
     NSMutableString *result = [NSMutableString stringWithString:@""];
-    
-    NSString *validCharacters = @"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    NSString *validCharacters = @"0123456789ABCDEF";
     //NSString *validCharacters = @"aeiouyaeiouyaeiouyabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCEDEFGHIJKLMNOPQRSTUVVXYZ012345678901234567890123456789";
-
+    
     for (int index = 0; index < len; index++) {
         NSInteger rnd = random() % [validCharacters length];
         [result appendString:[validCharacters substringWithRange:NSMakeRange(rnd, 1)]];
     }
     return result;
+}
+
++(BOOL)isNotEmptyString:(NSString *)str {
+    if (str==nil) {
+        return NO;
+    }
+    if ([str length]==0) {
+        return NO;
+    }
+    return YES;
+}
++(BOOL)isEmptyString:(NSString *)str {
+    if (str==nil) {
+        return YES;
+    }
+    if ([str length]==0) {
+        return YES;
+    }
+    return NO;
+}
+
+-(NSString *)stringByInsertingHyphensEvery:(short)number {
+    NSMutableString *result = [self mutableCopy];
+    short index = [result length] - number;
+    while (index>0) {
+        [result insertString:@"-" atIndex:index];
+        index -= number;
+    }
+    return [NSString stringWithString:result];
+    
 }
 
 @end

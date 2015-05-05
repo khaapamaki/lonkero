@@ -8,16 +8,16 @@
 
 
 #import <Cocoa/Cocoa.h>
+#import "Definitions.h"
 #import "Preferences.h"
 #import "FileSystemItem.h"
 #import "TemplateManager.h"
-#import "Definitions.h"
 #import "PreferencesController.h"
 #import "NSString+Extras.h"
 #import "FileBrowserHelper.h"
 #import "TemplateMetadata.h"
 #import "TemplateDeployer.h"
-
+#import "MetadataBrowser.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSTableViewDataSource, NSTableViewDelegate, NSWindowDelegate> {
 @private
@@ -31,6 +31,7 @@
     FileBrowserHelper *_targetBrowserHelper;
     NSMutableArray *_parameterQueryTableContents;
     FileBrowserHelper *_templateBrowserHelper;
+    MetadataBrowser *metadataBrowser;
 }
 
 @property (unsafe_unretained) IBOutlet NSWindow *mainWind;
@@ -107,12 +108,17 @@
 - (IBAction)userSelectedPath:(id)sender;
 -(NSInteger)updateTargetFolder;
 -(void)updateTargetFolderViews;
-- (IBAction)goToUpFolder:(id)sender;
-- (IBAction)browseTargetFolder:(id)sender;
+- (IBAction)selectParentFolder:(id)sender;
+- (IBAction)browseForNewTargetFolder:(id)sender;
 - (IBAction)targetOutlineViewAction:(id)sender;
 - (IBAction)contextMenuCopyParameters:(id)sender;
 - (IBAction)contextMenuShowInFinder:(id)sender;
 @property (weak) IBOutlet NSMenu *contextMenu;
+
+- (IBAction)filterAction:(id)sender;
+
+
+@property (weak) IBOutlet NSButton *filterOnOffButton;
 
 #pragma mark -
 #pragma mark TOOLBAR AND MENU
@@ -121,6 +127,13 @@
 @property (unsafe_unretained) IBOutlet NSToolbarItem *templateManagerToolbarItem;
 @property (unsafe_unretained) IBOutlet NSToolbarItem *preferencesToolbarItem;
 @property (unsafe_unretained) IBOutlet NSMenuItem *templateManagerMenuItem;
+
+#pragma mark -
+#pragma mark METADATA BROWSER
+
+- (IBAction)openMetadataBrowser:(id)sender;
+@property (unsafe_unretained) IBOutlet NSWindow *metadataBrowserWindow;
+- (IBAction)showMetadataContextMenuAction:(id)sender;
 
 #pragma mark -
 #pragma mark NOTIFICATIONS

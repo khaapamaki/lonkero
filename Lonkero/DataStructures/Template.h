@@ -12,8 +12,10 @@
 #import "FileSystemItem.h"
 #import "NSString+Extras.h"
 
-@interface Template : NSObject
-
+@interface Template : NSObject {
+    
+}
+@property NSString *version;
 @property NSString *name;
 @property FileSystemItem *location;
 

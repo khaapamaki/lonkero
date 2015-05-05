@@ -20,23 +20,23 @@
 }
 
 -(void)setAsMasterFolderAsDepthOf:(NSInteger) depth {
-    _isMasterFolder = [NSNumber numberWithBool:YES];
-    _isParentFolder = [NSNumber numberWithBool:NO];
-    _depth = [NSNumber numberWithInteger:depth];
+    _isMasterFolder = @YES;
+    _isParentFolder = @NO;
+    _depth = @(depth);
 }
 
 -(void)setAsParenFolderAsDepthOf:(NSInteger)depth {
-    _isMasterFolder = [NSNumber numberWithBool:NO];
-    _isParentFolder = [NSNumber numberWithBool:YES];
-    _isTargetFolder = [NSNumber numberWithBool:NO];
-    _depth = [NSNumber numberWithInteger:depth];
+    _isMasterFolder = @NO;
+    _isParentFolder = @YES;
+    _isTargetFolder = @NO;
+    _depth = @(depth);
 }
 
 -(void)setAsTargetFolder {
     // don't get confused here, target can be master but not a parent.
-    _isTargetFolder = [NSNumber numberWithBool:YES];
-    _isParentFolder = [NSNumber numberWithBool:NO];
-    _depth = [NSNumber numberWithInteger:0];
+    _isTargetFolder = @YES;
+    _isParentFolder = @NO;
+    _depth = @0;
 }
 
 -(void) encodeWithCoder: (NSCoder *) coder {
@@ -68,7 +68,6 @@
     [coder encodeObject:_isAdditionalDeployment forKey:@"isAdditionalDeployment"];
     [coder encodeObject:_archiveLocation forKey:@"archiveLocation"];
     [coder encodeObject:_archiveDescription forKey:@"archiveDescription"];
-    [coder encodeObject:_parentFolders forKey:@"parentFolders"];
 
 }
 
@@ -97,7 +96,6 @@
     _isAdditionalDeployment = [coder decodeObjectForKey:@"isAdditionalDeployment"];
     _archiveLocation = [coder decodeObjectForKey:@"archiveLocation"];
     _archiveDescription = [coder decodeObjectForKey:@"archiveDescription"];
-    _parentFolders = [coder decodeObjectForKey:@"parentFolders"];
 
     return self;
 }
@@ -110,23 +108,22 @@
         _templateID = @"";
         _deploymentID = @"";
         _creationRootFolder = targetFolder;
-        _templateContents = [NSArray array];
-        _deployedContents = [NSArray array];
-        _parentFolders = [NSArray array];
-        _isArchived = [NSNumber numberWithBool:NO];
-        _markedToBeArchived = [NSNumber numberWithBool:NO];
-        _isRemoved = [NSNumber numberWithBool:NO];
-        _isAdditionalDeployment = [NSNumber numberWithBool:NO];
+        _templateContents = @[];
+        _deployedContents = @[];
+        _isArchived = @NO;
+        _markedToBeArchived = @NO;
+        _isRemoved = @NO;
+        _isAdditionalDeployment = @NO;
         _archiveLocation = [[FileSystemItem alloc] init];
         _archiveDescription = @"";
-        _depth = [NSNumber numberWithLong:0];
+        _depth = @0L;
         _creationDate = [NSDate date];
         _creator = NSUserName();
         _creatorFullName = NSFullUserName();
         _parametersForParentLevel = [[NSDictionary alloc] init];
-        _isMasterFolder = [NSNumber numberWithBool:NO];
-        _isParentFolder = [NSNumber numberWithBool:NO];
-        _isTargetFolder = [NSNumber numberWithBool:NO];
+        _isMasterFolder = @NO;
+        _isParentFolder = @NO;
+        _isTargetFolder = @NO;
     }
     return self;
 }

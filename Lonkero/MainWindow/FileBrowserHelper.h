@@ -18,9 +18,12 @@
     NSMutableDictionary *_directoryContentStorage;
     FileSystemItem *_masterFolder;
     NSMutableDictionary *_expandedStatus;
-    NSOutlineView *_targetBrowserOutlineView;
+    NSOutlineView *_myOutlineView;
+    Template *_filteringTemplate;
+    BOOL _isFilteringOn;
 }
 @property (weak) IBOutlet NSMenu *contextMenu;
+
 
 //@property (unsafe_unretained) IBOutlet NSOutlineView *targetBrowserOutlineView;
 @property BOOL showFiles;
@@ -32,11 +35,17 @@
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 
 -(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata;
+-(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata filteringTemplate:(Template*) filterTemplate;
+
 -(void)updateWithFolder:(FileSystemItem *)rootFolder andTemplate:(Template *) currentTemplate;
 
 -(void)expandOrCollapseBySavedStatus;
 
 -(void)refresh;
+
+-(void)setFilteringTemplate:(Template*)filteringTemplate;
+-(void)stopFiltering;
+
 
 -(id)initWithOutlineView:(NSOutlineView*)outlineView folder:(FileSystemItem*)rootFolder showFiles:(BOOL)showFiles;
 

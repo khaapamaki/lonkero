@@ -30,7 +30,7 @@
 @property NSString *templateID;
 @property NSString *groupID;
 @property NSString *metadataVersion;
-@property NSArray *parentFolders;
+
 @property NSNumber *isArchived;
 @property NSNumber *markedToBeArchived;
 @property NSNumber *isRemoved;
@@ -39,7 +39,6 @@
 @property NSString *deploymentID;
 @property FileSystemItem *archiveLocation;
 @property NSString *archiveDescription;
-
 
 -(id)initWithTemplate:(Template *)usedTemplate targetFolder:(FileSystemItem *)targetFolder;
 -(void)setAsMasterFolderAsDepthOf:(NSInteger) depth;

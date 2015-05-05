@@ -50,7 +50,7 @@
 
 -(void)updateExistingFolderListTableView {
 
-    FileSystemItem *templateSetFolder = [_preferences.templateSetLocations objectAtIndex:[_selectLocationPopUp indexOfSelectedItem]];
+    FileSystemItem *templateSetFolder = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
     [_existingFolders removeAllObjects];
     [_existingFolders addObjectsFromArray:[TemplateManager getFoldersAtFolder:templateSetFolder select:nonTemplatesOnly]];
     [_existingFoldersTableView reloadData];
@@ -74,7 +74,7 @@
 }
 
 - (IBAction)chooseFromExistingFolders:(id)sender {
-    FileSystemItem *selectedFolder = [_existingFolders objectAtIndex:[_existingFoldersTableView selectedRow]];
+    FileSystemItem *selectedFolder = _existingFolders[[_existingFoldersTableView selectedRow]];
 
     Template *newTemplate = [[Template alloc] init];
   //  Folder *currentTemplateSetFolder = [_preferences.templateSetLocations objectAtIndex:[_selectLocationPopUp indexOfSelectedItem]];
@@ -88,7 +88,7 @@
 
 - (IBAction)createNewEmptyTemplateFolder:(id)sender {
     NSFileManager *fm = [[NSFileManager defaultManager] init ];
-    FileSystemItem *selectedFolder = [_preferences.templateSetLocations objectAtIndex:[_selectLocationPopUp indexOfSelectedItem]];
+    FileSystemItem *selectedFolder = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
     NSString *folderName = [_folderNameTextField stringValue];
     if (!folderName || [folderName isEqualToString:@""]) {
         // no name, do nothing
@@ -116,8 +116,8 @@
         NSRunAlertPanel(errMsg, @"", nil, nil, nil);
 
     }
+    
 }
-
 #pragma mark
 #pragma mark TABLE VIEW DELEGATE
 
@@ -129,7 +129,7 @@
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"imageandtext" owner:self];
     
     if (result != nil) {
-        [result textField].stringValue = [[[_existingFolders objectAtIndex:row] path] lastPathComponent];
+        [result textField].stringValue = [[_existingFolders[row] path] lastPathComponent];
     }
     
     return result;

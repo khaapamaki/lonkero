@@ -32,7 +32,7 @@
     [self showWindow:self];
 
     for (NSDictionary *objekti in _templateList) {
-        if ([[objekti objectForKey:@"templateSet"] isExpanded]) {
+        if ([objekti[@"templateSet"] isExpanded]) {
             [_templateListOutlineView expandItem:objekti];
         } else {
             [_templateListOutlineView collapseItem:objekti];
@@ -57,7 +57,6 @@
         NSURL *templateSettingURL = [NSURL fileURLWithPath:[templateFolder pathByExpandingTildeInPath]];
         _selectedTemplate = [[Template alloc] initWithURL:templateSettingURL];
         _selectedTemplate.location = templateFolder;
-//        [_masterFolderNamingRule setStringValue:_selectedTemplate.masterFolderNamingRule];
         [_dateFormatTextField setStringValue:_selectedTemplate.dateFormatString];
         [_currentTemplateNameTextField setStringValue:_selectedTemplate.location.nickName];
         [_parametersArrayController removeObjects:_parametersArray];
@@ -66,15 +65,16 @@
         [_targetFoldersArrayController addObjects:_selectedTemplate.targetFolderPresets];
         [_groupIdTextField setStringValue:_selectedTemplate.groupId];
         [_templateIdtTextField setStringValue:_selectedTemplate.templateId];
+        _templateVersionLabel.stringValue = _selectedTemplate.version;
     } else {
         // Clear Template Manager Panel
         _selectedTemplate = nil;
-//        [_masterFolderNamingRule setStringValue:@""];
         [_currentTemplateNameTextField setStringValue:@""];
         [_parametersArrayController removeObjects:_parametersArray];
         [_groupIdTextField setStringValue:@""];
         [_templateIdtTextField setStringValue:@""];
         [_dateFormatTextField setStringValue:@""];
+        _templateVersionLabel.stringValue = @"";
     }
 }
 
@@ -105,7 +105,7 @@
     
     //expand or collapse
     for (NSDictionary *objekti in _templateList) {
-        if ([[objekti objectForKey:@"templateSet"] isExpanded]) {
+        if ([objekti[@"templateSet"] isExpanded]) {
             [_templateListOutlineView expandItem:objekti];
         } else {
             [_templateListOutlineView collapseItem:objekti];
@@ -329,12 +329,10 @@
     
 
     NSDirectoryEnumerator *dirEnum = [fileMgr enumeratorAtURL:URL
-                                   includingPropertiesForKeys:[NSArray arrayWithObjects:
-                                                               NSURLNameKey,
+                                   includingPropertiesForKeys:@[NSURLNameKey,
                                                                NSURLIsDirectoryKey,
                                                                NSURLIsAliasFileKey,
-                                                               NSURLIsPackageKey,
-                                                               nil]
+                                                               NSURLIsPackageKey]
                                                       options:dirEnumOptions
                                                  errorHandler:nil];
 
@@ -362,8 +360,8 @@
 }
 
 +(BOOL)isURLDirectory:(NSURL *)URL {
-    NSNumber *isDirectory = [NSNumber numberWithInt:0];
-    NSNumber *isPackage = [NSNumber numberWithInt:0];
+    NSNumber *isDirectory = @0;
+    NSNumber *isPackage = @0;
     [URL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
     [URL getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil];
     return  ([isDirectory boolValue] && ![isPackage boolValue]);
@@ -389,7 +387,7 @@
 - (void)moveUpItemInMutableArray:(NSMutableArray *)anArray atTableView:(NSTableView *)aTableView {
     long row =[aTableView selectedRow];
     if (row >= 1) {
-        id itemToBeMoved = [anArray objectAtIndex:row];
+        id itemToBeMoved = anArray[row];
         [anArray removeObjectAtIndex:row];
         [anArray insertObject:itemToBeMoved atIndex:row-1];
         [aTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row-1] byExtendingSelection:NO];
@@ -400,7 +398,7 @@
 - (void)moveDownItemInMutableArray:(NSMutableArray *)anArray atTableView:(NSTableView *)aTableView {
     long row =[aTableView selectedRow];
     if (row < [anArray count] -1) {
-        id itemToBeMoved = [anArray objectAtIndex:row];
+        id itemToBeMoved = anArray[row];
         [anArray removeObjectAtIndex:row];
         [anArray insertObject:itemToBeMoved atIndex:row+1];
         [aTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row+1] byExtendingSelection:NO];
@@ -423,11 +421,11 @@
 // child
 -(id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item {
     if (item == nil) {
-        return [_templateList objectAtIndex:index];  // returns NSMutableDictionary for template folder contents
+        return _templateList[index];  // returns NSMutableDictionary for template folder contents
     }
     
     if ([item isKindOfClass:[NSMutableDictionary class]]) {
-        return [[item objectForKey:@"templates"] objectAtIndex:index]; // returns NSMutableArray of templates
+        return item[@"templates"][index]; // returns NSMutableArray of templates
     }
     return nil;
 }
@@ -452,7 +450,7 @@
     }
     
     if ([item isKindOfClass:[NSMutableDictionary class]]) {
-        return [[item objectForKey:@"templates"] count];
+        return [item[@"templates"] count];
     }
     
     return 0;
@@ -462,7 +460,7 @@
 -(id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item {
     
     if ([item isKindOfClass:[NSMutableDictionary class]]) {
-        return [[item objectForKey:@"templateSet"] nickName];
+        return [item[@"templateSet"] nickName];
     } else {
 
 
@@ -475,14 +473,14 @@
 
 // save expanded status after change
 - (void)outlineViewItemDidExpand:(NSNotification *)notification {
-    NSDictionary *changedObject = [notification.userInfo objectForKey:@"NSObject"];
-     [[changedObject objectForKey:@"templateSet"] setIsExpanded:YES];
+    NSDictionary *changedObject = (notification.userInfo)[@"NSObject"];
+     [changedObject[@"templateSet"] setIsExpanded:YES];
 
 }
 // save expanded status after change
 - (void)outlineViewItemDidCollapse:(NSNotification *)notification {
-    NSDictionary *changedObject = [notification.userInfo objectForKey:@"NSObject"];
-       [[changedObject objectForKey:@"templateSet"] setIsExpanded:NO];
+    NSDictionary *changedObject = (notification.userInfo)[@"NSObject"];
+       [changedObject[@"templateSet"] setIsExpanded:NO];
     
 }
 
@@ -503,7 +501,7 @@
     
 }
 -(void)awakeFromNib {
-    NSLog(@"Template Manager awakes from nib");
+  
   
 }
 -(id)initWithPreferences:(Preferences *) appPreferences {

@@ -7,6 +7,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PreferencesController">
             <connections>
+                <outlet property="dateFormat" destination="zmp-N9-xdQ" id="ja2-lz-Y8U"/>
+                <outlet property="defaultTemplate" destination="UJv-2g-UG1" id="JIr-X3-thW"/>
                 <outlet property="preferencesWindow" destination="7zC-VP-tyR" id="84Z-mM-iLJ"/>
                 <outlet property="templateFoldersArrayController" destination="S6s-uM-ZxK" id="olg-cz-GN5"/>
                 <outlet property="templateFoldersTableView" destination="zpm-vf-3CX" id="Wcs-La-3AW"/>
@@ -17,14 +19,14 @@
         <window title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="7zC-VP-tyR" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="272" y="172" width="663" height="365"/>
+            <rect key="contentRect" x="272" y="172" width="663" height="503"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
             <view key="contentView" id="aSe-UY-Yck">
-                <rect key="frame" x="0.0" y="0.0" width="663" height="365"/>
+                <rect key="frame" x="0.0" y="0.0" width="663" height="503"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="Zh6-BN-50g">
-                        <rect key="frame" x="20" y="178" width="623" height="132"/>
+                        <rect key="frame" x="20" y="316" width="623" height="132"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" id="j0j-lO-aWk">
                             <rect key="frame" x="1" y="17" width="621" height="114"/>
@@ -99,7 +101,7 @@
                         </connections>
                     </button>
                     <button id="XQ1-Be-N6O">
-                        <rect key="frame" x="20" y="140" width="25" height="25"/>
+                        <rect key="frame" x="20" y="278" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5Pi-Um-pgt">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -110,7 +112,7 @@
                         </connections>
                     </button>
                     <button id="81H-Q0-dPL">
-                        <rect key="frame" x="44" y="140" width="25" height="25"/>
+                        <rect key="frame" x="44" y="278" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSRemoveTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="USL-wv-Opo">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -135,7 +137,7 @@ Gw
                         </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="7eY-Mp-ca4">
-                        <rect key="frame" x="18" y="90" width="113" height="17"/>
+                        <rect key="frame" x="17" y="185" width="113" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default Template" id="JRr-6a-s3U">
                             <font key="font" metaFont="system"/>
@@ -144,7 +146,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button id="OFC-eW-Tej">
-                        <rect key="frame" x="79" y="140" width="25" height="25"/>
+                        <rect key="frame" x="79" y="278" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="up_triangle" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nqD-H9-sil">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -155,7 +157,7 @@ Gw
                         </connections>
                     </button>
                     <button id="CYD-yA-MnR">
-                        <rect key="frame" x="103" y="140" width="25" height="25"/>
+                        <rect key="frame" x="103" y="278" width="25" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="down_triangle" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="URf-AN-5Aa">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -166,7 +168,7 @@ Gw
                         </connections>
                     </button>
                     <popUpButton verticalHuggingPriority="750" id="UJv-2g-UG1">
-                        <rect key="frame" x="18" y="58" width="628" height="26"/>
+                        <rect key="frame" x="17" y="153" width="628" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Not implemented" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="TVJ-Jf-zxJ" id="BTZ-sw-3x3">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -181,7 +183,7 @@ Gw
                         </popUpButtonCell>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Xq2-na-Zmg">
-                        <rect key="frame" x="16" y="323" width="151" height="17"/>
+                        <rect key="frame" x="16" y="461" width="151" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Template Set Locations" id="XPJ-Td-MRm">
                             <font key="font" metaFont="system"/>
@@ -189,6 +191,57 @@ Gw
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="H57-8o-tqC">
+                        <rect key="frame" x="18" y="227" width="132" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default Date Format" id="CAo-TI-Pel">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <comboBox verticalHuggingPriority="750" id="zmp-N9-xdQ">
+                        <rect key="frame" x="174" y="223" width="178" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="p6n-Kj-Ysb">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <objectValues>
+                                <string>yyyy-dd-mm</string>
+                                <string>mm-dd-yyyy</string>
+                                <string>dd-mm-yyyy</string>
+                                <string>yyyyddmm</string>
+                                <string>yyddmm</string>
+                                <string>ddmmyy</string>
+                                <string>mmddyy</string>
+                            </objectValues>
+                        </comboBoxCell>
+                    </comboBox>
+                    <button id="Pa5-am-0jd">
+                        <rect key="frame" x="17" y="108" width="221" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Close window after deployment" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="Uxz-gF-Ipx">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button id="J5G-Iv-mhF">
+                        <rect key="frame" x="17" y="74" width="243" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Close application after deployment" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="M8m-P1-wdt">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button id="AWx-33-iDc">
+                        <rect key="frame" x="325" y="108" width="251" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Open target folder after deployment" bezelStyle="regularSquare" imagePosition="left" enabled="NO" state="on" inset="2" id="IBI-Tm-nYL">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <connections>
@@ -201,7 +254,6 @@ Gw
                 <outlet property="content" destination="zpm-vf-3CX" id="j6k-w9-vkq"/>
             </connections>
         </arrayController>
-        <customObject id="8uD-xg-PBO"/>
     </objects>
     <resources>
         <image name="NSAddTemplate" width="8" height="8"/>

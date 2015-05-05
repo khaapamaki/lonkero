@@ -31,7 +31,7 @@
 {
     BOOL mutable = YES;
     @try {
-        [self setObject:[NSNull null] forKey:[NSNull null]];
+        self[[NSNull null]] = [NSNull null];
     }
     @catch (NSException *exception) {
         mutable = NO;
@@ -48,17 +48,17 @@
     NSEnumerator* ke = [dict keyEnumerator];
     
     for (id<NSCopying> key in ke) {
-        id myObj = [self objectForKey:key];
-        id obj = [dict objectForKey:key];
+        id myObj = self[key];
+        id obj = dict[key];
         if (!myObj) {
             // The key was not already in self, so simply add it.
             MERGE_LOG(@"inserted new object for key: %@", key);
             
-            [self setObject:obj forKey:key];
+            self[key] = obj;
         } else {
             id result = nil;
             if ([Merge mergeObj:myObj withObj:obj result:&result]) {
-                [self setObject:result forKey:key];
+                self[key] = result;
                 MERGE_LOG(@"merged objects for key: %@", key);
             } else {
                 MERGE_LOG(@"could not merge objects for key: %@", key);

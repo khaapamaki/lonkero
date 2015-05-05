@@ -6,21 +6,24 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 #define APPNAME @"Lonkero"
-#define APPVERSION @"0.7.2"
+#define APPVERSION @"0.6 beta"
 #define APPDESC @"Folder Template Manager"
 
-#define PREFEFENCES_VERSION @"0.2"
-#define PREFERENCES_FILENAME @""
+#define PREFEFENCES_VERSION @"0.3"
+#define PREFERENCES_FILENAME @"Preferences.plist"
 
 #define TEMPLATE_VERSION @"0.2"
 #define USERPREFERENCES_VERSION @"0.1"
 #define USERPREFERENCES_FILENAME @"User Preferences.plist"
-#define METADATA_VERSION @"0.5";
+#define METADATA_VERSION @"0.4";
 #define TEMPLATE_SETTINGS_FILENAME @"Template Settings.plist"
 #define METADATA_FILENAME @".Template Metadata.plist"
-#define DEFAULT_ID_LENGTH 12
-#define DEFAULT_GROUP_ID @"ZZZZZZZZZZZZ"
-
+#define DEFAULT_ID_LENGTH 16
+#define DEFAULT_GROUP_ID @"FFFFFFFFFFFFFFFF"
+#define TAGCHAR_INNER_1 @"["
+#define TAGCHAR_INNER_2 @"]"
+#define TAGCHAR_OUTER_1 @"{"
+#define TAGCHAR_OUTER_2 @"}"
 
 #if DEBUG
 #   define LOG(fmt, ...) NSLog(fmt, ##__VA_ARGS__)

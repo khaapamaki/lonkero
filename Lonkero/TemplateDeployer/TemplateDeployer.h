@@ -35,10 +35,10 @@
 #pragma mark -
 #pragma mark PARAMETER PARSING
 
-
-+(NSString *) parseParametersForString:(NSString*)aString withTemplate:(Template*)aTemplate;
-+(NSArray*)parseParametersForPathComponents:(NSArray*)pathComponents withTemplate:(Template*)aTemplate error:(NSNumber**)err;
 +(NSArray *) parentFoldersForTemplate:(Template *)aTemplate withTargetFolder:(FileSystemItem *)targetFolder error:(NSNumber **)err;
++(NSString *) parseParametersForString:(NSString*)aString withTemplate:(Template*)aTemplate;
++(NSArray *) parseParametersForPathComponents:(NSArray*)pathComponents withTemplate:(Template*)aTemplate error:(NSNumber**)err;
+
 
 /* +(FileSystemItem *)masterFolderForTemplate:(Template*)aTemplate andTargetFolder:(FileSystemItem*)aTargetFolder;
 -(NSString *) masterFolderNameByParsingTags;
@@ -51,13 +51,15 @@
 #pragma mark -
 #pragma mark METADATA
 
-// these methods generate dictionaries of tags(=parameters) used for name generation of any parent folder level
-// they are saved as metadata and used for autocompletion of fields when selecting folders created with earlier template deployments
-
 -(void)writeMetadataToFolders:(NSArray *)folders involvedParametersArray:(NSArray *)parametersArray deploymentId:(NSString*)deploymentId;
 
+// these methods generate dictionaries of tags(=parameters) until any parameter that creates a parent folder
+// the array will have parameter dictionaries to all parent folders to be created
+// they are saved as metadata and used for autocompletion of fields when selecting folders created with earlier template deployments
+
+
 +(NSArray *)parentFolderParametersInvolved:(Template *)aTemplate;
-+(NSDictionary *)dictionaryWithInvolvedParametersForParentFolder:(NSString *)aString withTemplate:(Template *)aTemplate;
++(NSDictionary *)dictionaryWithInvolvedParametersTillLevel:(NSInteger)level withTemplate:(Template *)aTemplate;
 
 #pragma mark -
 #pragma mark INIT

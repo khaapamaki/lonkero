@@ -671,14 +671,14 @@
         <window title="Lonkero" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="831" y="452" width="1000" height="647"/>
+            <rect key="contentRect" x="831" y="452" width="1000" height="648"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
             <view key="contentView" id="372" customClass="CustomViewForWindow">
-                <rect key="frame" x="0.0" y="0.0" width="1000" height="647"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <rect key="frame" x="0.0" y="0.0" width="1000" height="648"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ORX-wb-B3a">
-                        <rect key="frame" x="922" y="584" width="30" height="25"/>
+                        <rect key="frame" x="922" y="585" width="30" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="ag4-gv-kzT"/>
@@ -688,11 +688,11 @@
                             <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="browseTargetFolder:" target="494" id="5se-dr-eKD"/>
+                            <action selector="browseForNewTargetFolder:" target="494" id="qhC-82-VVM"/>
                         </connections>
                     </button>
                     <popUpButton misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="08P-Ut-Qfr">
-                        <rect key="frame" x="56" y="584" width="377" height="25"/>
+                        <rect key="frame" x="56" y="585" width="377" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="377" id="ITc-TV-Ng9"/>
@@ -713,20 +713,20 @@
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yNA-fX-IJq">
-                        <rect key="frame" x="915" y="7" width="68" height="17"/>
+                        <rect key="frame" x="807" y="7" width="181" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="62" id="Zdg-L9-mGv"/>
+                            <constraint firstAttribute="width" constant="175" id="Zdg-L9-mGv"/>
                             <constraint firstAttribute="height" constant="17" id="xGy-X5-f3u"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.7.2 " id="LJp-Tk-nFB">
-                            <font key="font" size="11" name="LucidaGrande"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.8 ALPHA DEVELOPMENT" id="LJp-Tk-nFB">
+                            <font key="font" size="13" name="LucidaGrande"/>
                             <color key="textColor" red="0.73237941576086962" green="0.18136127937235871" blue="0.16027643664650632" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <popUpButton misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wuf-3f-bDv">
-                        <rect key="frame" x="564" y="584" width="350" height="25"/>
+                        <rect key="frame" x="564" y="585" width="350" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="350" id="7IS-sj-6V4"/>
@@ -838,7 +838,7 @@
                                     <constraint firstItem="wY3-Os-gF0" firstAttribute="top" secondItem="XSx-aT-gWP" secondAttribute="bottom" id="go5-rn-Wyv"/>
                                 </constraints>
                             </customView>
-                            <customView horizontalCompressionResistancePriority="500" misplaced="YES" id="ido-gS-yjx" customClass="CustomView">
+                            <customView horizontalCompressionResistancePriority="500" misplaced="YES" id="ido-gS-yjx" customClass="CustomViewForParameterTable">
                                 <rect key="frame" x="290" y="0.0" width="400" height="530"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -984,7 +984,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                                                 <comboBox identifier="combo" verticalHuggingPriority="750" id="K1n-KK-qOE">
                                                                     <rect key="frame" x="177" y="124" width="185" height="26"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" identifier="combocell" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="uTE-Av-0O2">
+                                                                    <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" identifier="combocell" drawsBackground="YES" numberOfVisibleItems="5" id="uTE-Av-0O2">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1136,7 +1136,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
-                                            <action selector="goToUpFolder:" target="494" id="9qL-qP-WQj"/>
+                                            <action selector="selectParentFolder:" target="494" id="lSn-pu-qnI"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1160,7 +1160,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </holdingPriorities>
                     </splitView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Tj-uC-vH7">
-                        <rect key="frame" x="56" y="618" width="380" height="17"/>
+                        <rect key="frame" x="56" y="619" width="380" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="TEMPLATE" id="Vap-bg-fBk">
                             <font key="font" metaFont="cellTitle"/>
@@ -1169,7 +1169,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lfk-Lt-j52">
-                        <rect key="frame" x="566" y="616" width="351" height="17"/>
+                        <rect key="frame" x="561" y="617" width="356" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="TARGET" id="eS7-5T-LCM">
                             <font key="font" metaFont="cellTitle"/>
@@ -1178,7 +1178,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         </textFieldCell>
                     </textField>
                     <box autoresizesSubviews="NO" verticalHuggingPriority="750" misplaced="YES" title="Box" boxType="separator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="MQt-C3-CF1">
-                        <rect key="frame" x="0.0" y="559" width="1000" height="5"/>
+                        <rect key="frame" x="0.0" y="560" width="1000" height="5"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1194,7 +1194,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                 </subviews>
                 <constraints>
                     <constraint firstItem="4Tj-uC-vH7" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="59" id="1ym-rg-peU"/>
-                    <constraint firstItem="wuf-3f-bDv" firstAttribute="leading" secondItem="lfk-Lt-j52" secondAttribute="leading" constant="-5" id="9Ov-d9-0EG"/>
+                    <constraint firstItem="wuf-3f-bDv" firstAttribute="leading" secondItem="lfk-Lt-j52" secondAttribute="leading" id="9Ov-d9-0EG"/>
                     <constraint firstItem="yNA-fX-IJq" firstAttribute="top" secondItem="iZw-mk-x85" secondAttribute="bottom" constant="8" symbolic="YES" id="FLf-Mg-z4l"/>
                     <constraint firstItem="08P-Ut-Qfr" firstAttribute="top" secondItem="4Tj-uC-vH7" secondAttribute="bottom" constant="10" id="Mg1-nP-P5U"/>
                     <constraint firstItem="yNA-fX-IJq" firstAttribute="top" secondItem="ZzL-Jb-Ige" secondAttribute="bottom" constant="8" symbolic="YES" id="Mmc-hD-IKI"/>
@@ -1206,7 +1206,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <constraint firstItem="ZzL-Jb-Ige" firstAttribute="leading" secondItem="iZw-mk-x85" secondAttribute="leading" id="ZFn-L8-qcc"/>
                     <constraint firstItem="4Tj-uC-vH7" firstAttribute="trailing" secondItem="08P-Ut-Qfr" secondAttribute="trailing" id="fnU-ng-PvP"/>
                     <constraint firstItem="iZw-mk-x85" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="gQ2-99-3nk"/>
-                    <constraint firstAttribute="trailing" secondItem="yNA-fX-IJq" secondAttribute="trailing" constant="20" symbolic="YES" id="ibv-4Y-is8"/>
+                    <constraint firstAttribute="trailing" secondItem="yNA-fX-IJq" secondAttribute="trailing" constant="15" id="ibv-4Y-is8"/>
                     <constraint firstItem="iZw-mk-x85" firstAttribute="top" secondItem="08P-Ut-Qfr" secondAttribute="bottom" constant="24" id="imj-jy-hXg"/>
                     <constraint firstItem="lfk-Lt-j52" firstAttribute="trailing" secondItem="ORX-wb-B3a" secondAttribute="trailing" constant="-38" id="kNh-vd-3q4"/>
                     <constraint firstItem="ZzL-Jb-Ige" firstAttribute="trailing" secondItem="iZw-mk-x85" secondAttribute="trailing" id="kax-jw-fsg"/>
@@ -1255,11 +1255,36 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             </textFieldCell>
                         </textField>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="364EABF0-CC16-4656-8022-138A7A734D44" label="" paletteLabel="" id="A03-z0-33X">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="59" height="19"/>
+                        <size key="maxSize" width="122" height="21"/>
+                        <button key="view" verticalHuggingPriority="750" id="AvN-rJ-SSa">
+                            <rect key="frame" x="0.0" y="14" width="81" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="roundRect" title="Filter Off" bezelStyle="roundedRect" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fZH-DW-RoU">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
+                                <font key="font" metaFont="cellTitle"/>
+                            </buttonCell>
+                        </button>
+                        <connections>
+                            <action selector="filterAction:" target="494" id="WRR-dr-m1K"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="348099D3-60A8-4A19-958C-718AA65639AF" label="Toolbar Item" paletteLabel="Toolbar Item" tag="-1" image="NSUserGuest" id="BYK-X6-oaM"/>
+                    <toolbarItem implicitItemIdentifier="6A2147D3-1604-44EE-8EAB-C360389DFF5E" label="Show Info" paletteLabel="Show Info" tag="-1" image="NSInfo" id="5IE-4P-jpk">
+                        <connections>
+                            <action selector="openMetadataBrowser:" target="494" id="MVM-3U-hek"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="hkY-0S-kdh"/>
                     <toolbarItem reference="k6q-it-8mB"/>
                     <toolbarItem reference="0Xw-Ab-Gjy"/>
+                    <toolbarItem reference="A03-z0-33X"/>
+                    <toolbarItem reference="5IE-4P-jpk"/>
+                    <toolbarItem reference="oG1-K0-5yV"/>
                     <toolbarItem reference="kOU-Ip-YpU"/>
                 </defaultToolbarItems>
             </toolbar>
@@ -1271,6 +1296,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="contextMenu" destination="CmD-7M-0vk" id="9fv-7b-6tb"/>
+                <outlet property="filterOnOffButton" destination="AvN-rJ-SSa" id="qHN-0r-zym"/>
                 <outlet property="mainWind" destination="371" id="rt0-Xx-IdT"/>
                 <outlet property="mainWindow" destination="371" id="kFf-f2-OLe"/>
                 <outlet property="parameterAreaCustomView" destination="ido-gS-yjx" id="Ho8-HY-PHM"/>
@@ -1333,17 +1359,27 @@ Gw
         </window>
         <menu title="Action" id="CmD-7M-0vk" userLabel="Context Menu">
             <items>
-                <menuItem title="Open In Finder" enabled="NO" id="tiR-dh-WP9">
+                <menuItem title="Open In Finder" id="tiR-dh-WP9">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="contextMenuShowInFinder:" target="494" id="FRI-GI-6fC"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Copy Parameters From (experimental)" id="QlA-zd-piO">
+                <menuItem isSeparatorItem="YES" id="rAf-pL-jqt"/>
+                <menuItem title="Show Metadata" enabled="NO" id="Ofe-Iq-lOg">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showMetadataContextMenuAction:" target="494" id="hoe-KA-hHn"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Copy Parameters From..." id="QlA-zd-piO">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="contextMenuCopyParameters:" target="494" id="Dpk-lh-EOR"/>
                     </connections>
+                </menuItem>
+                <menuItem title="Update Parameters To Metadata" enabled="NO" id="FaU-hF-CWp">
+                    <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
             </items>
         </menu>
@@ -1351,8 +1387,10 @@ Gw
     <resources>
         <image name="NSAdvanced" width="32" height="32"/>
         <image name="NSFolder" width="32" height="32"/>
+        <image name="NSInfo" width="32" height="32"/>
         <image name="NSPathTemplate" width="13" height="10"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSUserGuest" width="32" height="32"/>
         <image name="green_target" width="32" height="32"/>
         <image name="up_folder" width="16" height="16"/>
     </resources>

@@ -26,7 +26,7 @@
 @property NSArray *typeSelection;
 @property NSInteger parameterType;
 @property NSString *dateFormatString;
-@property NSString *value;
+@property NSString *stringValue;
 @property NSDate *dateValue;
 @property BOOL booleanValue;
 @property BOOL optionalWithAbove;

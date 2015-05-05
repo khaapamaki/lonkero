@@ -35,16 +35,10 @@
     preferencesToBeEdited = prefs;
     [_templateFolderArray removeAllObjects];
     [_templateFolderArray addObjectsFromArray:prefs.templateSetLocations];
-   /*
-    if (!preferencesController) {
-        preferencesController = [[PreferencesController alloc] init];
-    }
-    [preferencesController  removeAllObjects];
-    [_templateFolders addObjectsFromArray:self.templateFolders];
-    */
 
     [super initWithWindow:_preferencesWindow];
     [self showWindow:self];
+    if (prefs.defaultDateFormat != nil) [_dateFormat setStringValue:prefs.defaultDateFormat];
     NSApplication *me = [NSApplication sharedApplication];
     [_preferencesWindow setPreventsApplicationTerminationWhenModal:NO];
     [me runModalForWindow:_preferencesWindow];
@@ -84,6 +78,7 @@
         currentFolder.isExpandable = YES; // overriding user's actions, and dont save that expanded state
         currentFolder.isExpanded = YES;
     }
+    [preferencesToBeEdited setDefaultDateFormat:[_dateFormat stringValue]];
     [preferencesToBeEdited savePreferences];
     [_preferencesWindow close];
 
@@ -99,7 +94,7 @@
 - (void)moveUpItemInMutableArray:(NSMutableArray *)anArray atTableView:(NSTableView *)aTableView {
     long row =[aTableView selectedRow];
     if (row >= 1) {
-        id itemToBeMoved = [anArray objectAtIndex:row];
+        id itemToBeMoved = anArray[row];
         [anArray removeObjectAtIndex:row];
         [anArray insertObject:itemToBeMoved atIndex:row-1];
         [aTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row-1] byExtendingSelection:NO];
@@ -110,7 +105,7 @@
 - (void)moveDownItemInMutableArray:(NSMutableArray *)anArray atTableView:(NSTableView *)aTableView {
     long row =[aTableView selectedRow];
     if (row < [anArray count] -1) {
-        id itemToBeMoved = [anArray objectAtIndex:row];
+        id itemToBeMoved = anArray[row];
         [anArray removeObjectAtIndex:row];
         [anArray insertObject:itemToBeMoved atIndex:row+1];
         [aTableView selectRowIndexes:[[NSIndexSet alloc] initWithIndex:row+1] byExtendingSelection:NO];

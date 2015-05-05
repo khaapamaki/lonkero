@@ -20,7 +20,7 @@
     
     // get permissions from enclosing folder
     short posix = [folder.posix shortValue] & 0666;
-    [FileSystemItem setPosix:[NSNumber numberWithShort:posix] toItem:metadataFile];
+    [FileSystemItem setPosix:@(posix) toItem:metadataFile];
 }
 
 -(void) encodeWithCoder: (NSCoder *) coder {
@@ -40,7 +40,11 @@
 
         if (self = [super init]) {
             if ([fm fileExistsAtPath:path]) {
-                self = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+
+                    TemplateMetadata *newMetadata = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+                    self = newMetadata;
+
+
             } else {
                 _metadataArray = [[NSMutableArray alloc] init];
             }

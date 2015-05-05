@@ -90,7 +90,7 @@
 			if ( [openDlg runModal] == NSOKButton )
 			{
 				NSArray* selectedURLS = [openDlg URLs];
-				[sender setURL:[selectedURLS objectAtIndex:0]];
+				[sender setURL:selectedURLS[0]];
 			}
 		} else {
 			[sender setURL:clickedPathURL];

@@ -16,6 +16,7 @@
 @property NSMutableArray *templateSetLocations; // retain?
 @property NSString *defaultTemplatePath;
 @property NSString *defaultTemplateName;
+@property NSString *defaultDateFormat;
 
 -(void) savePreferences;
 -(id) initWithLoadingPreferences;

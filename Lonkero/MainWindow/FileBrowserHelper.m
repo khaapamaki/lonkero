@@ -10,8 +10,11 @@
 #import "TemplateMetadata.h"
 
 @implementation FileBrowserHelper
-
 -(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata {
+    return [self getFoldersAtFolder:folder readMetadata:readMetadata filteringTemplate:nil];
+}
+
+-(NSMutableArray *)getFoldersAtFolder:(FileSystemItem *)folder readMetadata:(BOOL)readMetadata filteringTemplate:(Template*) filterTemplate {
     NSMutableArray *result = [[NSMutableArray alloc] init];
 
     NSFileManager *fileMgr = [[NSFileManager alloc] init];
@@ -22,12 +25,10 @@
         return [NSMutableArray array];
     }
     NSDirectoryEnumerator *dirEnum = [fileMgr enumeratorAtURL:[folder fileURL]
-                                   includingPropertiesForKeys:[NSArray arrayWithObjects:
-                                                               NSURLNameKey,
+                                   includingPropertiesForKeys:@[NSURLNameKey,
                                                                NSURLIsDirectoryKey,
                                                                NSURLIsAliasFileKey,
-                                                               NSURLIsPackageKey,
-                                                               nil]
+                                                               NSURLIsPackageKey]
                                                       options:dirEnumOptions
                                                  errorHandler:nil];
     
@@ -35,15 +36,39 @@
         
         if ([FileBrowserHelper isURLDirectory:currentURL]) {
             FileSystemItem *entryFolder = [[FileSystemItem alloc] initWithURL:currentURL];
+            
             if (readMetadata) {
                 TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:entryFolder];
                 if ([metadata.metadataArray count]>0) {
                     entryFolder.isMaster = [metadata hasAnyMaster];
                     entryFolder.isParent = [metadata hasAnyParent];
+                    
+                    if (_isFilteringOn && _filteringTemplate!=nil) {
+                        
+                        
+                        // FILTERING CODE
+                        NSArray* metaarray = metadata.metadataArray;
+                        
+                        NSArray *tempparam = [metaarray[0] usedTemplate].templateParameterSet;
+                        TemplateParameter *oneParam = tempparam[0];
+                        
+                        if ([oneParam.stringValue isEqualToString:@"Urheilu"]) {
+                            //pass
+                        } else {
+                            //no pass
+                            entryFolder = nil;
+                        }
+                    }
+                } else {
+                    if (_isFilteringOn && _filteringTemplate!=nil) entryFolder = nil;
                 }
             }
-            entryFolder.isExpandable = YES;
-            [result addObject:entryFolder];
+            
+            if (entryFolder) {
+                entryFolder.isExpandable = YES;
+                [result addObject:entryFolder];
+            }
+
         } else {
             if (_showFiles) {
                 FileSystemItem *entryFolder = [[FileSystemItem alloc] initWithURL:currentURL];
@@ -54,13 +79,13 @@
     }
 
     NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"itemName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    [result sortUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
+    [result sortUsingDescriptors:@[sortDesc]];
     return result;
 }
 
 +(BOOL)isURLDirectory:(NSURL *)URL {
-    NSNumber *isDirectory = [NSNumber numberWithInt:0];
-    NSNumber *isPackage = [NSNumber numberWithInt:0];
+    NSNumber *isDirectory = @0;
+    NSNumber *isPackage = @0;
     [URL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
     [URL getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil];
     return  ([isDirectory boolValue] && ![isPackage boolValue]);
@@ -84,12 +109,16 @@
     if (parentFolder==nil) {
         return 0;
     }
-    contents = [_directoryContentStorage objectForKey:[parentFolder URLStylePath]];
+    contents = _directoryContentStorage[[parentFolder URLStylePath]];
     if (!contents) {
-        contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
-        [_directoryContentStorage setObject:contents forKey:[parentFolder URLStylePath]];
+        if (_isFilteringOn) {
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"] filteringTemplate:_filteringTemplate];
+        } else {
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+        }
+        _directoryContentStorage[[parentFolder URLStylePath]] = contents;
     }
-    FileSystemItem *resultItem =  [contents objectAtIndex:index];
+    FileSystemItem *resultItem =  contents[index];
     return resultItem;
 }
     
@@ -114,10 +143,13 @@
     if (parentFolder==nil) {
         return 0;
     }
-    contents = [_directoryContentStorage objectForKey:[parentFolder URLStylePath]];
+    contents = _directoryContentStorage[[parentFolder URLStylePath]];
     if (!contents) {
-        contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
-        [_directoryContentStorage setObject:contents forKey:[parentFolder URLStylePath]];
+        if (_isFilteringOn) {
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"] filteringTemplate:_filteringTemplate];
+        } else {
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+        }
     }
     return [contents count];
     
@@ -129,15 +161,9 @@
         FileSystemItem *fileSystemItem = item;
         
         result = [outlineView makeViewWithIdentifier:@"imageAndText" owner:self];
-        
-//        if ([outlineView.identifier isEqualToString:@"targetBrowser"]) {
-//            [result setMenu:_contextMenu];
-//            LOG(@"Menu: %@", _contextMenu);
-//        }
 
         [result.textField setStringValue:[item itemName]];
-        if
-            (fileSystemItem.isDirectory) {
+        if (fileSystemItem.isDirectory) {
             if (fileSystemItem.isMaster) {
                 [result.imageView setImage:[NSImage imageNamed:@"folder16x16_master"]];
             } else if (fileSystemItem.isParent) {
@@ -167,22 +193,33 @@
     return nil; // not in use, this is cell based stuff
 }
 
+-(void)setFilteringTemplate:(Template*)filteringTemplate {
+    _filteringTemplate = filteringTemplate;
+    _isFilteringOn = YES;
+    [self refresh];
+}
+
+-(void)stopFiltering {
+    _isFilteringOn = NO;
+    _filteringTemplate = nil;
+    [self refresh];
+}
 
 - (void)outlineViewItemDidExpand:(NSNotification *)notification {
-    FileSystemItem *changedItem = [notification.userInfo objectForKey:@"NSObject"];
+    FileSystemItem *changedItem = (notification.userInfo)[@"NSObject"];
     NSNumber *expandedValue = nil;
-    NSNumber *isExpanded = [NSNumber numberWithBool:YES];
-    expandedValue = [_expandedStatus objectForKey:[changedItem URLStylePath]];
+    NSNumber *isExpanded = @YES;
+    expandedValue = _expandedStatus[[changedItem URLStylePath]];
     NSString *key = [NSString stringWithString:[changedItem URLStylePath]];
-    [_expandedStatus setObject:changedItem forKey:key];
+    _expandedStatus[key] = changedItem;
     [changedItem setIsExpanded:YES];
 }
 
 - (void)outlineViewItemDidCollapse:(NSNotification *)notification {
-    FileSystemItem *changedItem = [notification.userInfo objectForKey:@"NSObject"];
+    FileSystemItem *changedItem = (notification.userInfo)[@"NSObject"];
     NSNumber *expandedValue = nil;
-    NSNumber *isExpanded = [NSNumber numberWithBool:NO];
-    expandedValue = [_expandedStatus objectForKey:[changedItem URLStylePath]];
+    NSNumber *isExpanded = @NO;
+    expandedValue = _expandedStatus[[changedItem URLStylePath]];
     [_expandedStatus removeObjectForKey:[changedItem URLStylePath]];
     [changedItem setIsExpanded:NO];
 }
@@ -206,20 +243,13 @@
 }
 
 -(void)expandOrCollapseBySavedStatus {
-    for (NSString *key in _expandedStatus) {
-    //NSAssert([[_targetBrowserOutlineView itemAtRow:index] isKindOfClass:[FileSystemItem class]], @"wrong class" );
-      //  FileSystemItem *item = [_targetBrowserOutlineView itemAtRow:index];
 
-//        FileSystemItem *item = [_expandedStatus objectForKey:key];
-//        [_targetBrowserOutlineView expandItem:item];
-
-    }
 }
 
 -(void)refresh {
     _directoryContentStorage = nil;
     _directoryContentStorage = [[NSMutableDictionary alloc] init];
-    [_targetBrowserOutlineView reloadData];
+    [_myOutlineView reloadData];
 }
 
 -(void)awakeFromNib {
@@ -229,20 +259,20 @@
 
 -(id)initWithOutlineView:(NSOutlineView*)outlineView folder:(FileSystemItem*)rootFolder showFiles:(BOOL)showFiles {
     if (self = [super init]) {
-        _targetBrowserOutlineView = outlineView;
+        _myOutlineView = outlineView;
         _rootFolder = rootFolder;
         _showFiles = showFiles;
         fileManager = [NSFileManager defaultManager];
         _directoryContentStorage = [[NSMutableDictionary alloc] init];
         _expandedStatus = [[NSMutableDictionary alloc] init];
      //   _masterFolder = nil;
-        [_targetBrowserOutlineView setDelegate:self];
+        [_myOutlineView setDelegate:self];
 
     }
     return self;
 }
 
-
+//deprecated...
 -(id)initWithFolder:(FileSystemItem *)rootFolder andTemplate:(Template *)currentTemplate {
     if (self = [super init]) {
         _rootFolder = rootFolder;

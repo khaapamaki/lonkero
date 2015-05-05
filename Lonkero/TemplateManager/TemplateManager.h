@@ -101,6 +101,10 @@
 
 -(void)updatePreferences:(Preferences *) appPreferences;
 
+#pragma mark -
+#pragma mark DEVELOPMENT
+
+@property (weak) IBOutlet NSTextField *templateVersionLabel;
 
 
 @end

@@ -13,8 +13,8 @@
 
 
 -(NSInteger)deployToTargetFolder:(FileSystemItem*)targetFolder errString:(NSString**)errStr {
-    NSString *deploymentId = [NSString generateRandomStringOfLength:12];
-    NSNumber *err = [NSNumber numberWithInteger:0];
+    NSString *deploymentId = [NSString generateRandomStringOfLength:DEFAULT_ID_LENGTH];
+    NSNumber *err = @0;
     NSString *errString = @"";
     NSDictionary *targetFolderPermissions;
     NSInteger errcode = 0;
@@ -22,9 +22,9 @@
     _theTargetFolder = targetFolder; // store for other methods
     
     if (!_theTargetFolder.itemExists) {
-        NSInteger answer = NSRunAlertPanel(@"Target folder does not exist. Do you want to create it?", targetFolder.path, @"No", @"Create", nil);
+        NSInteger answer = NSRunAlertPanel(@"Target folder does not exist. Do you want to create it?", targetFolder.path, @"Create", @"Cancel", nil);
         
-        if (answer==YES) {
+        if (answer==NO) {
             return SkippedByUser;
         } else {
             errcode = [FileSystemItem createDirectoryWithIntermediatesInheritingPermissions:_theTargetFolder errString:&errString];
@@ -36,7 +36,7 @@
         }
     }
     
-    targetFolderPermissions = [NSDictionary dictionaryWithObjectsAndKeys:_theTargetFolder.posix, NSFilePosixPermissions, nil];
+    targetFolderPermissions = @{NSFilePosixPermissions: _theTargetFolder.posix};
     
     NSArray *parentFolders = [TemplateDeployer parentFoldersForTemplate:_theTemplate
                                                       withTargetFolder:_theTargetFolder
@@ -66,13 +66,13 @@
         } else {
             // Create Parent Folders
             NSArray *parentsExcludingTarget = [NSArray arrayWithArray:[parentFolders subarrayWithRange:NSMakeRange(1, [parentFolders count] - 1)]];
-            err = [NSNumber numberWithInteger:[self createFoldersIfNeeded:parentsExcludingTarget defaultPermissions:targetFolderPermissions]];
+            err = @([self createFoldersIfNeeded:parentsExcludingTarget defaultPermissions:targetFolderPermissions]);
             if ([err integerValue]!=0) return [err integerValue];
         }
     }
     
     // COPY FILES AND FOLDERS
-    err = [NSNumber numberWithInteger:[self copyFilesToFolder:masterFolder defaultPermissions:targetFolderPermissions errString:&errString]];
+    err = @([self copyFilesToFolder:masterFolder defaultPermissions:targetFolderPermissions errString:&errString]);
     
     if ([err integerValue]!=0) {
         *errStr = errString;
@@ -178,7 +178,7 @@
             }
         
             // copy label color
-            [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:[NSNumber numberWithInteger:item.labelNumber] forKey:NSURLLabelNumberKey error:nil];
+            [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:@(item.labelNumber) forKey:NSURLLabelNumberKey error:nil];
             
             // hidden extension
             [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:[NSNumber numberWithInteger:item.hasHiddenExtension] forKey:NSURLHasHiddenExtensionKey error:nil];
@@ -188,12 +188,12 @@
             NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:newDate, NSFileModificationDate, newDate, NSFileCreationDate, nil];
             
             if (!defaultPermissions) {
-                [attributes setObject:item.posix forKey:NSFilePosixPermissions];
+                attributes[NSFilePosixPermissions] = item.posix;
             } else {
-                short defaultPosix = [[defaultPermissions objectForKey:@"NSFilePosixPermissions"] shortValue];
+                short defaultPosix = [defaultPermissions[@"NSFilePosixPermissions"] shortValue];
                 short sourcePosix = [item.posix shortValue];
                 short newPosix = [TemplateDeployer combinePosixForTargetFolder:defaultPosix andSourceFolder:sourcePosix];
-                [attributes setObject:[NSNumber numberWithShort:newPosix] forKey:NSFilePosixPermissions];
+                attributes[NSFilePosixPermissions] = @(newPosix);
             }
             
             [fm setAttributes:attributes ofItemAtPath:item.pathToCopy error:&err];
@@ -218,6 +218,8 @@
         item.isCopied = NO;
         if (!item.isDirectory) {
             
+            [item updateExistingStatus];
+            
             if (!item.pathToCopyExists) {
                 
                 if (![item.pathToCopy isEqualToString:templateSettingsPathToBeExcluded]) {   //skip settings file
@@ -226,7 +228,7 @@
                     if (err) return ErrFileCopyError;
                     
                     // copy label color
-                    [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:[NSNumber numberWithInteger:item.labelNumber] forKey:NSURLLabelNumberKey error:nil];
+                    [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:@(item.labelNumber) forKey:NSURLLabelNumberKey error:nil];
                     
                     // hidden extension
                     [[NSURL fileURLWithPath:item.pathToCopy] setResourceValue:[NSNumber numberWithInteger:item.hasHiddenExtension] forKey:NSURLHasHiddenExtensionKey error:nil];
@@ -236,12 +238,12 @@
                     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:newDate, NSFileModificationDate, newDate, NSFileCreationDate, nil];
                     
                     if (!defaultPermissions) {
-                        [attributes setObject:item.posix forKey:NSFilePosixPermissions];
+                        attributes[NSFilePosixPermissions] = item.posix;
                     } else {
-                        short defaultPosix = [[defaultPermissions objectForKey:@"NSFilePosixPermissions"] shortValue];
+                        short defaultPosix = [defaultPermissions[@"NSFilePosixPermissions"] shortValue];
                         short sourcePosix = [item.posix shortValue];
                         short newPosix = [TemplateDeployer combinePosixForTargetFolder:defaultPosix andSourceFile:sourcePosix];
-                        [attributes setObject:[NSNumber numberWithShort:newPosix] forKey:NSFilePosixPermissions];
+                        attributes[NSFilePosixPermissions] = @(newPosix);
                     }
                     
                     [fm setAttributes:attributes ofItemAtPath:item.pathToCopy error:&err];
@@ -286,7 +288,6 @@
         
         [metadataItem setCreationMasterFolder:[folders lastObject]];
         [metadataItem setDeploymentID:deploymentId];
-        [metadataItem setParentFolders:folders];
         
         if (folder.isTarget) {
             [metadataItem setAsTargetFolder];
@@ -297,7 +298,7 @@
             [metadataItem readTemplateDirectoryContents];
             [metadataItem readDeployedDirectoryContents];
         } else {
-            [metadataItem setIsMasterFolder:[NSNumber numberWithBool:NO]];
+            [metadataItem setIsMasterFolder:@NO];
         }
         
         if (folder.isParent){
@@ -306,7 +307,7 @@
      
         if (indexForInvolvedParameterArray >= 0) {
             if (indexForInvolvedParameterArray > [parametersArray count]-1) indexForInvolvedParameterArray = [parametersArray count] -1;
-            [metadataItem setParametersForParentLevel:[parametersArray objectAtIndex:indexForInvolvedParameterArray]];
+            [metadataItem setParametersForParentLevel:parametersArray[indexForInvolvedParameterArray]];
         }
         
         [metadata addItem:metadataItem];
@@ -332,10 +333,9 @@
     targetFolder.isParent = NO;
     [result addObject:targetFolder];
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
-        if (currentParameter.createParentFolder) {
+        if ([NSString isNotEmptyString:currentParameter.parentFolderNamingRule]) {
             
-            if (currentParameter.booleanValue || ![currentParameter.value isEqualToString:@""] ) {
-                
+            if (currentParameter.booleanValue || [NSString isNotEmptyString:currentParameter.stringValue] ) {
                 NSNumber *error = nil;
                 NSString *parsedParentFolderName = [TemplateDeployer parseFileName:currentParameter.parentFolderNamingRule withTemplate:aTemplate error:&error];
                 if (error!=nil) {
@@ -360,9 +360,9 @@
     NSString *base = [filename stringByDeletingPathExtension];
     NSString *parsedBase = [TemplateDeployer parseParametersForString:base withTemplate:aTemplate];
     NSString *parsedFilename= [extension isEqualToString:@""] ? parsedBase : [NSString stringWithFormat:@"%@.%@", parsedBase, extension];
-    if ([parsedBase isEqualToString:@""] || parsedBase == nil || ![parsedBase isValidFileName] || ![parsedFilename isValidFileName]) {
+    if ([NSString isEmptyString:parsedBase] || ![parsedBase isValidFileName] || ![parsedFilename isValidFileName]) {
         parsedFilename = @"<empty_string>";
-        if(err!=NULL) *err = [NSNumber numberWithInteger:ErrInvalidFileOrFolderName];
+        if(err!=NULL) *err = @(ErrInvalidFileOrFolderName);
     }
     return parsedFilename;
 }
@@ -377,7 +377,7 @@
             NSNumber *error = nil;
             NSString *parsedPathComponent = [TemplateDeployer parseFileName:pathComponent withTemplate:aTemplate error:&error];
             if (error!=nil) {
-                if (err!=NULL) *err = [NSNumber numberWithInteger:[error integerValue]];
+                if (err!=NULL) *err = @([error integerValue]);
             }
             [parsedArray addObject:parsedPathComponent];
             
@@ -399,7 +399,7 @@
     
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
         
-        NSString *tagWithBrackets = [NSString stringWithFormat:@"[%@]", currentParameter.tag];
+        NSString *tagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_INNER_1, currentParameter.tag, TAGCHAR_INNER_2];
         NSRange tagRange;
         
         do {
@@ -408,7 +408,7 @@
                 NSString *extractedTag = [result substringWithRange:NSMakeRange(tagRange.location+1, tagRange.length-2)];
                 Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
                 replacesMade += 1;
-                [result replaceCharactersInRange:tagRange withString:[currentParameter.value convertToCase:caseConversionNeeded]];
+                [result replaceCharactersInRange:tagRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
             }
             
         } while (tagRange.length > 2);
@@ -420,12 +420,14 @@
 #pragma mark INVOLVED PARAMETERS
 
 +(NSArray *)parentFolderParametersInvolved:(Template *)aTemplate {
+    NSAssert(@"Trying to use deprecated method", nil) ;
+    
     NSMutableArray *allParents = [[NSMutableArray alloc] init];
  //   NSMutableDictionary *allInvolvedParametersSoFar = [[NSMutableDictionary alloc] init];
     NSInteger level = 0;
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
-        if (currentParameter.createParentFolder) {
-            if (currentParameter.booleanValue || ![currentParameter.value isEqualToString:@""] ) {
+        if ([NSString isNotEmptyString:currentParameter.parentFolderNamingRule]) {
+            if (currentParameter.booleanValue || ![currentParameter.stringValue isEqualToString:@""] ) {
             
                 NSDictionary *involvedParameters = [TemplateDeployer dictionaryWithInvolvedParametersTillLevel:level withTemplate:aTemplate];
 
@@ -443,29 +445,8 @@
     return allParents;
 }
 
-//+(NSDictionary *)dictionaryWithInvolvedParametersForParentFolder:(NSString *)aString withTemplate:(Template *)aTemplate {
-//    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-//    
-//    NSMutableString *namingRuleMutatingToName = [NSMutableString stringWithString:aString];
-//    
-//    for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
-//        NSString *tagWithBrackets = [NSString stringWithFormat:@"[%@]",  currentParameter.tag];
-//        NSInteger replacesMade = [namingRuleMutatingToName replaceOccurrencesOfString:tagWithBrackets withString:currentParameter.value options:NSCaseInsensitiveSearch range:NSMakeRange(0, [namingRuleMutatingToName length])];
-//        if (replacesMade>0) {
-//            
-//            if (currentParameter.parameterType==date) {
-//                [result setObject:currentParameter.dateValue forKey:[currentParameter.tag lowercaseString]];
-//            } else if (currentParameter.parameterType==boolean) {
-//                [result setObject:[NSNumber numberWithBool:currentParameter.booleanValue] forKey:[currentParameter.tag lowercaseString]];
-//            } else {
-//                [result setObject:currentParameter.value forKey:[currentParameter.tag lowercaseString]];
-//            }
-//            
-//        }
-//    }
-//    return result;
-//}
 
+// level here means just an order number of all parameters in a template
 +(NSDictionary *)dictionaryWithInvolvedParametersTillLevel:(NSInteger)level withTemplate:(Template *)aTemplate {
     NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     NSInteger levelIndex = 0;
@@ -473,11 +454,11 @@
         if (levelIndex<=level) {
            // if (currentParameter.parameterType!=date && currentParameter.isHidden==NO) {
                 if (currentParameter.parameterType==boolean) {
-                    [result setObject:[NSNumber numberWithBool:currentParameter.booleanValue] forKey:[currentParameter.tag lowercaseString]];
+                    result[[currentParameter.tag lowercaseString]] = @(currentParameter.booleanValue);
                 } else if (currentParameter.parameterType==date){
-                    [result setObject:currentParameter.dateValue forKey:[currentParameter.tag lowercaseString]];
+                    result[[currentParameter.tag lowercaseString]] = currentParameter.dateValue;
                 } else {
-                    [result setObject:currentParameter.value forKey:[currentParameter.tag lowercaseString]];
+                    result[[currentParameter.tag lowercaseString]] = currentParameter.stringValue;
                 }
            // }
 
@@ -488,7 +469,7 @@
 }
 
 #pragma mark -
-#pragma mark SUPPORTING
+#pragma mark SUPPORTING METHODS
 
 +(short)combinePosixForTargetFolder:(short)targetPosix andSourceFile:(short)sourcePosix {
     short result;

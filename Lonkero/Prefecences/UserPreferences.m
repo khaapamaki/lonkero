@@ -10,4 +10,14 @@
 
 @implementation UserPreferences
 
+-(id)init {
+    self = [super init];
+    if (self) {
+        _closeApplicationAfterDeployment = NO;
+        _closeWindowAfterDeployment = YES;
+        _openMasterFolderAfterDeployment = YES;
+        _openTargetFolderAfterDeployment = NO;
+    }
+    return self;
+}
 @end

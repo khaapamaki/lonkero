@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Definitions.h"
+#import "NSString+Extras.h"
 
 @interface FileSystemItem : NSObject <NSCopying>
 

@@ -149,7 +149,7 @@
 
 - (void)setSelectedTemplateByPopUp {
     if ([_templateArray count] > 0) {
-        FileSystemItem *templateFolder = [_templateArray objectAtIndex:[_templatePopUpButton indexOfSelectedItem]];
+        FileSystemItem *templateFolder = _templateArray[[_templatePopUpButton indexOfSelectedItem]];
         _selectedTemplate = [[Template alloc] initWithURL:[templateFolder fileURL]];
     } else {
         _selectedTemplate = nil;
@@ -165,26 +165,26 @@
     
     for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
         if (currentParameter.parameterType != list) {
-            currentParameter.value = [currentParameter.defaultValue copy];
+            currentParameter.stringValue = [currentParameter.defaultValue copy];
         }
         
-        if (currentParameter.parameterType == loginName && ([currentParameter.value isEqualToString:@""] || currentParameter.value == nil) ) {
-            currentParameter.value = NSUserName();
+        if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+            currentParameter.stringValue = NSUserName();
         }
         
-        if (currentParameter.parameterType == userName && ([currentParameter.value isEqualToString:@""] || currentParameter.value == nil) ) {
-            currentParameter.value = NSFullUserName();
+        if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+            currentParameter.stringValue = NSFullUserName();
         }
         if (currentParameter.parameterType == boolean) {
 
-            if ([currentParameter.value isEqualToString:@""] || currentParameter.defaultValue==nil) {
+            if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
                 currentParameter.booleanValue = NO;
             } else {
                 currentParameter.booleanValue = YES;
             }
-            currentParameter.value = @"";
+            currentParameter.stringValue = @"";
         }
-        if (currentParameter.value == nil) currentParameter.value = @"";
+        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
         if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
     }
     
@@ -201,7 +201,7 @@
     // Prepare array for parameter NSView objects
     long rowIndex=0;
     for (NSInteger arrayIndex =0; arrayIndex<[_selectedTemplate.templateParameterSet count ]; arrayIndex++) {
-        if (![[_selectedTemplate.templateParameterSet objectAtIndex:arrayIndex] isHidden]) {
+        if (![(_selectedTemplate.templateParameterSet)[arrayIndex] isHidden]) {
             [_parameterQueryTableContents addObject:[self getNSViewForParameterQueryValueColumnForRow:rowIndex]];
             rowIndex++;
         }
@@ -219,26 +219,26 @@
     
     for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
         if (currentParameter.parameterType != list) {
-            currentParameter.value = [currentParameter.defaultValue copy];
+            currentParameter.stringValue = [currentParameter.defaultValue copy];
         }
         
-        if (currentParameter.parameterType == loginName && ([currentParameter.value isEqualToString:@""] || currentParameter.value == nil) ) {
-            currentParameter.value = NSUserName();
+        if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+            currentParameter.stringValue = NSUserName();
         }
         
-        if (currentParameter.parameterType == userName && ([currentParameter.value isEqualToString:@""] || currentParameter.value == nil) ) {
-            currentParameter.value = NSFullUserName();
+        if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
+            currentParameter.stringValue = NSFullUserName();
         }
         if (currentParameter.parameterType == boolean) {
             
-            if ([currentParameter.value isEqualToString:@""] || currentParameter.defaultValue==nil) {
+            if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
                 currentParameter.booleanValue = NO;
             } else {
                 currentParameter.booleanValue = YES;
             }
-            currentParameter.value = @"";
+            currentParameter.stringValue = @"";
         }
-        if (currentParameter.value == nil) currentParameter.value = @"";
+        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
         if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
     }
     
@@ -248,7 +248,7 @@
     // Prepare array for parameter NSView objects
     long rowIndex=0;
     for (NSInteger arrayIndex =0; arrayIndex<[_selectedTemplate.templateParameterSet count ]; arrayIndex++) {
-        if (![[_selectedTemplate.templateParameterSet objectAtIndex:arrayIndex] isHidden]) {
+        if (![(_selectedTemplate.templateParameterSet)[arrayIndex] isHidden]) {
             [_parameterQueryTableContents addObject:[self getNSViewForParameterQueryValueColumnForRow:rowIndex]];
             rowIndex++;
         }
@@ -266,27 +266,27 @@
             switch (currentParameter.parameterType) {
                 case date:
                     currentParameter.dateValue = [NSDate date];
-                    currentParameter.value = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
+                    currentParameter.stringValue = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
                     break;
                 case loginName:
-                    currentParameter.value = NSUserName();
+                    currentParameter.stringValue = NSUserName();
                     break;
                 case userName:
-                    currentParameter.value = NSFullUserName();
+                    currentParameter.stringValue = NSFullUserName();
                     break;
                 case incremental:
-                    currentParameter.value = @"not_avail"; // IMPLEMENTOI
+                    currentParameter.stringValue = @"not_avail"; // IMPLEMENTOI
                     break;
                 case boolean:
-                    if ([currentParameter.value isEqualToString:@""] || currentParameter.defaultValue==nil) {
+                    if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
                         currentParameter.booleanValue = NO;
                     } else {
                         currentParameter.booleanValue = YES;
                     }
-                    currentParameter.value = @"";
+                    currentParameter.stringValue = @"";
                     break;
                 default:
-                    currentParameter.value = currentParameter.defaultValue;
+                    currentParameter.stringValue = currentParameter.defaultValue;
                     break;
             }
         }
@@ -305,27 +305,27 @@
             switch (currentParameter.parameterType) {
                 case date:
                     currentParameter.dateValue = [NSDate date];
-                    currentParameter.value = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
+                    currentParameter.stringValue = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
                     break;
                 case loginName:
-                    currentParameter.value = NSUserName();
+                    currentParameter.stringValue = NSUserName();
                     break;
                 case userName:
-                    currentParameter.value = NSFullUserName();
+                    currentParameter.stringValue = NSFullUserName();
                     break;
                 case incremental:
-                    currentParameter.value = @"not_avail"; // IMPLEMENTOI
+                    currentParameter.stringValue = @"not_avail"; // IMPLEMENTOI
                     break;
                 case boolean:
-                    if ([currentParameter.value isEqualToString:@""] || currentParameter.defaultValue==nil) {
+                    if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
                         currentParameter.booleanValue = NO;
                     } else {
                         currentParameter.booleanValue = YES;
                     }
-                    currentParameter.value = @"";
+                    currentParameter.stringValue = @"";
                     break;
                 default:
-                    currentParameter.value = [currentParameter.defaultValue copy];
+                    currentParameter.stringValue = [currentParameter.defaultValue copy];
                     break;
             }
             
@@ -336,30 +336,30 @@
             
             if([cellView isKindOfClass:[NSDatePicker class]]) {
                 currentParameter.dateValue = [cellView dateValue];
-                currentParameter.value = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
+                currentParameter.stringValue = [self parseDate:currentParameter.dateValue withFormat:aTemplate.dateFormatString];
             } else {
                 currentParameter.dateValue = nil;
             }
             if ([cellView isKindOfClass:[NSComboBox class]]) { // checkbox
-                currentParameter.value = [cellView stringValue];
+                currentParameter.stringValue = [cellView stringValue];
                 
             }
             if ([cellView isKindOfClass:[NSTableCellView class]]) { // textfield/number
                 if ([[cellView textField] stringValue] == nil) {
-                    currentParameter.value = @"";
+                    currentParameter.stringValue = @"";
                 } else {
-                    currentParameter.value = [[cellView textField] stringValue] ;
+                    currentParameter.stringValue = [[cellView textField] stringValue] ;
                 }
             }
             if ([cellView isKindOfClass:[NSButton class]]) { // checkbox
-                currentParameter.value = @"";
+                currentParameter.stringValue = @"";
                 currentParameter.booleanValue = [cellView state];
             }
             tableIndex++;
         }
         arrayIndex++;
-        if (currentParameter.value == nil) currentParameter.value = @"";
-            currentParameter.value = [currentParameter.value stringByPerformingFullCleanUp];
+        if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
+            currentParameter.stringValue = [currentParameter.stringValue stringByPerformingFullCleanUp];
     }
 }
 
@@ -407,14 +407,14 @@
         
         // Set nextKeyViews
         if (row>0) {
-            NSView *currentView = [_parameterQueryTableContents objectAtIndex:row];
-            NSView *previousView = [_parameterQueryTableContents objectAtIndex:row-1];
+            NSView *currentView = _parameterQueryTableContents[row];
+            NSView *previousView = _parameterQueryTableContents[row-1];
             if ([[currentView subviews] count]>0) currentView = [[currentView subviews] lastObject];
             if ([[previousView subviews] count]>0) previousView = [[previousView subviews] lastObject];
             [previousView setNextKeyView:currentView];
         }
         
-        return [_parameterQueryTableContents objectAtIndex:row];
+        return _parameterQueryTableContents[row];
     }
     return result;
 }
@@ -426,21 +426,21 @@
     NSTableCellView *result;
     long newRow = [self calculateArrayRowFromTableRow:row];
     
-    TemplateParameter *theParameter =[_selectedTemplate.templateParameterSet objectAtIndex:newRow];
+    TemplateParameter *theParameter =(_selectedTemplate.templateParameterSet)[newRow];
     
     result = [_parameterQueryTableView makeViewWithIdentifier:@"imageAndLabel" owner:self];
     
     [result.textField setStringValue:[NSString stringWithFormat:@"%@:", [theParameter name]]];
-    if (theParameter.createParentFolder && theParameter.isRequired) {
+    if ([NSString isNotEmptyString:theParameter.parentFolderNamingRule] && theParameter.isRequired) {
         [result imageView].image = [NSImage imageNamed:@"parameter_folder_required"];
     }
-    if (theParameter.createParentFolder && !theParameter.isRequired) {
+    if ([NSString isNotEmptyString:theParameter.parentFolderNamingRule] && !theParameter.isRequired) {
         [result imageView].image = [NSImage imageNamed:@"parameter_folder"];
     }
-    if (!theParameter.createParentFolder && theParameter.isRequired) {
+    if ([NSString isEmptyString:theParameter.parentFolderNamingRule] && theParameter.isRequired) {
         [result imageView].image = [NSImage imageNamed:@"parameter_required"];
     }
-    if (!theParameter.createParentFolder && !theParameter.isRequired) {
+    if ([NSString isEmptyString:theParameter.parentFolderNamingRule] && !theParameter.isRequired) {
         [result imageView].image = nil;
     }
     return result;
@@ -454,7 +454,7 @@
     NSButton *resultCheckBox;
     long newRow = [self calculateArrayRowFromTableRow:row];
     
-    TemplateParameter *theParameter =[_selectedTemplate.templateParameterSet objectAtIndex:newRow];
+    TemplateParameter *theParameter =(_selectedTemplate.templateParameterSet)[newRow];
 
         NSDate *today = [NSDate date];
         BOOL isEditable = [theParameter isEditable];
@@ -463,13 +463,13 @@
                 result = [_parameterQueryTableView makeViewWithIdentifier:@"textfield" owner:self];
                 [result.textField setEditable:isEditable];
                 [result.textField setEnabled:isEditable];
-                [result.textField setStringValue:theParameter.value];
+                [result.textField setStringValue:theParameter.stringValue];
                 break;
             case number:
                 result = [_parameterQueryTableView makeViewWithIdentifier:@"textfield" owner:self];
                 [result.textField setEditable:isEditable];
                 [result.textField setEnabled:isEditable];
-                [result.textField setStringValue:theParameter.value];
+                [result.textField setStringValue:theParameter.stringValue];
                 break;
             case list:
                 resultCombo = [_parameterQueryTableView makeViewWithIdentifier:@"combo" owner:self];
@@ -487,13 +487,13 @@
                 result = [_parameterQueryTableView makeViewWithIdentifier:@"textfield" owner:self];
                 [result.textField setEditable:isEditable];
                 [result.textField setEnabled:isEditable];
-                [result.textField setStringValue:theParameter.value];
+                [result.textField setStringValue:theParameter.stringValue];
                 break;
             case userName:
                 result = [_parameterQueryTableView makeViewWithIdentifier:@"textfield" owner:self];
                 [result.textField setEditable:isEditable];
                 [result.textField setEnabled:isEditable];
-                [result.textField setStringValue:theParameter.value];
+                [result.textField setStringValue:theParameter.stringValue];
                 break;
             case boolean:
                 resultCheckBox = [_parameterQueryTableView makeViewWithIdentifier:@"checkbox" owner:self];
@@ -505,7 +505,7 @@
                 result = [_parameterQueryTableView makeViewWithIdentifier:@"textfield" owner:self];
                 [result.textField setEditable:isEditable];
                 [result.textField setEnabled:isEditable];
-                [result.textField setStringValue:theParameter.value];
+                [result.textField setStringValue:theParameter.stringValue];
                 break;
         }
         
@@ -531,7 +531,7 @@
 }
 
 
--(void)browseTargetFolder:(id)sender {
+-(void)browseForNewTargetFolder:(id)sender {
     NSOpenPanel *openDlg = [[NSOpenPanel alloc] init];
     [openDlg setCanChooseFiles:NO];
     [openDlg setAllowsMultipleSelection:NO];
@@ -542,7 +542,7 @@
     if ( [openDlg runModal] == NSOKButton )
     {
         NSArray* selectedURLS = [openDlg URLs];
-        _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:[selectedURLS objectAtIndex:0]];
+        _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:selectedURLS[0]];
         lastSelectedTargetFolderIndex = -1;
         [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
         [self updateTargetFolderViews];
@@ -570,32 +570,7 @@
 }
 
 
-- (IBAction)targetOutlineViewAction:(id)sender {
-    
-}
 
-- (IBAction)contextMenuCopyParameters:(id)sender {
-    NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
-    id item = [_targetFolderOutlineView itemAtRow:rowIndex];
-    if (![item isKindOfClass:[FileSystemItem class]]) return;
-    FileSystemItem *fileSystemItem = item;
-    if (fileSystemItem.isDirectory) {
-        TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:fileSystemItem];
-        if (metadata==nil || [metadata.metadataArray count]==0) {
-            LOG(@"non template folder");
-            return;
-        }
-        LOG(@"going to find some good stuff");
-        if (_selectedTemplate!=nil) {
-            [self readParametersFromMetadata:metadata];
-        }
-
-    }
-}
-
-- (IBAction)contextMenuShowInFinder:(id)sender {
-    
-}
 
 - (IBAction)userSelectedPath:(id)sender {
     NSPathComponentCell *clickedPathCell = [sender clickedPathComponentCell];
@@ -617,7 +592,7 @@
 	}
 }
 
-- (IBAction)goToUpFolder:(id)sender {
+- (IBAction)selectParentFolder:(id)sender {
     if ([[_selectedTargetFolder.pathByExpandingTildeInPath pathComponents] count] > 1) {
         NSURL *newTargetURL = [[_pathControl URL] URLByDeletingLastPathComponent];
         
@@ -690,7 +665,7 @@
     }
     [_targetFolderPopUpButton addItemWithTitle:@"Custom"];
     if ([_selectedTemplate.targetFolderPresets count] > 0) {
-        _selectedTargetFolder = [_selectedTemplate.targetFolderPresets objectAtIndex:0];
+        _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[0];
         [self readParameterQueryTableToTemplate:_selectedTemplate];
         
     } else {
@@ -717,7 +692,7 @@
         
         if ( [openDlg runModal] == NSOKButton ) {
             NSArray* selectedURLS = [openDlg URLs];
-            NSURL *selectedURL =[ selectedURLS objectAtIndex:0];
+            NSURL *selectedURL =selectedURLS[0];
             _selectedTargetFolder = [[FileSystemItem alloc] initWithPath:[selectedURL path] andNickName:@"Custom"];
             [self updateTargetFolderViews];
             NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -732,13 +707,82 @@
         
         // FOLDER PRESET
         
-        _selectedTargetFolder = [_selectedTemplate.targetFolderPresets objectAtIndex:selectedIndex];
+        _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[selectedIndex];
         lastSelectedTargetFolderIndex = selectedIndex;
         [self updateTargetFolderViews];
 
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc postNotificationName:@"targetPathChanged" object:self];
     }
+}
+
+#pragma mark -
+#pragma mark TARGET BROWSER VIEW
+
+- (IBAction)targetOutlineViewAction:(id)sender {
+    if (metadataBrowser) {
+        NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
+        id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+        FileSystemItem *clickedItem = item;
+        TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:clickedItem];
+ 
+            [metadataBrowser setMetadata:metadata];
+    }
+  
+}
+
+
+
+
+- (IBAction)contextMenuCopyParameters:(id)sender {
+    NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
+    id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+    if (![item isKindOfClass:[FileSystemItem class]]) return;
+    FileSystemItem *fileSystemItem = item;
+    if (fileSystemItem.isDirectory) {
+        TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:fileSystemItem];
+        if (metadata==nil || [metadata.metadataArray count]==0) {
+            LOG(@"non template folder");
+            return;
+        }
+        LOG(@"going to find some good stuff");
+        if (_selectedTemplate!=nil) {
+            [self readParametersFromMetadata:metadata];
+        }
+        
+    }
+}
+
+- (IBAction)contextMenuShowInFinder:(id)sender {
+    NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
+    id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+}
+
+- (IBAction)showMetadataContextMenuAction:(id)sender {
+    NSInteger rowIndex =  [_targetFolderOutlineView clickedRow];
+    id item = [_targetFolderOutlineView itemAtRow:rowIndex];
+    if (!metadataBrowser) {
+        metadataBrowser = [[MetadataBrowser alloc] init];
+    }
+    FileSystemItem *clickedItem = item;
+    TemplateMetadata *metadata = [[TemplateMetadata alloc] initByReadingFromFolder:clickedItem];
+    if ([metadata.metadataArray count] > 0) {
+        [metadataBrowser openWindow];
+        [metadataBrowser setMetadata:metadata];
+    }
+
+}
+
+
+#pragma mark -
+#pragma mark METADATA BROWSER
+
+-(void)openMetadataBrowser:(id)sender {
+    if (!metadataBrowser) {
+        metadataBrowser = [[MetadataBrowser alloc] init];
+    }
+    [metadataBrowser setMetadata:nil];
+    [metadataBrowser openWindow];
 }
 
 #pragma mark -
@@ -806,7 +850,7 @@
                 
                 if (currentParameter.parameterType == boolean) {
                     
-                    foundCheckBoxValue = [metadataItem.parametersForParentLevel objectForKey:[currentParameter.tag lowercaseString]] ;
+                    foundCheckBoxValue = (metadataItem.parametersForParentLevel)[[currentParameter.tag lowercaseString]] ;
                     if (foundCheckBoxValue!=nil) {
                         if (previouslyFoundCheckBoxValue==nil) previouslyFoundStringValue = [foundCheckBoxValue copy];
                         if ([foundCheckBoxValue boolValue] != [previouslyFoundCheckBoxValue boolValue] ) {
@@ -815,7 +859,7 @@
                         }
                     }
                 } else {
-                    foundStringValue = [metadataItem.parametersForParentLevel objectForKey:[currentParameter.tag lowercaseString]];
+                    foundStringValue = (metadataItem.parametersForParentLevel)[[currentParameter.tag lowercaseString]];
                     if (![foundStringValue isEqualToString:@""] && foundStringValue!=nil) {
                         if (previouslyFoundStringValue==nil) previouslyFoundStringValue = [foundStringValue copy];
                         if (![previouslyFoundStringValue isCaseInsensitiveLike:foundStringValue]) {
@@ -857,11 +901,11 @@
         long defaultIndex = 0;
     NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[semicolonSeparatedString componentsSeparatedByString:@";"]];
     for (long index = 0; index < [items count]; index++) {
-        NSString *string = [items objectAtIndex:index];
-        [items replaceObjectAtIndex:index withObject:[string stringByRemovingDoubleSpacesAndPunctuation]];
+        NSString *string = items[index];
+        items[index] = [string stringByRemovingDoubleSpacesAndPunctuation];
     }
     if ([items count] >0) {
-        if ([[items objectAtIndex:0] isEqualToString:@""]) {
+        if ([items[0] isEqualToString:@""]) {
             defaultIndex = -1;
         }
     } else {
@@ -871,7 +915,7 @@
 
     if ([items count] > 1 && defaultIndex >= 0) {
         for (long index = 1; index < [items count]; index++) {
-            if ([[items objectAtIndex:0] isEqualToString:[items objectAtIndex:index]]) {
+            if ([items[0] isEqualToString:items[index]]) {
                 defaultIndex = index-1;
                 [items removeObjectAtIndex:0];
                 break ;
@@ -892,7 +936,7 @@
 -(void)removeEmptyStringsFromMutableArray:(NSMutableArray *)mutableArray {
     if ([mutableArray count] > 0) {
         for (long index = [mutableArray count] - 1; index >= 0; index--) {
-            if ([[mutableArray objectAtIndex:index] isEqualToString:@""]) {
+            if ([mutableArray[index] isEqualToString:@""]) {
                 [mutableArray removeObjectAtIndex:index];
             }
         }
@@ -1048,6 +1092,19 @@
 -(void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
+- (IBAction)filterAction:(id)sender {
+    LOG(@"%li", [_filterOnOffButton state]);
+    if ([_filterOnOffButton state] ==1) {
+        _filterOnOffButton.title    = @"Filter On";
+        [self readParameterQueryTableToTemplate:_selectedTemplate];
+        [_targetBrowserHelper setFilteringTemplate:_selectedTemplate];
+    } else {
+        _filterOnOffButton.title = @"Filter Off";
+        [_targetBrowserHelper stopFiltering];
+    }
+}
+
 
 @end
 

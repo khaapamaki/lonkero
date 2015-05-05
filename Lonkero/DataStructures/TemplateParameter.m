@@ -20,19 +20,20 @@
 }
 
 -(void) encodeWithCoder: (NSCoder *) coder {
+        _createParentFolder = NO; // to deprecate this
     [coder encodeObject:self.name forKey:@"parameterName"];
     [coder encodeObject:self.tag forKey:@"parameterTag"];
-    [coder encodeObject:[NSNumber numberWithLong:self.parameterType] forKey:@"parameterType"];
+    [coder encodeObject:@(self.parameterType) forKey:@"parameterType"];
     [coder encodeObject:self.defaultValue forKey:@"parameterDefaultValue"];
-    [coder encodeObject:[NSNumber numberWithBool:self.isEditable] forKey:@"parameterIsEditable"];
-    [coder encodeObject:[NSNumber numberWithBool:self.isRequired] forKey:@"parameterIsRequired"];
-    [coder encodeObject:[NSNumber numberWithBool:self.isHidden] forKey:@"parameterIsHidden"];
+    [coder encodeObject:@(self.isEditable) forKey:@"parameterIsEditable"];
+    [coder encodeObject:@(self.isRequired) forKey:@"parameterIsRequired"];
+    [coder encodeObject:@(self.isHidden) forKey:@"parameterIsHidden"];
     [coder encodeObject:self.typeSelection forKey:@"parameterAvailableTypes"];
-    [coder encodeObject:[NSNumber numberWithBool:self.createParentFolder] forKey:@"parameterCreateParent"];
     [coder encodeObject:self.parentFolderNamingRule forKey:@"parameterParentName"];
-    [coder encodeObject:[NSNumber numberWithBool:self.optionalWithAbove] forKey:@"parameterIsOptionalWithAbove"];
-    [coder encodeObject:self.value forKey:@"stringValue"];
+    [coder encodeObject:@(self.optionalWithAbove) forKey:@"parameterIsOptionalWithAbove"];
+    [coder encodeObject:self.stringValue forKey:@"stringValue"];
     [coder encodeObject:self.dateValue forKey:@"dateValue"];
+
 }
 
 -(id) initWithCoder:(NSCoder *) coder {
@@ -43,19 +44,19 @@
     self.isEditable = [[coder decodeObjectForKey:@"parameterIsEditable"] boolValue];
     self.isRequired = [[coder decodeObjectForKey:@"parameterIsRequired"] boolValue];
     self.isHidden = [[coder decodeObjectForKey:@"parameterIsHidden"] boolValue];
-    self.createParentFolder = [[coder decodeObjectForKey:@"parameterCreateParent"] boolValue];
     self.parentFolderNamingRule = [coder decodeObjectForKey:@"parameterParentName"];
     self.optionalWithAbove = [[coder decodeObjectForKey:@"parameterIsOptionalWithAbove"] boolValue];
-    self.value = [coder decodeObjectForKey:@"stringValue"];
+    self.stringValue = [coder decodeObjectForKey:@"stringValue"];
     self.dateValue = [coder decodeObjectForKey:@"dateValue"];
+    
+    _createParentFolder = NO; // to deprecate this
     // _typeSelection = [coder decodeObjectForKey:@"parameterAvailableTypes"];
 
     if (_typeSelection == nil) {
-       _typeSelection = [[NSArray alloc] initWithObjects:PARAMETER_TYPES, nil];
+       _typeSelection = @[PARAMETER_TYPES];
     }
-    _dateValue = [NSDate date];
-    _value = @"";
-    
+    //_dateValue = [NSDate date];
+   
     return self;
 }
 -(id) init {
@@ -69,10 +70,10 @@
         _isHidden = NO;
         _parentFolderNamingRule = @"";
         _defaultValue = @"";
-        _value = @"";
+        _stringValue = @"";
         _createParentFolder = NO;
         _dateValue = [NSDate date];
-        _typeSelection = [[NSArray alloc] initWithObjects:PARAMETER_TYPES, nil];
+        _typeSelection = @[PARAMETER_TYPES];
         _optionalWithAbove = NO;
 
     }

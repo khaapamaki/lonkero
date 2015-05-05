@@ -18,6 +18,8 @@
 @property NSMutableArray *templateFolderArray;
 @property (unsafe_unretained) IBOutlet NSTableView *templateFoldersTableView;
 @property (strong) IBOutlet NSArrayController *templateFoldersArrayController;
+@property (weak) IBOutlet NSComboBox *dateFormat;
+@property (weak) IBOutlet NSPopUpButton *defaultTemplate;
 
 @property (strong) IBOutlet NSPanel *preferencesWindow;
 
