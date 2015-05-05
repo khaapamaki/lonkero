@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Definitions.h"
 #import "Preferences.h"
+#import "UserPreferences.h"
 #import "FileSystemItem.h"
 #import "TemplateManager.h"
 #import "PreferencesController.h"
@@ -45,6 +46,7 @@
     TemplateDeployer *_templateDeployer;
 }
 
+
 @property (unsafe_unretained) IBOutlet NSWindow *mainWind;
 - (IBAction)showMainWindow:(id)sender;
 
@@ -67,6 +69,8 @@
 #pragma mark PREFERENCES
 
 @property Preferences *preferences;
+@property UserPreferences *userPreferences;
+
 -(IBAction)showPreferencePanel:(id)sender;
 
 #pragma mark -
@@ -77,6 +81,7 @@
 @property Template *selectedTemplate;
 @property (unsafe_unretained) IBOutlet NSPopUpButton *templatePopUpButton;
 - (IBAction)templatePopUpAction:(id)sender;
+- (void)populateTemplatePopUpButton;
 
 #pragma mark -
 #pragma mark TEMPLATE FILE BROWSER
@@ -97,6 +102,7 @@
 -(void)readParameterQueryTableToTemplate:(Template*) aTemplate;
 -(void)cleanUpParametersForTemplate:(Template *) aTemplate;
 -(BOOL)hasMissingParameters;
+-(BOOL)hasTooManyParameters:(NSString**)errCode;
 -(void)setHiddenParametersToTemplate:(Template *)aTemplate;
 -(NSView*)getNSViewForParameterQueryTitleColumnForRow:(NSInteger)row;
 -(NSView*)getNSViewForParameterQueryValueColumnForRow:(NSInteger)row;
@@ -147,7 +153,6 @@
 #pragma mark METADATA BROWSER
 
 - (IBAction)openMetadataBrowser:(id)sender;
-@property (unsafe_unretained) IBOutlet NSWindow *metadataBrowserWindow;
 - (IBAction)showMetadataContextMenuAction:(id)sender;
 
 #pragma mark -
@@ -155,6 +160,8 @@
 
 - (void) preferencesDidChange:(NSNotification*)aNotification;
 - (void) templatesDidChange:(NSNotification*)aNotification;
+- (void) targetPathDidChange:(NSNotification*)aNotification;
+- (void) parameterValueDidChange:(NSNotification*)aNotification;
 
 #pragma mark -
 #pragma mark SUPPORTING METHODS
@@ -173,5 +180,6 @@
 @property (unsafe_unretained) IBOutlet NSTextField *debugLabel;
 - (IBAction)testButtonPressed:(id)sender;
 @property (unsafe_unretained) IBOutlet NSButton *testButton;
+
 
 @end

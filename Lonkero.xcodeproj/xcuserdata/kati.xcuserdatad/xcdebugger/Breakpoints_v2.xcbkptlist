@@ -30,12 +30,58 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "410973580.597506"
+            timestampString = "412769330.170395"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
-            landmarkName = "-copyFilesToFolder:defaultPermissions:errString:"
+            startingLineNumber = "827"
+            endingLineNumber = "827"
+            landmarkName = "-parseSystemParametersForString:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[TemplateDeployer parseSystemParametersForString:]"
+                  moduleName = "Lonkero"
+                  urlString = "file://localhost/Users/kati/Dropbox/Development/Lonkero/Source/Lonkero%200.8-working/Lonkero/TemplateDeployer/TemplateDeployer.m"
+                  timestampString = "412769333.456292"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "828"
+                  endingLineNumber = "828"
+                  offsetFromSymbolStart = "124">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[TemplateDeployer parseSystemParametersForString:]"
+                  moduleName = "Lonkero"
+                  urlString = "file://localhost/Users/kati/Dropbox/Development/Lonkero/Source/Lonkero%200.8-working/Lonkero/TemplateDeployer/TemplateDeployer.m"
+                  timestampString = "412769333.456463"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "828"
+                  endingLineNumber = "828"
+                  offsetFromSymbolStart = "1537">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
+            timestampString = "412769397.745298"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "859"
+            endingLineNumber = "859"
+            landmarkName = "-parseSystemParametersForString:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

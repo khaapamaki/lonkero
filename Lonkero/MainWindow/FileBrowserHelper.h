@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 
+// todo 10.9
+
 #import <Foundation/Foundation.h>
 #import "Template.h"
 #import "FileSystemItem.h"
@@ -22,6 +24,7 @@
     NSOutlineView *_myOutlineView;
     Template *_filteringTemplate;
     BOOL _isFilteringOn;
+    NSMutableDictionary *_metadataCache;
 }
 
 @property (weak) IBOutlet NSMenu *contextMenu;
@@ -48,6 +51,8 @@
 
 -(void)refresh;
 -(void)setFilteringTemplate:(Template*)filteringTemplate;
+-(void)flushMetadataCache;
+
 
 -(void)stopFiltering;
 
@@ -59,5 +64,6 @@
 -(id)initWithFolder:(FileSystemItem *)rootFolder andTemplate:(Template *) currentTemplate;
 
 +(BOOL)isURLDirectory:(NSURL *)URL;
+-(BOOL)wildCardMatchForString:(NSString*)string searchString:(NSString*)searchString;
 
 @end

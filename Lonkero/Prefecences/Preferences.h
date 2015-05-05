@@ -7,18 +7,20 @@
 //
 
 #import "Definitions.h"
-#import "PreferencesController.h"
+#import "FileSystemItem.h"
+#import "TemplateDeployer.h"
 
-@interface Preferences : NSObject {
+@class PreferencesController;
+
+@interface Preferences : NSObject <NSCopying> {
     PreferencesController *preferencesController;
 }
 
 @property NSMutableArray *templateSetLocations; // retain?
-@property NSString *defaultTemplatePath;
-@property NSString *defaultTemplateName;
 @property NSString *defaultDateFormat;
 
 -(void) savePreferences;
 -(id) initWithLoadingPreferences;
+-(NSMutableArray*)templateSetLocationsByParsingSystemParameters;
 
 @end

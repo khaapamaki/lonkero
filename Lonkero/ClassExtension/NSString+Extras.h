@@ -27,8 +27,11 @@
 +(BOOL)isNotEmptyString:(NSString*)str;
 +(BOOL)isEmptyString:(NSString*)str;
 
--(NSString*)stringByInsertingHyphensEvery:(short)number;
-+(NSString *)convertWildCardToRegExp:(NSString *)WildCardString;
-+(NSString *)generateRandomStringOfLength:(short)len;
--(NSArray*)arrayFromSemicolonSeparatedList;
+-(NSString*) stringByInsertingHyphensEvery:(short)number;
++(NSString*) convertWildCardToRegExp:(NSString *)WildCardString;
++(NSString*) generateRandomStringOfLength:(short)len;
+-(NSArray*)  arrayFromSemicolonSeparatedList;
+-(NSString*) characterStringAtIndex:(NSInteger)index;
+-(NSArray*) arrayOfSubstringsSeparatedWithCharactersInString:(NSString*)separatorCharacters;
+
 @end

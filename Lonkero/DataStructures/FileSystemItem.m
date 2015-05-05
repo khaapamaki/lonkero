@@ -340,9 +340,10 @@
 -(void)updateExistingStatus {
     NSFileManager *fm = [NSFileManager defaultManager];
     BOOL isDir = NO;
+    NSString *path = [self pathByExpandingTildeInPath];
     BOOL URLExists = [fm fileExistsAtPath:[self pathByExpandingTildeInPath] isDirectory:&isDir];
     _itemExists = URLExists;
-    _isDirectory = isDir;
+    if (URLExists) _isDirectory = isDir;
 }
 
 
@@ -373,6 +374,7 @@
     }
     return nil;
 }
+
 /** Initializes a FileSystemItem object by letting user to select a folder in open dialog.
  
  @return self if successful.
@@ -387,6 +389,7 @@
     [openDlg setAllowsMultipleSelection:NO];
     [openDlg setCanChooseDirectories:YES];
     [openDlg setCanCreateDirectories:YES];
+    [openDlg setDirectoryURL:[[FileSystemItem systemRootFolder] fileURL]];
     [openDlg setAnimationBehavior:NSWindowAnimationBehaviorNone];
     if ([openDlg runModal] == NSOKButton) {
         self = [super init];
@@ -458,7 +461,7 @@
     _isParent = [[coder decodeObjectForKey:@"isParent"] boolValue];
     _isTarget = [[coder decodeObjectForKey:@"isTarget"] boolValue];
     _shouldCopy = NO;
-
+    _filteredOut = NO;
     
     return self;
 }
@@ -483,6 +486,7 @@
         _isParent = NO;
         _isTarget = NO;
         _shouldCopy = NO;
+        _filteredOut = NO;
 
     }
     return self;
@@ -519,6 +523,7 @@ Initialises the object and also reads file/folder parameters from the file syste
         _isParent = NO;
         _isTarget = NO;
         _shouldCopy = NO;
+        _filteredOut = NO;
     }
     return self;
 }
@@ -543,6 +548,7 @@ Initialises the object and also reads file/folder parameters from the file syste
         _isParent = NO;
         _isTarget = NO;
         _shouldCopy = NO;
+        _filteredOut = NO;
         [self setPathByAbbreviatingTildeInPath:_path];
     }
     return self;
@@ -576,6 +582,7 @@ Initialises the object and also reads file/folder parameters from the file syste
         _isParent = NO;
         _isTarget = NO;
         _shouldCopy = NO;
+        _filteredOut = NO;
     }
     return self;
 }
@@ -612,6 +619,7 @@ Initialises the object and also reads file/folder parameters from the file syste
     newFolder.isMaster = _isMaster;
     newFolder.isTarget = _isTarget;
     newFolder.shouldCopy = _shouldCopy;
+    newFolder.filteredOut = _filteredOut;
     return newFolder;
 }
 

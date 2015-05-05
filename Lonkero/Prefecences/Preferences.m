@@ -9,6 +9,7 @@
 #import "Preferences.h"
 #import "Definitions.h"
 
+
 @implementation Preferences
 
 -(void)savePreferences {
@@ -20,10 +21,14 @@
     
     // create prefs folder if it doesn't exist
     if (![fm fileExistsAtPath:preferenceFolderPath isDirectory:&isdir]) {
-        [fm createDirectoryAtPath:preferenceFolderPath withIntermediateDirectories:YES attributes:0 error:nil];
+        if (![fm createDirectoryAtPath:preferenceFolderPath withIntermediateDirectories:YES attributes:0 error:nil]) {
+            NSRunAlertPanel(@"Cannot create folder for preferences", @"", @"Ok", nil, nil);
+        }
     }
-    [NSKeyedArchiver archiveRootObject:self toFile:preferenceFilePath];
     
+    if (![NSKeyedArchiver archiveRootObject:self toFile:preferenceFilePath]) {
+        NSRunAlertPanel(@"Cannot write preferences", @"", @"Ok", nil, nil);
+    }
 }
 
 -(void) encodeWithCoder: (NSCoder *) coder {
@@ -55,8 +60,7 @@
     NSFileManager *fm = [[NSFileManager alloc] init];
     // read prefrences if they exists
     if ([fm fileExistsAtPath:preferenceFilePath]) {
-        Preferences *loadedPreferences;
-        loadedPreferences = [NSKeyedUnarchiver unarchiveObjectWithFile:preferenceFilePath];
+        Preferences *loadedPreferences = [NSKeyedUnarchiver unarchiveObjectWithFile:preferenceFilePath];
         
         if (loadedPreferences != nil) {
             self = loadedPreferences;
@@ -71,6 +75,23 @@
     return self;
 }
 
+-(NSMutableArray *)templateSetLocationsByParsingSystemParameters {
+    NSMutableArray *parsedTemplateLocations = [NSMutableArray array];
+    for (FileSystemItem *currentLocation in _templateSetLocations) {
+        TemplateDeployer *td = [[TemplateDeployer alloc] init];
+        FileSystemItem *anItem = [[FileSystemItem alloc] initWithPath:[td parseSystemParametersForString:currentLocation.path] andNickName:currentLocation.nickName];
+        [parsedTemplateLocations addObject:anItem];
+    }
+    
+    return parsedTemplateLocations;
+}
+
+-(id)copyWithZone:(NSZone*)zone {
+    Preferences *newPrefs = [[Preferences allocWithZone:zone] init];
+    newPrefs.templateSetLocations = [_templateSetLocations mutableCopy];
+    newPrefs.defaultDateFormat = [_defaultDateFormat copy];
+    return newPrefs;
+}
 
 -(id)init {
     self = [super init];

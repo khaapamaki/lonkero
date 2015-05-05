@@ -27,7 +27,8 @@
     
     [_createNewEmptyFolderButton setEnabled:YES];
     [_selectLocationPopUp removeAllItems];
-    for (FileSystemItem *currentFolder in _preferences.templateSetLocations) {
+    for (FileSystemItem *currentFolder in _preferences.templateSetLocationsByParsingSystemParameters) {
+        
         if (currentFolder.nickName != nil && ![currentFolder.nickName isEqualToString:@""]) {
             [_selectLocationPopUp addItemWithTitle:currentFolder.nickName];
         } else {
@@ -50,7 +51,10 @@
 
 -(void)updateExistingFolderListTableView {
 
-    FileSystemItem *templateSetFolder = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
+    TemplateDeployer *td = [[TemplateDeployer alloc] init];
+    FileSystemItem *unparsedTemplateLocation = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
+    FileSystemItem *templateSetFolder = [[FileSystemItem alloc] initWithPath:[td parseSystemParametersForString:unparsedTemplateLocation.pathByExpandingTildeInPath] andNickName:unparsedTemplateLocation.nickName];
+    
     [_existingFolders removeAllObjects];
     [_existingFolders addObjectsFromArray:[TemplateManager getFoldersAtFolder:templateSetFolder select:nonTemplatesOnly]];
     [_existingFoldersTableView reloadData];
@@ -87,8 +91,10 @@
 }
 
 - (IBAction)createNewEmptyTemplateFolder:(id)sender {
-    NSFileManager *fm = [[NSFileManager defaultManager] init ];
-    FileSystemItem *selectedFolder = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    TemplateDeployer *td = [[TemplateDeployer alloc] init];
+    FileSystemItem *unparsedTemplateLocation = (_preferences.templateSetLocations)[[_selectLocationPopUp indexOfSelectedItem]];
+    FileSystemItem *selectedFolder = [[FileSystemItem alloc] initWithPath:[td parseSystemParametersForString:unparsedTemplateLocation.pathByExpandingTildeInPath] andNickName:unparsedTemplateLocation.nickName];
     NSString *folderName = [_folderNameTextField stringValue];
     if (!folderName || [folderName isEqualToString:@""]) {
         // no name, do nothing

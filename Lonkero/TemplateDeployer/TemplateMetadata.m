@@ -19,7 +19,6 @@
 
 -(NSInteger)count {
     return [_metadataArray count];
-    
 }
 
 /**
@@ -61,6 +60,13 @@
     return self;
 }
 
+
++(BOOL)metadataExisistAtFolder:(FileSystemItem*)aFolder {
+        NSString *path = [NSString stringWithFormat:@"%@/%@", aFolder.pathByExpandingTildeInPath, METADATA_FILENAME];
+        NSFileManager *fm = [[NSFileManager alloc] init];
+        
+        return [fm fileExistsAtPath:path];
+}
 /**
  *  Initializes the template object with the data read form a folder
  *

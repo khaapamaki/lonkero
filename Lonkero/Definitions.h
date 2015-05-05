@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Kati Haapamäki. All rights reserved.
 //
 #define APPNAME @"Lonkero"
-#define APPVERSION @"0.8 beta"
+#define APPVERSION @"0.8.8 beta"
 #define APPDESC @"Folder Template Manager"
 
 #define PREFEFENCES_VERSION @"0.3"
@@ -24,7 +24,7 @@
 #define TAGCHAR_INNER_2 @"]"
 #define TAGCHAR_OUTER_1 @"{"
 #define TAGCHAR_OUTER_2 @"}"
-#define TAGCHAR_EXTRACTING_INNER_1 @"[-"
+#define TAGCHAR_EXTRACTING_INNER_1 @"[!"
 
 #if DEBUG
 #   define LOG(fmt, ...) NSLog(fmt, ##__VA_ARGS__)
@@ -53,6 +53,9 @@ enum {
     ErrInvalidFileOrFolderName = 12,
     ErrNoExistingMetadata = 13,
     ErrMasterFolderDoesNotExist = 14,
+    ErrFileOccupiedByFolder = 15,
+    ErrOverlappingOptionalParameters = 16,
+    ErrMasterFolderDoesNotExistWhileUpdatingMetadata = 17,
     WarnSkippedExistingFiles = 65,
     SkippedByUser = 129,
     UserCancelled = -1,
@@ -85,6 +88,14 @@ typedef enum {
     customcase,
     noCaseChange
 } Case;
+
+typedef enum {
+    quitApp = 1,
+    closeWindow = 2,
+    openMasterFolder = 4,
+    openTargetFolder = 8,
+    ask = -1
+} PostDeploymentAction;
 
 // typedef enum { isNotParentFolder = 0, isParentFolderOptional = 1, isParentFolderRequired = 2 } templateParentFolderSetting;
 typedef enum { templatesOnly = 1, nonTemplatesOnly = 0, bothTemplatesAndNonTemplates= -1 } FolderSelectionType;

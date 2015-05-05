@@ -10,4 +10,5 @@
 
 @interface CustomViewForWindow : NSView
 
+
 @end

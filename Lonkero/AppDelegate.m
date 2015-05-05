@@ -10,6 +10,21 @@
 
 @implementation AppDelegate
 
+#pragma mark
+#pragma TESTING
+
+
+-(void)performTestRoutineForDevelopmentPurposes {
+#if DEBUG
+    
+   
+    
+    
+#endif
+}
+
+
+
 #pragma mark -
 #pragma mark IB ACTIONS
 
@@ -93,6 +108,7 @@
     errCode = [_templateDeployer rewriteMetadataToTargetFolder:targetFolder errString:&errString];
     if (errCode != 0) {
         if (errCode <= 128) {
+            [_targetBrowserHelper flushMetadataCache];
             [self updateTargetFolderViews];
             [self errorPanelForErrCode:errCode andParameter:errString];
         }
@@ -124,6 +140,11 @@
         [self errorPanelForErrCode:ErrRequiredParametersMissing andParameter:nil] ;
         return;
     }
+    NSString *errStr = nil;
+    if ([self hasTooManyParameters:&errStr]) {
+        [self errorPanelForErrCode:ErrOverlappingOptionalParameters andParameter:errStr];
+        return;
+    }
     
     // err code not implemented yet..
     NSInteger err = [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
@@ -133,29 +154,62 @@
         return;
     }
     
+    // check if custom target folder is set and warn user
+    if (lastSelectedTargetFolderIndex == -1) {
+        NSInteger answer = NSRunAlertPanel(@"Warning! Custom target folder is set. Are you sure you want to deploy to that folder?", _selectedTargetFolder.path, @"Proceed", @"Cancel", nil);
+        if (answer == NSCancelButton) return;
+    }
     NSString *errString = @"";
     NSInteger errCode = 0;
     
     // DEPLOY
-    errCode = [_templateDeployer deployToTargetFolder:[self parsedTargetFolder] errString:&errString];
+    
+    FileSystemItem *targetFolder = [self parsedTargetFolder];
+    
+    errCode = [_templateDeployer deployToTargetFolder:targetFolder errString:&errString];
+    
+    FileSystemItem *masterFolder = [[_templateDeployer generateParentFolderArrayWithError:nil] lastObject];
+    
+    [_targetBrowserHelper flushMetadataCache];
     
     // Deploy results
     if (errCode != 0) {
         if (errCode <= 128) {
+
             [self updateTargetFolderViews];
             [self errorPanelForErrCode:errCode andParameter:errString];
         }
     } else {
-        // Show in Finder
-        FileSystemItem *masterfolder = [[_templateDeployer getParentFoldersWithError:nil] lastObject];
-        BOOL couldOpen = [[NSWorkspace sharedWorkspace] openURL:[masterfolder fileURL]];
+        BOOL couldOpen = NO;
+        BOOL openFolder = (([_userPreferences.postDeploymentAction integerValue] & openMasterFolder) || ([_userPreferences.postDeploymentAction integerValue] & openTargetFolder) );
         
-        NSAssert(couldOpen, @"Could not open finder window");
+        if (openFolder) {
+
+            FileSystemItem *folderToShow = nil;
+            if ([_userPreferences.postDeploymentAction integerValue] & openMasterFolder) {
+                folderToShow = masterFolder;
+            } else {
+                folderToShow = targetFolder;
+            }
+            couldOpen = [[NSWorkspace sharedWorkspace] openURL:[folderToShow fileURL]];
+            NSAssert(couldOpen, @"Could not open finder window");
+        } else {
+            NSRunAlertPanel(@"Folder structure deployed", masterFolder.path, @"Ok", nil, nil);
+        }
+        
+        
+
         [self reloadParameterQueryTable];
         [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
         [self updateTargetFolderViews];
-       // [_mainWind close];
         
+        if ([_userPreferences.postDeploymentAction integerValue] & closeWindow) {
+            [_mainWind close];
+        }
+        
+        if ([_userPreferences.postDeploymentAction integerValue] & quitApp) {
+            // QUIT APP
+        }
     }
 }
 
@@ -163,7 +217,7 @@
     if (!preferencesController) {
         preferencesController = [[PreferencesController alloc] init];
     }
-    [preferencesController editPreferences:_preferences];
+    [preferencesController editPreferences:_preferences andUserPreferences:_userPreferences];
     [_toolBar setSelectedItemIdentifier:nil];
 }
 
@@ -192,11 +246,51 @@
 
 - (IBAction)templatePopUpAction:(id)sender {
     [self setSelectedTemplateByPopUp];
+
+}
+
+/**
+ *  Reads template selection popup button's value and set it to be the current template
+ *
+ *  Sets @a _selectedTemplate variable and initializes the template browser
+ */
+
+- (void)setSelectedTemplateByPopUp {
+    if ([_templateArray count] > 0) {
+        FileSystemItem *templateFolder = _templateArray[[_templatePopUpButton indexOfSelectedItem]];
+        _selectedTemplate = [[Template alloc] initWithURL:[templateFolder fileURL]];
+    } else {
+        _selectedTemplate = nil;
+    }
+    [_templateBrowserHelper updateWithFolder:_selectedTemplate.location andTemplate:_selectedTemplate];
+    [_templateBrowserHelper refresh];
+    [_templateFileBrowserOutlineView reloadData];
+    _templateDeployer = [[TemplateDeployer alloc] initWithTemplate:_selectedTemplate];
     [self loadParameterQueryTableWithTemplate:_selectedTemplate];
     [self populateTargetFolderPopUpButton];
     [self setTargetFolderPopUpButtonToIndex:0];
+    [_targetBrowserHelper flushMetadataCache];
     [self updateTargetFolderViews];
 }
+
+-(void)setTemplatePopUpButtonByUserPreferencesDefault {
+    FileSystemItem *chooseThis = _userPreferences.locationOfDefaultTemplate;
+    BOOL templateFound = NO;
+    for (NSInteger index=0; index < [_templateArray count]; index++) {
+        FileSystemItem *popupItem = _templateArray[index];
+        if ([chooseThis.URLStylePath isEqualToString:popupItem.URLStylePath]) {
+            templateFound = YES;
+            [_templatePopUpButton selectItemAtIndex:index];
+            break;
+        }
+    }
+    if (!templateFound) {
+        [_templatePopUpButton selectItemAtIndex:0];
+    }
+    [self setSelectedTemplateByPopUp];
+    
+}
+
 
 #pragma mark -
 #pragma mark PARAMETER QUERY TABLE
@@ -225,7 +319,7 @@
                          // cannot be missing
                         break;
                     case list:
-                        if  ([[cellView objectValueOfSelectedItem] isEqualToString:@""] || [cellView objectValueOfSelectedItem]==nil) {
+                        if  ([NSString isEmptyString:[cellView objectValueOfSelectedItem]]) {
                             result = YES;
                         }
                         break;
@@ -233,7 +327,8 @@
                          // cannot be missing
                         break;
                     default:
-                        if (([[[cellView textField] stringValue] isEqualToString:@""] || [[cellView textField] stringValue] == nil)) {
+                        
+                        if ([NSString isEmptyString:[[cellView textField] stringValue]]) {
                             result = YES;
                         }
                         break;
@@ -246,24 +341,65 @@
     return result;
 }
 
+
 /**
- *  Reads template selection popup button's value and set it to be the current template
+ *  Checks if user has entered too many parameter values in parameter query
  *
- *  Sets @a _selectedTemplate variable and initializes the template browser
+ *  This can occur if there are optional parameters that are not allowed together with another.
+ *
+ *  @return YES if there are too many parameters
  */
-- (void)setSelectedTemplateByPopUp {
-    if ([_templateArray count] > 0) {
-        FileSystemItem *templateFolder = _templateArray[[_templatePopUpButton indexOfSelectedItem]];
-        _selectedTemplate = [[Template alloc] initWithURL:[templateFolder fileURL]];
-    } else {
-        _selectedTemplate = nil;
-    }
-    [_templateBrowserHelper updateWithFolder:_selectedTemplate.location andTemplate:_selectedTemplate];
-    [_templateBrowserHelper refresh];
-    [_templateFileBrowserOutlineView reloadData];
-    _templateDeployer = [[TemplateDeployer alloc] initWithTemplate:_selectedTemplate];
+
+-(BOOL)hasTooManyParameters:(NSString**)errStr {
+    BOOL result = NO;
+    long tableIndex = 0;
+    long arrayIndex = 0;
+    BOOL previousParameterSet = NO;
+    BOOL thisParameterSet = NO;
+    TemplateParameter *previousParameter = nil;
     
+    for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
+        if (!currentParameter.isHidden) {
+            thisParameterSet = NO;
+            
+            NSInteger column = [_parameterQueryTableView columnWithIdentifier:@"value"];
+            id cellView = [_parameterQueryTableView viewAtColumn:column row:tableIndex makeIfNecessary:NO];
+            switch (currentParameter.parameterType) {
+                case boolean:
+                    thisParameterSet = YES;
+                    break;
+                case list:
+                    if ([NSString isNotEmptyString:[cellView objectValueOfSelectedItem]]) thisParameterSet = YES;
+                    
+                    break;
+                case date:
+                    thisParameterSet = YES;
+                    break;
+                default:
+                    if ([NSString isNotEmptyString:[[cellView textField] stringValue]]) thisParameterSet = YES;
+                    break;
+            }
+            
+            if (currentParameter.optionalWithAbove && previousParameter != nil) {
+                if (thisParameterSet && previousParameterSet) {
+                    if (result == NO && errStr!=NULL) {
+                        *errStr = [NSString stringWithFormat:@"\"%@\" and \"%@\"", previousParameter.name, currentParameter.name];
+                    }
+                    result = YES;
+                }
+            }
+            tableIndex++;
+            previousParameter = currentParameter;
+            previousParameterSet = thisParameterSet;
+        }
+        arrayIndex++;
+        
+    }
+    
+    return result;
 }
+
+
 
 /**
  *  Initializes parameter query table for a given template
@@ -557,7 +693,7 @@
                 }
             }
             if ([cellView isKindOfClass:[NSButton class]]) { // checkbox
-                currentParameter.stringValue = @"";
+                currentParameter.stringValue = [cellView state] == 0 ? @"off" : @"on";
                 currentParameter.booleanValue = [cellView state];
             }
             tableIndex++;
@@ -569,7 +705,7 @@
 }
 
 /**
- *  Cleans up parameter values in given template
+ *  Cleans up parameter value string formatting in given template
  *
  *  This is used before deployment to remove illegal characters and bad formatting
  *  from string values of template's parameters.
@@ -623,8 +759,8 @@
 
 -(NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView {
     return [_parameterQueryTableContents count];
-
 }
+
 /**
  *  TableView protocol method. Also sets nextKeyViews for correct tabbing. This may be unusual place to do
  *  that, but it seems to work.
@@ -637,6 +773,7 @@
     if (row >= [_parameterQueryTableContents count]) {
         return nil;
     }
+    
     // LABEL COLUMN
     if ([tableColumn.identifier isEqualToString:@"title"]) {
         return [self getNSViewForParameterQueryTitleColumnForRow:row];
@@ -680,7 +817,12 @@
     
     result = [_parameterQueryTableView makeViewWithIdentifier:@"imageAndLabel" owner:self];
     
-    [result.textField setStringValue:[NSString stringWithFormat:@"%@:", [theParameter name]]];
+    if (theParameter.optionalWithAbove) {
+        [result.textField setStringValue:[NSString stringWithFormat:@"+ %@:", [theParameter name]]];
+    } else {
+        [result.textField setStringValue:[NSString stringWithFormat:@"%@:", [theParameter name]]];
+    }
+    
     if ([NSString isNotEmptyString:theParameter.parentFolderNamingRule] && theParameter.isRequired) {
         [result imageView].image = [NSImage imageNamed:@"parameter_folder_required"];
     }
@@ -818,6 +960,7 @@
     
     if (newTargetFolder != nil) {
         _selectedTargetFolder = newTargetFolder;
+        [_targetBrowserHelper flushMetadataCache];
         [self updateTargetFolderViews];
         [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -864,6 +1007,7 @@
     _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:item.fileURL];
 //    lastSelectedTargetFolderIndex = -1;
 //    [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+    [_targetBrowserHelper flushMetadataCache];
     [self updateTargetFolderViews];
     [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -889,6 +1033,7 @@
             _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:clickedPathURL];
 //            lastSelectedTargetFolderIndex = -1;
 //            [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+            [_targetBrowserHelper flushMetadataCache];
             [self updateTargetFolderViews];
             [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
             NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -909,6 +1054,7 @@
         _selectedTargetFolder = [[FileSystemItem alloc] initWithURL:newTargetURL];
 //        lastSelectedTargetFolderIndex = -1;
 //        [_targetFolderPopUpButton selectItemAtIndex:[[_targetFolderPopUpButton itemArray] count] -1];
+        [_targetBrowserHelper flushMetadataCache];
         [self updateTargetFolderViews];
         [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -967,6 +1113,7 @@
         [self populateTargetFolderPopUpButton];
      //   [_targetFolderPopUpButton selectItemAtIndex:lastIndex];
         [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
+        [_targetBrowserHelper flushMetadataCache];
         [self updateTargetFolderViews];
         NSRunAlertPanel(@"Note: Target folder has changed due to parameter change.", _selectedTargetFolder.path, @"Ok", nil, nil);
     }
@@ -1065,6 +1212,7 @@
         
         if (newTargetFolder != nil) {
             _selectedTargetFolder = newTargetFolder;
+            [_targetBrowserHelper flushMetadataCache];
             [self updateTargetFolderViews];
             [self setTargetFolderPopUpToFolder:_selectedTargetFolder];
             NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -1103,6 +1251,7 @@
         
         _selectedTargetFolder = (_selectedTemplate.targetFolderPresets)[selectedIndex];
         lastSelectedTargetFolderIndex = selectedIndex;
+        [_targetBrowserHelper flushMetadataCache];
         [self updateTargetFolderViews];
         
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -1111,7 +1260,7 @@
 }
 
 #pragma mark -
-#pragma mark TARGET BROWSER VIEW
+#pragma mark TARGET BROWSER VIEW IB ACTIONS
 
 - (IBAction)targetOutlineViewAction:(id)sender {
     if (metadataBrowser) {
@@ -1144,6 +1293,11 @@
         }
         if (_selectedTemplate!=nil) {
             [self readParametersFromMetadata:metadata];
+            [_parameterQueryTableView reloadData];
+            [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+            if ([_filterOnOffButton state] == 1) {
+                [_targetBrowserHelper refresh];
+            }
         }
         
     }
@@ -1197,6 +1351,7 @@
  *
  *  @param sender A sender
  */
+
 -(IBAction)openMetadataBrowser:(id)sender {
     if (!metadataBrowser) {
         metadataBrowser = [[MetadataBrowser alloc] init];
@@ -1207,6 +1362,7 @@
 
 #pragma mark -
 #pragma mark NOTIFICATIONS AND EVENTS
+
 /**
  *  Notification responder for preferences change
  *
@@ -1223,10 +1379,13 @@
         [templateManager updatePreferences:_preferences];
     }
     [self populateTemplatePopUpButton];
+    [self setTemplatePopUpButtonByUserPreferencesDefault];
     [self setSelectedTemplateByPopUp];
-    [self loadParameterQueryTableWithTemplate:_selectedTemplate];
-    [self updateTargetFolderViews];
+   // [self loadParameterQueryTableWithTemplate:_selectedTemplate];
+    //[_targetBrowserHelper flushMetadataCache];
+    //[self updateTargetFolderViews];
 }
+
 /**
  *  Notification responder for template selection change
  *
@@ -1234,39 +1393,65 @@
  *
  *  @param aNotification A notification
  */
+
 -(void)templatesDidChange:(NSNotification*)aNotification {
     [_viewMenuItem setHidden:YES];
     [self populateTemplatePopUpButton];
     [self setSelectedTemplateByPopUp];
-    [self loadParameterQueryTableWithTemplate:_selectedTemplate];
+ //   [self loadParameterQueryTableWithTemplate:_selectedTemplate];
    // [self checkIfTargetFolderHasChangedDueParsingAndUpdate];  // check!
-    [self updateTargetFolderViews];
+   // [self updateTargetFolderViews];
 }
 
--(void)targetDidChange:(NSNotification*)aNotification {
+-(void)targetPathDidChange:(NSNotification*)aNotification {
 //    TemplateMetadata *targetMetadata = [[TemplateMetadata alloc] initByReadingFromFolder:_selectedTargetFolder];
+
     
 }
 - (IBAction)comboBoxAction:(id)sender {
     [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
-    [self prepareForFilteringIfNeeded];
+    if ([_filterOnOffButton state] == 1) {
+    //    [_targetBrowserHelper flushMetadataCache];
+        [_targetBrowserHelper refresh];
+    }
+   // [self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)checkBoxAction:(id)sender {
     [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
-    [self prepareForFilteringIfNeeded];
+    if ([_filterOnOffButton state] == 1) {
+      //  [_targetBrowserHelper flushMetadataCache];
+        [_targetBrowserHelper refresh];
+    }
+ //   [self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)datePickerAction:(id)sender {
     [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
-    [self prepareForFilteringIfNeeded];
+    if ([_filterOnOffButton state] == 1) {
+     //   [_targetBrowserHelper flushMetadataCache];
+        [_targetBrowserHelper refresh];
+    }
+    //[self prepareForFilteringIfNeeded];
 }
 
 - (IBAction)textFieldAction:(id)sender {
     [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
-    [self prepareForFilteringIfNeeded];
+    if ([_filterOnOffButton state] == 1) {
+      //  [_targetBrowserHelper flushMetadataCache];
+        [_targetBrowserHelper refresh];
+    }
+    //[self prepareForFilteringIfNeeded];
 }
 
+-(void)parameterValueDidChange:(NSNotification*)aNotification {
+    [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
+    if ([_filterOnOffButton state] == 1) {
+        [_targetBrowserHelper refresh];
+    }
+    //[self prepareForFilteringIfNeeded];
+    return;
+}
 
 #pragma mark -
 #pragma mark SUPPORTING METHODS
@@ -1313,8 +1498,10 @@
                     }
                 }
             }
-            
-            if (foundStringValue!=nil || foundCheckBoxValue!=nil) {
+            if (foundStringValue==nil) {
+                foundStringValue = @"";
+            }
+            if (YES) { // jos vaikka jotain ei pitäiskään kopioida... 
                 NSInteger column = [_parameterQueryTableView columnWithIdentifier:@"value"];
                 id cellView = [_parameterQueryTableView viewAtColumn:column row:tableIndex makeIfNecessary:NO];
 
@@ -1334,8 +1521,7 @@
         }
         arrayIndex++;
     }
-
-    
+ 
 }
 
 /**
@@ -1405,71 +1591,72 @@
  *  @param errCode  Error code as NSInteger
  *  @param paramStr Description string
  */
+
 -(void)errorPanelForErrCode:(NSInteger)errCode andParameter:(NSString*)paramStr {
     NSString *errMsg;
     BOOL isError = NO;
-    // BOOL isWargning = NO;
-    if (errCode>0) {
-        
+    BOOL isWarning = NO;
+    
+    if (errCode>0 && errCode<128) {
+        if (errCode<64) isError = YES;
+        if (errCode>=64) isWarning = YES;
         switch (errCode) {
             case ErrMasterFolderExists:
                 errMsg = @"Project folder already exists";
-                isError = YES;
                 break;
             case ErrCouldntCreateFolder:
                 errMsg = @"Cannot create folder";
-                isError = YES;
                 break;
             case ErrFolderOccupiedByFile:
                 errMsg = @"Cannot create folder. Folder's name is in use";
-                isError = YES;
                 break;
             case ErrInvalidParentFolderName:
                 errMsg = @"Invalid parent folder name";
-                isError = YES;
                 break;
             case ErrTargetFolderDoesntExist:
                 errMsg = @"Target folder does not exist";
-                isError = YES;
                 break;
             case ErrFileExistsAtTarget:
                 errMsg = @"File already exists";
-                isError = YES;
                 break;
             case ErrFileCopyError:
                 errMsg = @"Cannot write file";
-                isError = YES;
                 break;
             case ErrParameterTagsYieldedEmptyString:
                 errMsg = @"Empty parent folder name";
-                isError = YES;
                 break;
             case ErrRequiredParametersMissing:
                 errMsg = @"Required parameter missing";
-                isError = YES;
                 break;
             case ErrInvalidMasterFolderName:
                 errMsg = @"Invalid master folder name";
-                isError = YES;
                 break;
             case ErrInvalidFileOrFolderName:
                 errMsg = @"Invalid file or folder name";
-                isError = YES;
+                break;
+            case ErrNoExistingMetadata:
+                errMsg = @"Metadata is missing";
                 break;
             case ErrSettingPosix:
                 errMsg = @"Could not set permissions";
-                isError = YES;
+                break;
+            case ErrMasterFolderDoesNotExistWhileUpdatingMetadata:
+                errMsg = @"Master folder doesn't exist. You have probably set wrong target folder.";
+                break;
+            case ErrMasterFolderDoesNotExist:
+                errMsg = @"Master folder doesn't exist";
                 break;
             case WarnSkippedExistingFiles:
                 errMsg = @"Skipped existing file(s)";
-                isError = NO;
                 break;
-                
+            case ErrOverlappingOptionalParameters:
+                errMsg = @"Two optional parameters are used at the same time. Remove at least one.";
             default:
-                errMsg = [NSString stringWithFormat:@"General error with code: %li", errCode];
+                errMsg = [NSString stringWithFormat:@"Error with code: %li", errCode];
                 isError = YES;
                 break;
         }
+        
         if (isError) {
             errMsg = [NSString stringWithFormat:@"Error:\n%@", errMsg];
         } else {
@@ -1488,13 +1675,12 @@
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    
-    // TEST
-    
+
     // seeding random generator;
     srandom((unsigned int) time(NULL));
     
     _preferences = [[Preferences alloc] initWithLoadingPreferences];
+    _userPreferences = [[UserPreferences alloc] initWithLoadingUserPreferences];
     [_templateManagerToolbarItem setAutovalidates:NO];
     [_templateManagerMenuItem setEnabled:[_preferences.templateSetLocations count]>0];
     [_templateManagerToolbarItem setEnabled:[_preferences.templateSetLocations count]>0];
@@ -1504,10 +1690,11 @@
     _templateBrowserHelper = [[FileBrowserHelper alloc] initWithOutlineView:_templateFileBrowserOutlineView folder:nil showFiles:YES];
     
     [self populateTemplatePopUpButton];
-    [self setSelectedTemplateByPopUp];
-    [self loadParameterQueryTableWithTemplate:_selectedTemplate];
+    [self setTemplatePopUpButtonByUserPreferencesDefault];
+  //  [self setSelectedTemplateByPopUp];
+  //  [self loadParameterQueryTableWithTemplate:_selectedTemplate];
     [self checkIfTargetFolderHasChangedDueParsingAndUpdate];
-    [self updateTargetFolderViews];
+  //  [self updateTargetFolderViews];
     [_targetFolderOutlineView setTarget:self];
     [_targetFolderOutlineView setDoubleAction:@selector(doubleClick:)];
     [_targetFolderOutlineView setDataSource:_targetBrowserHelper];
@@ -1516,10 +1703,13 @@
     [_templateFileBrowserOutlineView setDataSource:_templateBrowserHelper];
     [_templateFileBrowserPathControl setBackgroundColor:[Definitions controlPathBackgroundColor ]];
     [_pathControl setBackgroundColor:[Definitions controlPathBackgroundColor]];
+
     
+    // RUN TESTS FOR DEVELOPMENT
 #if DEBUG
     [_testButton setHidden:NO];
     [_debugLabel setHidden:NO];
+    [self performTestRoutineForDevelopmentPurposes];
     
 #endif
 
@@ -1534,7 +1724,8 @@
         NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
         [nc addObserver:self selector:@selector(preferencesDidChange:) name:@"preferencesDidChange" object:nil];
         [nc addObserver:self selector:@selector(templatesDidChange:) name:@"templatesDidChange" object:nil];
-        [nc addObserver:self selector:@selector(targetDidChange:) name:@"targetPathChanged" object:nil];
+        [nc addObserver:self selector:@selector(targetPathDidChange:) name:@"targetPathChanged" object:nil];
+        [nc addObserver:self selector:@selector(parameterValueDidChange:) name:@"parameterValueDidChange" object:nil];
     }
     
     return self;

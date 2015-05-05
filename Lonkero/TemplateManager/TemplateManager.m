@@ -97,7 +97,12 @@
 -(void)saveTemplate {
     // copy IB fields to _selectedTemplate and save that
 //    _selectedTemplate.masterFolderNamingRule = [_masterFolderNamingRule stringValue];
-    _selectedTemplate.dateFormatString = [_dateFormatTextField stringValue];
+    if ([NSString isNotEmptyString:_dateFormatTextField.stringValue]) {
+            _selectedTemplate.dateFormatString = [_dateFormatTextField stringValue];
+    } else {
+        _selectedTemplate.dateFormatString = _preferences.defaultDateFormat;
+    }
+
     _selectedTemplate.templateParameterSet = [_parametersArray copy];
     _selectedTemplate.targetFolderPresets = [_targetFoldersArray copy];
     _selectedTemplate.groupId = [_groupIdTextField stringValue];
@@ -319,11 +324,15 @@
 
     
     NSMutableArray *newTemplateList = [[NSMutableArray alloc] init];
+    TemplateDeployer *td = [[TemplateDeployer alloc] init];
+    
     for (FileSystemItem *currentFolder in _preferences.templateSetLocations) {
         
-        FileSystemItem *newFolder = [currentFolder copy]; // cannot use currentFolder directly because it would change preferences
+        FileSystemItem *newFolder = [[FileSystemItem alloc] initWithPath:[td parseSystemParametersForString:currentFolder.pathByExpandingTildeInPath] andNickName:currentFolder.nickName];
+       // [currentFolder copy]; // cannot use currentFolder directly because it would change preferences
+        
         newFolder.isExpandable = YES;
-        if (newFolder.nickName == nil || [newFolder.nickName isEqualToString:@""]) {
+        if ([NSString isEmptyString:newFolder.nickName]) {
                 newFolder.nickName = [[newFolder fileURL] lastPathComponent];
         }
 
@@ -338,12 +347,19 @@
     return newTemplateList;
 }
 
-
+/**
+ *  Returns an array of alla available templates by preferences.
+ *
+ *  @param prefs Preferences
+ *
+ *  @return NSMutableArray
+ */
 
 +(NSMutableArray *) getAvailableTemplatesAsFoldersWithPreferences:(Preferences *)prefs  {
 
     NSMutableArray *newTemplateList = [[NSMutableArray alloc] init];
-    for (FileSystemItem *currentFolder in prefs.templateSetLocations) {
+    NSMutableArray *templateLocations = prefs.templateSetLocationsByParsingSystemParameters;
+    for (FileSystemItem *currentFolder in templateLocations) {
         currentFolder.isExpandable = YES;
         NSString *currentFolderName = currentFolder.nickName;
         if (currentFolder.nickName == nil || [currentFolder.nickName isEqualToString:@""]) {

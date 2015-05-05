@@ -213,8 +213,8 @@
  
  */
 -(NSString *)stringByPerformingFullCleanUp {
-    NSString *useThis = [self copy];
-    return [[[useThis stringByReplacingIllegalCharactersWith:@""] stringByTrimmingSpaces] stringByRemovingDoubleSpaces];
+    //NSString *useThis = [self copy];
+    return [[[self stringByReplacingIllegalCharactersWith:@""] stringByTrimmingSpaces] stringByRemovingDoubleSpaces];
 }
 
 /** Checks if the string has at least one alphanumeric character.
@@ -292,7 +292,7 @@
 /** Converts wild card formatted string to regular expression format
  
  
- @note Only simple conversion is made. Not to be used generally.
+ @note Only simple conversion is made. Not to be used generally in other projects.
  
  */
 
@@ -302,7 +302,11 @@
     [result replaceOccurrencesOfString:@"." withString:@"\\." options:0 range:NSMakeRange(0, [result length])];
     [result replaceOccurrencesOfString:@"*" withString:@".*" options:0 range:NSMakeRange(0, [result length])];
     [result replaceOccurrencesOfString:@"?" withString:@"." options:0 range:NSMakeRange(0, [result length])];
-    [result appendString:@"$"];
+    if ([[result substringFromIndex:[result length]-1] isEqualToString:@"/"]) {
+        result = [NSMutableString stringWithString:[result substringToIndex:[result length]-1]];
+        [result appendString:@"$"];
+    }
+    //[result appendString:@"$"];
     return result;
 }
 
@@ -329,7 +333,12 @@
 /**
  *  Returns an arrays of semicolon separated items of the string
  *
- *  @return NSArray
+ *  @note This method is only to be used for template's combobox defaults. It has speciality that it allows empty string object as first item.
+ *  For other purposes use arrayFromListSeparatedWithCharactersInString:
+ *
+ *  @see arrayFromListSeparatedWithCharactersInString:
+ *
+ *  @return An array of separated strings.
  */
 
 -(NSArray*)arrayFromSemicolonSeparatedList {
@@ -349,7 +358,46 @@
     [items removeEmptyStringItems];
     if (firstItemIsEmpty) [items insertObject:@"" atIndex:0];
     
-    return items;
+    return [NSArray arrayWithArray:items];
 }
 
+
+/**
+ *  Returns single character length substring at index.
+ *
+ *  @param index An index
+ *
+ *  @return A string of lenght 1
+ */
+
+-(NSString*)characterStringAtIndex:(NSInteger)index {
+    return [self substringWithRange:NSMakeRange(index, 1)];
+}
+
+
+/**
+ *  Returns an array of substrings separated with any character in a separatorCharacters parameter.
+ *
+ *  @param separatorCharacters A string of separator characters
+ *
+ *  @return An array of strings
+ */
+
+-(NSArray*)arrayOfSubstringsSeparatedWithCharactersInString:(NSString*)separatorCharacters {
+   
+    NSCharacterSet *separatorCharacterSet = [NSCharacterSet characterSetWithCharactersInString:separatorCharacters];
+
+    NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[self componentsSeparatedByCharactersInSet:separatorCharacterSet]];
+    for (long index = 0; index < [items count]; index++) {
+        NSString *string = items[index];
+        items[index] = [string stringByPerformingFullCleanUp];
+    }
+    
+    [items removeEmptyStringItems];
+    
+    return [NSArray arrayWithArray:items];
+}
+
+                                       
+                                       
 @end

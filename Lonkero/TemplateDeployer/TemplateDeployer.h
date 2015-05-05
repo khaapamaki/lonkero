@@ -41,16 +41,23 @@
 
 // this is used for creation of parent folders that doesn't already exist
 -(NSInteger)createFoldersIfNeeded:(NSArray *)folders defaultPermissions:(NSDictionary *)defaultPermissions;
--(NSInteger)copyFilesToFolder:(FileSystemItem*)folder defaultPermissions:(NSDictionary *)defaultPermissions errString:(NSString**) errStr;
+-(NSInteger)copyTemplateContentsToFolder:(FileSystemItem*)folder defaultPermissions:(NSDictionary *)defaultPermissions errString:(NSString**) errStr;
+
+-(NSArray *) generateParentFolderArrayWithError:(NSNumber **)err;
 
 
 #pragma mark -
 #pragma mark PARAMETER PARSING
 
--(NSArray *) getParentFoldersWithError:(NSNumber **)err;
--(NSString *) parseParametersForString:(NSString*)aString;
--(NSArray *) parseParametersForPathComponents:(NSArray*)pathComponents error:(NSNumber**)err;
--(NSString *)parseSystemParametersForString:(NSString *)aString;
+
+
+-(NSString*) parseParametersForString:(NSString*)aString;
+-(NSString*) parseSystemParametersForString:(NSString *)aString;
+-(NSString*) parseParametersForPathComponent:(NSString*)filename error:(NSNumber **)err;
+-(NSArray*) parseParametersForPathComponents:(NSArray*)pathComponents error:(NSNumber**)err;
+-(NSString*) parseParametersForPath:(NSString *)path;
+
+
 
 /* +(FileSystemItem *)masterFolderForTemplate:(Template*)aTemplate andTargetFolder:(FileSystemItem*)aTargetFolder;
 -(NSString *) masterFolderNameByParsingTags;
@@ -58,8 +65,7 @@
 +(FileSystemItem *)generateMasterFolderUsingParentArray:(NSArray *)array withTemplate:(Template*)aTemplate withTargetFolder:(FileSystemItem*)targetFolder;
 */
 
--(NSString*) parseParametersForPath:(NSString *)path;
--(NSString*) parseFileName:(NSString*)filename error:(NSNumber **)err;
+
 
 #pragma mark -
 #pragma mark METADATA

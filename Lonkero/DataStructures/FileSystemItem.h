@@ -48,6 +48,7 @@
 @property BOOL itemExists;
 @property NSString *pathToCopy;
 @property NSImage *icon;
+@property BOOL filteredOut;
 
 
 -(NSURL *) URL;

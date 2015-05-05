@@ -7,12 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FileSystemItem.h"
+#import "Definitions.h"
 
-@interface UserPreferences : NSObject
+@interface UserPreferences : NSObject <NSCopying>
 
+/*
 @property BOOL closeWindowAfterDeployment;
 @property BOOL closeApplicationAfterDeployment;
 @property BOOL openTargetFolderAfterDeployment;
 @property BOOL openMasterFolderAfterDeployment;
+*/
+@property FileSystemItem *locationOfDefaultTemplate;
+@property NSNumber *postDeploymentAction;
+
+-(id)initWithLoadingUserPreferences;
+-(void)saveUserPreferences;
 
 @end

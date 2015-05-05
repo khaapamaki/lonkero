@@ -33,43 +33,64 @@
     NSNumber *errCode = @(0);
     NSString *errorString = @"";
     NSNumber *err = @0;
-
+    BOOL metadataMissing = NO;
     
-    NSArray *parentFolders = [self getParentFoldersWithError:&err];
+    NSArray *parentFolders = [self generateParentFolderArrayWithError:&err];
     FileSystemItem *masterFolder = [parentFolders lastObject];
     [masterFolder updateExistingStatus];
     if (!masterFolder.itemExists || !masterFolder.isDirectory) {
-        return ErrMasterFolderDoesNotExist;
+        if (errStr!=NULL) *errStr = masterFolder.pathByExpandingTildeInPath;
+        return ErrMasterFolderDoesNotExistWhileUpdatingMetadata;
     }
     TemplateMetadata *masterFolderMetadata = [[TemplateMetadata alloc] initByReadingFromFolder:masterFolder];
     if ([masterFolderMetadata count] == 0) {
+      //  BOOL answer = NSRunAlertPanel(@"No metadata found for master folder. Do you still want to write new metadata?", @"", @"Write Metadata", @"Cancel", nil);
+      //  if (!answer) {
+      //      return UserCancelled;
+      //  }
+        metadataMissing = YES;
         return ErrNoExistingMetadata;
     }
     
     TemplateMetadataItem *masterMetadataItem = nil;
     TemplateMetadataItem *lastPossibleMetadataItem = nil;
- 
+    NSMutableArray *matchingMetadataItems = [NSMutableArray array];
+    NSMutableArray *nonMatchingMetadataItems = [NSMutableArray array];
+    
+    // if there are multiple saved metadata items in master folder find the matching templateId
     for (NSInteger index=0; index < [masterFolderMetadata count]; index++) {
         TemplateMetadataItem *currentMetadataItem = masterFolderMetadata.metadataArray[index];
         if (currentMetadataItem.isMasterFolder) {
-            if ([_theTemplate.templateId isEqualToString:masterMetadataItem.templateID]) {
+            if ([_theTemplate.templateId isEqualToString:currentMetadataItem.templateID]) {
                 masterMetadataItem = currentMetadataItem;
+                [matchingMetadataItems addObject:currentMetadataItem];
             }
+            [nonMatchingMetadataItems addObject:currentMetadataItem];
             lastPossibleMetadataItem = currentMetadataItem;
         }
     }
-    if (lastPossibleMetadataItem==nil) {
+    if ([nonMatchingMetadataItems count]==0 || [matchingMetadataItems count]==0) {
+        // no metadata at all
+        
+       // BOOL answer = NSRunAlertPanel(@"No existing metadata that matches with template. Do you still want to write new metadata?", @"", @"Write Metadata", @"Cancel", nil);
+       // if (!answer) {
+       //     return UserCancelled;
+       // }
+        metadataMissing = YES;
         return ErrNoExistingMetadata;
     }
     
-    if (masterMetadataItem==nil) {
+    // no id-matching metadata found.. 
+    if ([matchingMetadataItems count]==0) {
         NSMutableString *info = [NSMutableString stringWithString:@""];
-        [info appendFormat:@"Existing Template: %@\n   (%@)\n", lastPossibleMetadataItem.usedTemplate.name, [lastPossibleMetadataItem.usedTemplate.templateId stringByInsertingHyphensEvery:4]];
+        [info appendFormat:@"Existing Template: %@\n   (%@)\n", [nonMatchingMetadataItems[0] usedTemplate].name, [[nonMatchingMetadataItems[0] usedTemplate].templateId stringByInsertingHyphensEvery:4]];
         [info appendFormat:@"Current Template: %@\n   (%@)\n", _theTemplate.name, [_theTemplate.templateId stringByInsertingHyphensEvery:4]];
         
         BOOL answer = NSRunAlertPanel(@"Metadata you are going to replace is based on the template with different id.\nYou may have wrong template selected.\nProceed anyway?", info, @"Proceed", @"Cancel", nil);
         if (!answer) return ExitOnly;
-        masterMetadataItem = lastPossibleMetadataItem;
+        masterMetadataItem = nonMatchingMetadataItems[0];
+    } else {
+        masterMetadataItem = matchingMetadataItems[0];
     }
     
     NSInteger options = (replaceExisitingMetadata | writeMetadata | generateNewId);
@@ -79,6 +100,18 @@
     return [errCode integerValue];
 }
 
+/**
+ *  Multipurpose: Deploys the template set in the object or writes its metadata, or both, depending on given options parameter.
+ *
+ *  @param targetFolder The target folder
+ *  @param options      Options to determine the action to be performed
+ *  @param deploymentId A deployment Id to be used
+ *  @param errNumCode   A pointer for a returning error code
+ *  @param errStr       A pointer for a returning error description
+ *
+ *  @return Metadata object if successful action. Nil if not.
+ */
+
 -(NSArray*)processWithTargetFolder:(FileSystemItem*)targetFolder options:(NSInteger)options deploymentId:(NSString*)deploymentId err:(NSNumber**)errNumCode errString:(NSString**)errStr {
 
     _deploymentStartDate = [NSDate date];
@@ -86,7 +119,8 @@
     NSString *errString = @"";
     NSDictionary *targetFolderPermissions;
     NSInteger errcode = 0;
-
+    NSArray *itemsToBeCopied;
+    
     _theTargetFolder = targetFolder; // store for other methods
     [_theTargetFolder updateExistingStatus];
     
@@ -109,9 +143,10 @@
     
     targetFolderPermissions = @{NSFilePosixPermissions: _theTargetFolder.posix};
     
-    NSArray *parentFolders = [self getParentFoldersWithError:&err];
+    NSArray *parentFolders = [self generateParentFolderArrayWithError:&err];
     
-    FileSystemItem *masterFolder;
+    FileSystemItem *masterFolder =[parentFolders lastObject];
+    /*
     if ([parentFolders count]==0) {
         masterFolder = _theTargetFolder;
         masterFolder.isMaster = YES;
@@ -122,7 +157,7 @@
         [[parentFolders lastObject] setIsMaster:YES];
         masterFolder = [parentFolders lastObject];
     }
-    
+    */
 
     // Pitää tsekata onko master folder olemassa JA ONKO SAMAN groupin/templaten nimissä
     if (masterFolder.itemExists && (options & deployTemplate)) {
@@ -130,27 +165,49 @@
         return nil;
     }
     
-    if ([parentFolders count]>1) {  // at least one parent more than the target folder
-        if ([err integerValue] !=0 ) {
-            if (errStr != NULL) *errStr = masterFolder.path;
-            if (errNumCode!= NULL) *errNumCode = @(ErrParameterTagsYieldedEmptyString);
-            return nil;
-        } else {
-            // Create Parent Folders
-            NSArray *parentsExcludingTarget = [NSArray arrayWithArray:[parentFolders subarrayWithRange:NSMakeRange(1, [parentFolders count] - 1)]];
-            if (options & deployTemplate) {
-                err = @([self createFoldersIfNeeded:parentsExcludingTarget defaultPermissions:targetFolderPermissions]);
-                if ([err integerValue]!=0) {
-                    if (errNumCode!= NULL) *errNumCode = [err copy];
-                    return nil;
-                }
-            }
 
+    
+    // GENERATE ITEMS TO BE COPIED
+
+    
+    if ((options & deployTemplate))  {
+        
+        itemsToBeCopied = [self generateArrayOfItemsToBeCopiedToFolder:masterFolder errCode:&err errString:&errString];
+        
+        if ([err integerValue]!=0) {
+            if (errNumCode!=NULL) *errNumCode = [err copy];
+            if (errStr!=NULL) *errStr = [errString copy];
+            return nil;
+        }
+        
+    }
+    // CREATE PARENT FOLDERS
+    
+    if ((options & deployTemplate))  {
+        
+        if ([parentFolders count]>1) {  // at least one parent more than the target folder
+            if ([err integerValue] !=0 ) {
+                if (errStr != NULL) *errStr = masterFolder.path;
+                if (errNumCode!= NULL) *errNumCode = @(ErrParameterTagsYieldedEmptyString);
+                return nil;
+            } else {
+                // Create Parent Folders
+                NSArray *parentsExcludingTarget = [NSArray arrayWithArray:[parentFolders subarrayWithRange:NSMakeRange(1, [parentFolders count] - 1)]];
+                if (options & deployTemplate) {
+                    err = @([self createFoldersIfNeeded:parentsExcludingTarget defaultPermissions:targetFolderPermissions]);
+                    if ([err integerValue]!=0) {
+                        if (errNumCode!= NULL) *errNumCode = [err copy];
+                        return nil;
+                    }
+                }
+                
+            }
         }
     }
     
-    // COPY FILES AND FOLDERS
-    if ((options & deployTemplate)) err = @([self copyFilesToFolder:masterFolder defaultPermissions:targetFolderPermissions errString:&errString]);
+    // COPY FILES AND FOLDERS FROM TEMPLATE STRUCTURE
+    
+    if ((options & deployTemplate)) err = @([self copyItems:itemsToBeCopied ToFolder:masterFolder defaultPermissions:targetFolderPermissions errString:&errString]);
     
     if ([err integerValue]!=0) {
         if (errStr != NULL) *errStr = errString;
@@ -207,16 +264,88 @@
 #pragma mark -
 #pragma markt COPY FILES AND CREATE FOLDERS
 
--(NSInteger)copyFilesToFolder:(FileSystemItem*)folder
+/**
+ *  Generates an array that have all the file system items that should be copied or created
+ *
+ *  @param folder  The target folder
+ *  @param errCode A pointer for a returning error code
+ *  @param errStr  A pointer for a returning error description
+ *
+ *  @return An array of items to be copied or created
+ */
+
+-(NSArray*)generateArrayOfItemsToBeCopiedToFolder:(FileSystemItem*)folder errCode:(NSNumber**)errCode errString:(NSString**)errStr {
+    NSArray *itemCandidatesToBeCopied = [FileSystemItem getDirectoryContentForFolder:_theTemplate.location includeFiles:YES includeFolders:YES includeSubDirectories:YES];
+    NSMutableArray *itemsToBeCopied = [NSMutableArray array];
+    NSFileManager *fm = [NSFileManager defaultManager];
+
+    for (FileSystemItem *item in itemCandidatesToBeCopied) {
+        NSNumber *pathComponentErr = nil;
+
+        NSNumber *shouldCopy = @YES;
+        NSString *relativeParsedPath = [NSString pathWithComponents:[self parseParametersForPathComponents:[item.relativePath pathComponents] shouldUse:&shouldCopy error:&pathComponentErr]];
+        
+        if ([pathComponentErr integerValue]==0) {
+            NSString *targetPath = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, relativeParsedPath];
+            item.pathToCopy = targetPath;
+            BOOL isCopyPathDir;
+            item.pathToCopyExists = [fm fileExistsAtPath:item.pathToCopy isDirectory:&isCopyPathDir];
+            item.pathToCopyIsDirectory = isCopyPathDir;
+            item.shouldCopy = [shouldCopy boolValue];
+            if (!item.isDirectory && !item.pathToCopyIsDirectory  && item.pathToCopyExists) {
+                if (errStr!=NULL) *errStr = [NSString stringWithString:item.pathToCopy];
+                if (errCode!=NULL) *errCode = [NSNumber numberWithInteger:ErrFileExistsAtTarget];
+                return nil;
+            }
+            
+            if (item.isDirectory && !item.pathToCopyIsDirectory && item.pathToCopyExists ) {
+                if (errStr!=NULL) *errStr = [NSString stringWithString:item.pathToCopy];
+                if (errCode!=NULL) *errCode = [NSNumber numberWithInteger:ErrFolderOccupiedByFile];
+                return nil;
+            }
+            if (!item.isDirectory && item.pathToCopyIsDirectory && item.pathToCopyExists ) {
+                if (errStr!=NULL) *errStr = [NSString stringWithString:item.pathToCopy];
+                if (errCode!=NULL) *errCode = [NSNumber numberWithInteger:ErrFileOccupiedByFolder];
+                return nil;
+            }
+            
+            //totalFileSize += item.fileSize;
+        } else {
+            if (errStr!=NULL) *errStr = [NSString stringWithString:item.path];  // relativeParsedPath;
+            if (errCode!=NULL) *errCode = [pathComponentErr copy]; // [NSNumber numberWithInteger:ErrInvalidFileOrFolderName];
+            return nil;
+        }
+        
+        if (item.shouldCopy) [itemsToBeCopied addObject:item];
+    }
+    
+    return [NSArray arrayWithArray:itemsToBeCopied];
+}
+
+/**
+ *  Copies file system items and creates neccessary folders to a given folder
+ *
+ *  @param items              Items to be copied/created as an array of FileSystemItems
+ *  @param folder             A folder to copy/create items to
+ *  @param defaultPermissions Default permissions as posix mask
+ *  @param errStr             A pointer for a returning error descriptionting
+ *
+ *  @return An error code. 0 if no errors occurred.
+ */
+
+-(NSInteger)copyItems:(NSArray*)items ToFolder:(FileSystemItem*)folder
            defaultPermissions:(NSDictionary *)defaultPermissions
                     errString:(NSString**) errStr {
     
-    NSInteger errCode = 0;
+   // NSInteger errCode = 0;
     NSFileManager *fm = [NSFileManager defaultManager];
-    NSArray *itemsToBeCopied = [FileSystemItem getDirectoryContentForFolder:_theTemplate.location includeFiles:YES includeFolders:YES includeSubDirectories:YES];
-    NSInteger totalFileSize = 0;
+    //NSArray *itemsToBeCopied = [FileSystemItem getDirectoryContentForFolder:_theTemplate.location includeFiles:YES includeFolders:YES includeSubDirectories:YES];
+   // NSInteger totalFileSize = 0;
     NSString *templateSettingsPathToBeExcluded = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, TEMPLATE_SETTINGS_FILENAME];
+  
     
+    
+    /*
     // SET COPY PATHS TO "TODO-ARRAY"
     
     for (FileSystemItem *item in itemsToBeCopied) {
@@ -253,9 +382,10 @@
     }
     
     if (errCode != 0) return errCode;
+    */
     
     // CREATE FOLDERS
-    for (FileSystemItem *item in itemsToBeCopied) {
+    for (FileSystemItem *item in items) {
         NSError *err = nil;
         item.isCopied = NO;
         if (item.isDirectory) {
@@ -304,7 +434,7 @@
     // COPY FILES
     
     NSMutableString *skippedFiles = [NSMutableString string];
-    for (FileSystemItem *item in itemsToBeCopied) {
+    for (FileSystemItem *item in items) {
         
         NSError *err = nil;
         item.isCopied = NO;
@@ -341,7 +471,7 @@
                     [fm setAttributes:attributes ofItemAtPath:item.pathToCopy error:&err];
                     if (err!=nil) {
                         LOG(@"Error setting permissions for %@", item.pathToCopy);
-                        *errStr = [item.pathToCopy copy];
+                        if (errStr!=NULL) *errStr = [item.pathToCopy copy];
                         return ErrSettingPosix;
                     }
                     
@@ -370,10 +500,26 @@
 // =============
 
 
-
-
 #pragma mark -
 #pragma mark METADATA
+
+/**
+ *  Writes metadata as a batch process to every given folder in a folders array.
+ *
+ *  This is used to write all the metadata for all parent folders at once.
+ *
+ *  The method reads existing metadata from folders and appends newly created metadata items to it,
+ *  and finally overwrites the existing metadata with new contents.
+ *
+ *  @note Metadata items are given in an array that must be in sync with a folder array,
+ *  in other words, they must have the same array index.
+ *
+ *  @param folders           A folder array
+ *  @param metadataItemArray A metadata item array
+ *  @param deploymentId      A deployment id
+ *  @param options           Options, not in use
+ */
+
 
 -(void)writeMetadataTo:(NSArray *)folders withMetadataItems:(NSArray*)metadataItemArray deploymentId:(NSString*)deploymentId options:(NSInteger)options {
     
@@ -410,7 +556,6 @@
                 
                 [existingMetadata removeMetadataItemWithId:deploymentId];
             }
-            
         }
         
         [existingMetadata addItem:metadataItem];
@@ -424,6 +569,24 @@
     }
 }
 
+
+
+/**
+ *  Generates as an batch process an array of metadata items for a set of folders
+ *
+ *  This is a batch process to generate new metadata for a set of folders.
+ *  It is used to get all metadata for all parent folders at once with method @a writeMetadataTo:
+ *
+ *  @note involved parameters -konsepti pitää selittää paremmin
+ *
+ *  @see -(void)writeMetadataTo:(NSArray *)folders withMetadataItems:(NSArray*)metadataItemArray deploymentId:(NSString*)deploymentId options:(NSInteger)options
+ *
+ *  @param folders         Folders array that will be processed
+ *  @param parametersArray Involved parameters
+ *  @param deploymentId    Deployment Id to be set for every new metadata item
+ *
+ *  @return An array of metadata items
+ */
 
 -(NSArray*)generateMetadataItemArrayForFolders:(NSArray *)folders involvedParametersArray:(NSArray *)parametersArray deploymentId:(NSString*)deploymentId {
     
@@ -474,12 +637,21 @@
     return [NSArray arrayWithArray:metadataItemArray];
 }
 
-
-
 #pragma mark -
-#pragma mark PARAMETER PARSING
+#pragma mark ARRAY GENERATION
 
--(NSArray *)getParentFoldersWithError:(NSNumber **)err {
+
+/**
+ *  Generates the parent folder array by the contents of _theTemplate
+ *
+ *  Reads all the parameters and parses neccessary paths
+ *
+ *  @param err An error code
+ *
+ *  @return An array of all parent folders as filesystem items
+ */
+
+-(NSArray *)generateParentFolderArrayWithError:(NSNumber **)err {
     NSMutableString *pathToParentFolder = [NSMutableString stringWithString:_theTargetFolder.pathByExpandingTildeInPath];
     NSMutableArray *result = [NSMutableArray array];
     _theTargetFolder.isTarget = YES;
@@ -490,28 +662,37 @@
             
             if (currentParameter.booleanValue || [NSString isNotEmptyString:currentParameter.stringValue] ) {
                 NSNumber *error = nil;
-                NSString *parsedParentFolderName = [self parseFileName:currentParameter.parentFolderNamingRule  error:&error];
+                NSString *parsedParentFolderName = [self parseParametersForPathComponent:currentParameter.parentFolderNamingRule  error:&error];
                 if (error!=nil) {
-                   if(err!=NULL) *err = [error copy];
+                    if(err!=NULL) *err = [error copy];
                 }
-
+                
                 [pathToParentFolder appendString:@"/"];
                 [pathToParentFolder appendString:parsedParentFolderName];
                 FileSystemItem *newFolder = [[FileSystemItem alloc] initWithPath:[pathToParentFolder copy] andNickName:@""];
                 newFolder.isParent = YES;
                 [result addObject:newFolder];
-
+                
             }
         }
     }
+    
+    [[result lastObject] setIsParent:NO];
+    [[result lastObject] setIsMaster:YES];
+
     return [NSArray arrayWithArray:result];
 }
 
 
--(NSString*)parseFileName:(NSString*)filename shouldUse:(NSNumber**)shouldUse error:(NSNumber **)err {
+
+#pragma mark -
+#pragma mark PARAMETER PARSING
+
+
+-(NSString*)parseParametersForPathComponent:(NSString*)component shouldUse:(NSNumber**)shouldUse error:(NSNumber **)err {
     NSNumber *shouldUse1 = @YES;
-    NSString *extension = [filename pathExtension];
-    NSString *base = [filename stringByDeletingPathExtension];
+    NSString *extension = [component pathExtension];
+    NSString *base = [component stringByDeletingPathExtension];
     NSString *parsedBase = [self parseParametersForString:base shouldUse:&shouldUse1];
     if (shouldUse!=NULL) *shouldUse = [shouldUse1 copy];
     NSString *parsedFilename= [extension isEqualToString:@""] ? parsedBase : [NSString stringWithFormat:@"%@.%@", parsedBase, extension];
@@ -519,15 +700,15 @@
     
     if ([NSString isEmptyString:parsedBase] || ![parsedBase isValidFileName] || ![parsedFilename isValidFileName]) {
         parsedFilename = @"<empty_string>";
-        if(err!=NULL) *err = @(ErrInvalidFileOrFolderName);
+        if(err!=NULL && ([*shouldUse boolValue] || shouldUse==NULL)) *err = @(ErrInvalidFileOrFolderName);
     }
 
     return parsedFilename;
 }
 
--(NSString*)parseFileName:(NSString*)filename error:(NSNumber **)err {
+-(NSString*)parseParametersForPathComponent:(NSString*)component error:(NSNumber **)err {
     NSNumber *err1 = @0;
-    NSString *result =  [self parseFileName:filename shouldUse:nil error:&err1];
+    NSString *result =  [self parseParametersForPathComponent:component shouldUse:nil error:&err1];
     if (err!=NULL) *err = [err1 copy];
     return result;
 }
@@ -541,7 +722,7 @@
             [parsedArray addObject:pathComponent];
         } else {
             NSNumber *error = nil;
-            NSString *parsedPathComponent = [self parseFileName:pathComponent shouldUse:&shouldUse1 error:&error];
+            NSString *parsedPathComponent = [self parseParametersForPathComponent:pathComponent shouldUse:&shouldUse1 error:&error];
             if (shouldUse!=NULL) *shouldUse = [shouldUse1 copy];
             if (error!=nil) {
                 if (err!=NULL) *err = @([error integerValue]);
@@ -566,11 +747,26 @@
     return [NSString pathWithComponents:parsedPathComponents];
 }
 
+
+/**
+ *  Parses a single string with tags in the template parameters
+ *
+ *  @note This method is the lowest level in parameter parser method hierarchy.
+ *  This does the actual parsing.
+ *
+ *  @see -(NSString *)parseParametersForString:(NSString *)aString shouldUse:(NSNumber**)shouldUse
+ *
+ *  @param aString   A string to be parsed
+ *  @param shouldUse A pointer to returning boolean value to send a flag if any tag determines the item to be excludedP
+ *
+ *  @return Parsed string
+ */
+
 -(NSString *)parseParametersForString:(NSString *)aString shouldUse:(NSNumber**)shouldUse {
     if (shouldUse!=NULL) *shouldUse = @YES;
     NSMutableString *result = [[self parseSystemParametersForString:aString] mutableCopy];
     long replacesMade = 0;
-
+    
     for (TemplateParameter *currentParameter in _theTemplate.templateParameterSet) {
         
         NSString *tagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_INNER_1, currentParameter.tag, TAGCHAR_INNER_2];
@@ -579,19 +775,26 @@
         NSString *extractingBrackets = [NSString stringWithFormat:@"%@%@", TAGCHAR_EXTRACTING_INNER_1, TAGCHAR_INNER_2];
         NSRange tagRange;
         NSInteger minTagLegth;
+        
+        NSString *extractingTagWithBracketsOldFormat = [NSString stringWithFormat:@"%@%@%@", @"[-", currentParameter.tag, TAGCHAR_INNER_2];
+        
         do {
             minTagLegth = [brackets length];
             tagRange = [result rangeOfString:tagWithBrackets options:NSCaseInsensitiveSearch];
             
-            // if normal tag is not found, look for special extracting tag [-tag]
-            if (tagRange.length <= [brackets length]) {
+            // if normal tag is not found, look for special *extracting tag* [!tag]
+            if (tagRange.location == NSNotFound) {
                 tagRange = [result rangeOfString:extractingTagWithBrackets options:NSCaseInsensitiveSearch];
-                if (tagRange.length > [extractingBrackets length]) {
+                if (tagRange.location == NSNotFound) {
+                    tagRange = [result rangeOfString:extractingTagWithBracketsOldFormat options:NSCaseInsensitiveSearch];
+                }
+                if (tagRange.location != NSNotFound) {
                     if ([NSString isEmptyString:currentParameter.stringValue] && shouldUse!=nil) *shouldUse = @NO;
+                    if (currentParameter.parameterType == boolean && currentParameter.booleanValue == NO) *shouldUse = @NO;
                 }
                 minTagLegth = [extractingBrackets length];
             }
-            if (tagRange.length > minTagLegth) {
+            if (tagRange.location != NSNotFound) {
                 NSString *extractedTag = [result substringWithRange:NSMakeRange(tagRange.location+minTagLegth-1, tagRange.length-minTagLegth)];
                 Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
                 replacesMade += 1;
@@ -600,9 +803,22 @@
             
         } while (tagRange.length > 0);
     }
+    
+    
     return [NSString stringWithString:[result stringByPerformingFullCleanUp]];
 }
 
+/**
+ *  Parses factory build system parameters for a string.
+ *
+ *  This is called by other tag parser methods as part of their process
+ *
+ *  Tags to be parsed: [today], [creator], [creator-full-name]
+ *
+ *  @param aString A string
+ *
+ *  @return A parsed string
+ */
 
 -(NSString *)parseSystemParametersForString:(NSString *)aString  {
     
@@ -622,8 +838,10 @@
                 replacesMade += 1;
                 
                 NSString* replacement = @"";
-                if ([currentTag isEqualToString:@"today"]) {
-                    replacement = [_deploymentStartDate parsedDateWithFormat:[_theTemplate.dateFormatString stringByPerformingFullCleanUp]];
+                if (_theTemplate) {
+                    if ([currentTag isEqualToString:@"today"]) {
+                        replacement = [_deploymentStartDate parsedDateWithFormat:[_theTemplate.dateFormatString stringByPerformingFullCleanUp]];
+                    }
                 }
                 if ([currentTag isEqualToString:@"creator"]) {
                     replacement = NSUserName();
@@ -639,12 +857,20 @@
         } while (tagRange.length > 2);
     }
     
-    return [NSString stringWithString:[result stringByPerformingFullCleanUp]];
+    return [result copy];
 }
 
 -(NSString *)parseParametersForString:(NSString *)aString {
     return [self parseParametersForString:aString shouldUse:nil];
 }
+
+/**
+ *  Parses whole path
+ *
+ *  @param aFileSystemItem A FileSystemItem
+ *
+ *  @return A new FileSystemItem
+ */
 
 +(FileSystemItem *) parsePathForFileSystemItem:(FileSystemItem*)aFileSystemItem {
     TemplateDeployer *td = [[TemplateDeployer alloc] init];
@@ -655,11 +881,29 @@
     return [[FileSystemItem alloc] initWithPathByAbbreviatingTildeInPath:parsedPath andNickName:aFileSystemItem.nickName];
 }
 
+
 #pragma mark -
 #pragma mark INVOLVED PARAMETERS
 
+/**
+ *  Generates an array of arrays of involved paraters for all parent levels
+ *
+ *  Involved parameters is an array of parameters that have been set so far
+ *  to the level of parent in the parent folder creation process.
+ *
+ *  To put it simpy, they are parameters and their values in a TemplateParameters object
+ *  that have lower or the same index value than the parameter that causes parent folder creation.
+ *  Involved parameters are stored along with other metadata.
+ *
+ *  The purpose for this is to quickly read used parameters and their values from a deployed folder structure.
+ *
+ *  @param aTemplate The template. Usually _theTemplate.
+ *
+ *  @return Involved parameters array.
+ */
+
 +(NSArray *)parentFolderParametersInvolved:(Template *)aTemplate {
-    NSAssert(@"Trying to use deprecated method", nil) ;
+    NSAssert(@"****************** Trying to use deprecated method", nil) ;
     
     NSMutableArray *allParents = [[NSMutableArray alloc] init];
 

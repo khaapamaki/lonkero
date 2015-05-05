@@ -22,5 +22,6 @@
 -(void) removeMetadataItemWithId:(NSString*)deploymentId;
 -(NSInteger)count;
 -(TemplateMetadataItem*)metadataItemWithId:(NSString*)deploymentId;
++(BOOL)metadataExisistAtFolder:(FileSystemItem*)aFolder;
 
 @end
