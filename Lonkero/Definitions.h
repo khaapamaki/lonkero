@@ -37,7 +37,6 @@
 #import <Foundation/Foundation.h>
 
 
-
 enum {
     ErrMasterFolderExists = 1,
     ErrCouldntCreateFolder = 2,
@@ -78,6 +77,7 @@ typedef enum {
     deployTemplate = 1,
     writeMetadata = 2,
     replaceExisitingMetadata = 4,
+    createFoldersOnly = 16,
     generateNewId = 8
 } deploymentModes;
 

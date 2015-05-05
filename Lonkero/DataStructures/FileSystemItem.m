@@ -271,6 +271,7 @@
     NSFileManager *fm = [NSFileManager defaultManager];
     BOOL isDir = NO;
     BOOL URLExists = [fm fileExistsAtPath:[URL path] isDirectory:&isDir];
+    URL = [URL URLByStandardizingPath];
     
     _path = [NSString stringWithString:[[URL path] stringByAbbreviatingWithTildeInPath]];
     _isRootObject = NO;
@@ -506,8 +507,9 @@ Initialises the object and also reads file/folder parameters from the file syste
 -(id) initWithPath:(NSString *)path andNickName:(NSString *)name {
     self = [super init];
     if (self) {
-        if ([NSString isNotEmptyString:path]) {
-            [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
+        if ([NSString isNotEmptyString:[path stringByExpandingTildeInPath]]) {
+            NSString *testPath = [path stringByExpandingTildeInPath];
+            [self setPropertiesByURL:[NSURL fileURLWithPath:[path stringByExpandingTildeInPath]]];
         }
         _nickName = name;
         _isExpanded = NO;
@@ -531,8 +533,8 @@ Initialises the object and also reads file/folder parameters from the file syste
 -(id) initWithPathByAbbreviatingTildeInPath:(NSString *)path andNickName:(NSString *)name {
     self = [super init];
     if (self) {
-        if ([NSString isNotEmptyString:path]) {
-            [self setPropertiesByURL:[NSURL fileURLWithPath:path]];
+        if ([NSString isNotEmptyString:[path stringByExpandingTildeInPath]]) {
+            [self setPropertiesByURL:[NSURL fileURLWithPath:[path stringByExpandingTildeInPath]]];
         }
         _nickName = name;
         _isExpanded = NO;

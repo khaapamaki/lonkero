@@ -358,7 +358,7 @@
 +(NSMutableArray *) getAvailableTemplatesAsFoldersWithPreferences:(Preferences *)prefs  {
 
     NSMutableArray *newTemplateList = [[NSMutableArray alloc] init];
-    NSMutableArray *templateLocations = prefs.templateSetLocationsByParsingSystemParameters;
+    NSMutableArray *templateLocations = [prefs templateSetLocationsByParsingSystemParameters];
     for (FileSystemItem *currentFolder in templateLocations) {
         currentFolder.isExpandable = YES;
         NSString *currentFolderName = currentFolder.nickName;

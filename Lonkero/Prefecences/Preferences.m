@@ -79,6 +79,7 @@
     NSMutableArray *parsedTemplateLocations = [NSMutableArray array];
     for (FileSystemItem *currentLocation in _templateSetLocations) {
         TemplateDeployer *td = [[TemplateDeployer alloc] init];
+        NSString *testPath = [td parseSystemParametersForString:currentLocation.path];
         FileSystemItem *anItem = [[FileSystemItem alloc] initWithPath:[td parseSystemParametersForString:currentLocation.path] andNickName:currentLocation.nickName];
         [parsedTemplateLocations addObject:anItem];
     }

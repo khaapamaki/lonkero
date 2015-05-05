@@ -87,7 +87,12 @@
     } else {
         [self selectDefaultTemplateByIndex:0];
     }
-    _defaultTemplateLocation = _defaultTemplateSelectionArray[[_defaultTemplatePopupButton indexOfSelectedItem]];
+    
+    NSInteger selectedDefaultTemplateIndex = [_defaultTemplatePopupButton indexOfSelectedItem];
+    
+    if (selectedDefaultTemplateIndex>=0) {
+        _defaultTemplateLocation = _defaultTemplateSelectionArray[[_defaultTemplatePopupButton indexOfSelectedItem]];
+    }
     
 }
 
@@ -173,7 +178,7 @@
     }
     [_unsavedPreferences setDefaultDateFormat:[_dateFormat stringValue]];
     NSInteger index = [_defaultTemplatePopupButton indexOfSelectedItem];
-    _unsavedUserPreferences.locationOfDefaultTemplate = [[_defaultTemplateSelectionArray objectAtIndex:index] copy];
+    if (index>=0) _unsavedUserPreferences.locationOfDefaultTemplate = [[_defaultTemplateSelectionArray objectAtIndex:index] copy];
     _defaultTemplateLocation = _unsavedUserPreferences.locationOfDefaultTemplate;
 }
 
@@ -192,7 +197,12 @@
     }
     [_preferencesToBeEdited setDefaultDateFormat:[_dateFormat stringValue]];
     NSInteger index = [_defaultTemplatePopupButton indexOfSelectedItem];
-    _userPreferencesToBeEdited.locationOfDefaultTemplate = [[_defaultTemplateSelectionArray objectAtIndex:index] copy];
+    
+    if (index>=0) {
+        _userPreferencesToBeEdited.locationOfDefaultTemplate = [[_defaultTemplateSelectionArray objectAtIndex:index] copy];
+    } else {
+        _userPreferencesToBeEdited.locationOfDefaultTemplate = nil;
+    }
     
     NSInteger postDepAct = (int)(_closeMainWindowCheckBox.state) * closeWindow + (int)(_openMasterFolderCheckBox.state) * openMasterFolder;
     
