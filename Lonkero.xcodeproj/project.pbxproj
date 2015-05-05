@@ -1,0 +1,659 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		420B592D18532BBA00DA0E8B /* CustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 420B592C18532BBA00DA0E8B /* CustomView.m */; };
+		420B5930185330EB00DA0E8B /* CustomViewForWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 420B592F185330EB00DA0E8B /* CustomViewForWindow.m */; };
+		421783DA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783D9181C1CD5000FDB81 /* Cocoa.framework */; };
+		421783F9181C1CD5000FDB81 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783F8181C1CD5000FDB81 /* XCTest.framework */; };
+		421783FA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421783D9181C1CD5000FDB81 /* Cocoa.framework */; };
+		422C356D184BE09400212999 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3535184BE09400212999 /* AppDelegate.m */; };
+		422C356E184BE09400212999 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422C3536184BE09400212999 /* MainMenu.xib */; };
+		422C356F184BE09400212999 /* FileSystemItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C353A184BE09400212999 /* FileSystemItem.m */; };
+		422C3570184BE09400212999 /* Template.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C353C184BE09400212999 /* Template.m */; };
+		422C3571184BE09400212999 /* TemplateParameter.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C353E184BE09400212999 /* TemplateParameter.m */; };
+		422C3572184BE09400212999 /* Definitions.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3540184BE09400212999 /* Definitions.m */; };
+		422C3573184BE09400212999 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 422C3541184BE09400212999 /* Credits.rtf */; };
+		422C3574184BE09400212999 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 422C3543184BE09400212999 /* InfoPlist.strings */; };
+		422C3575184BE09400212999 /* LMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3546184BE09400212999 /* LMWindow.m */; };
+		422C3576184BE09400212999 /* Lonkero-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 422C3547184BE09400212999 /* Lonkero-Info.plist */; };
+		422C3577184BE09400212999 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3549184BE09400212999 /* main.m */; };
+		422C3578184BE09400212999 /* PathControlHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C354C184BE09400212999 /* PathControlHelper.m */; };
+		422C3579184BE09400212999 /* FileBrowserHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C354E184BE09400212999 /* FileBrowserHelper.m */; };
+		422C357A184BE09400212999 /* Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3551184BE09400212999 /* Merge.m */; };
+		422C357B184BE09400212999 /* NSDictionary-Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3554184BE09400212999 /* NSDictionary-Merge.m */; };
+		422C357C184BE09400212999 /* NSMutableDictionary-Merge.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3556184BE09400212999 /* NSMutableDictionary-Merge.m */; };
+		422C357D184BE09400212999 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3559184BE09400212999 /* Preferences.m */; };
+		422C357E184BE09400212999 /* PreferencesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C355B184BE09400212999 /* PreferencesController.m */; };
+		422C357F184BE09400212999 /* UserPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C355D184BE09400212999 /* UserPreferences.m */; };
+		422C3580184BE09400212999 /* TemplateDeployer.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3560184BE09400212999 /* TemplateDeployer.m */; };
+		422C3581184BE09400212999 /* TemplateMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3562184BE09400212999 /* TemplateMetadata.m */; };
+		422C3582184BE09400212999 /* TemplateMetadataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3564184BE09400212999 /* TemplateMetadataItem.m */; };
+		422C3583184BE09400212999 /* CreateNewTemplateHelperWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3567184BE09400212999 /* CreateNewTemplateHelperWindowController.m */; };
+		422C3584184BE09400212999 /* TemplateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C3569184BE09400212999 /* TemplateManager.m */; };
+		422C3585184BE09400212999 /* TemplateManagerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422C356A184BE09400212999 /* TemplateManagerWindow.xib */; };
+		422C3586184BE09400212999 /* TemplateSelectorOutlineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C356C184BE09400212999 /* TemplateSelectorOutlineViewController.m */; };
+		422C358B184BE1AF00212999 /* NSString+Extras.m in Sources */ = {isa = PBXBuildFile; fileRef = 422C358A184BE1AF00212999 /* NSString+Extras.m */; };
+		422C358D184BE7CA00212999 /* PreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 422C358C184BE7CA00212999 /* PreferencesWindow.xib */; };
+		42502A9F1854E4F900F593E9 /* lonkero_icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 42502A9E1854E4F900F593E9 /* lonkero_icon.iconset */; };
+		42FD4E431850E4F700FEFB57 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42FD4E421850E4F700FEFB57 /* Images.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		421783FB181C1CD5000FDB81 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 421783CE181C1CD5000FDB81 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 421783D5181C1CD5000FDB81;
+			remoteInfo = Kampela;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		420B592B18532BBA00DA0E8B /* CustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomView.h; sourceTree = "<group>"; };
+		420B592C18532BBA00DA0E8B /* CustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomView.m; sourceTree = "<group>"; };
+		420B592E185330EB00DA0E8B /* CustomViewForWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomViewForWindow.h; sourceTree = "<group>"; };
+		420B592F185330EB00DA0E8B /* CustomViewForWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomViewForWindow.m; sourceTree = "<group>"; };
+		421783D6181C1CD5000FDB81 /* Lonkero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lonkero.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		421783D9181C1CD5000FDB81 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		421783DC181C1CD5000FDB81 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		421783DD181C1CD5000FDB81 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		421783DE181C1CD5000FDB81 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		421783F7181C1CD5000FDB81 /* LonkeroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LonkeroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		421783F8181C1CD5000FDB81 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		422C3534184BE09400212999 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AppDelegate.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		422C3535184BE09400212999 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		422C3537184BE09400212999 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		422C3539184BE09400212999 /* FileSystemItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemItem.h; sourceTree = "<group>"; };
+		422C353A184BE09400212999 /* FileSystemItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemItem.m; sourceTree = "<group>"; };
+		422C353B184BE09400212999 /* Template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Template.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		422C353C184BE09400212999 /* Template.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Template.m; sourceTree = "<group>"; };
+		422C353D184BE09400212999 /* TemplateParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateParameter.h; sourceTree = "<group>"; };
+		422C353E184BE09400212999 /* TemplateParameter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateParameter.m; sourceTree = "<group>"; };
+		422C353F184BE09400212999 /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Definitions.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		422C3540184BE09400212999 /* Definitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Definitions.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		422C3542184BE09400212999 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		422C3544184BE09400212999 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		422C3545184BE09400212999 /* LMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMWindow.h; sourceTree = "<group>"; };
+		422C3546184BE09400212999 /* LMWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMWindow.m; sourceTree = "<group>"; };
+		422C3547184BE09400212999 /* Lonkero-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Lonkero-Info.plist"; path = "Lonkero/Lonkero-Info.plist"; sourceTree = "<group>"; };
+		422C3548184BE09400212999 /* Lonkero-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Lonkero-Prefix.pch"; path = "Lonkero/Lonkero-Prefix.pch"; sourceTree = "<group>"; };
+		422C3549184BE09400212999 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Lonkero/main.m; sourceTree = "<group>"; };
+		422C354B184BE09400212999 /* PathControlHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathControlHelper.h; sourceTree = "<group>"; };
+		422C354C184BE09400212999 /* PathControlHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathControlHelper.m; sourceTree = "<group>"; };
+		422C354D184BE09400212999 /* FileBrowserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileBrowserHelper.h; sourceTree = "<group>"; };
+		422C354E184BE09400212999 /* FileBrowserHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileBrowserHelper.m; sourceTree = "<group>"; };
+		422C3550184BE09400212999 /* Merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Merge.h; sourceTree = "<group>"; };
+		422C3551184BE09400212999 /* Merge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Merge.m; sourceTree = "<group>"; };
+		422C3552184BE09400212999 /* MergeProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MergeProtocol.h; sourceTree = "<group>"; };
+		422C3553184BE09400212999 /* NSDictionary-Merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary-Merge.h"; sourceTree = "<group>"; };
+		422C3554184BE09400212999 /* NSDictionary-Merge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary-Merge.m"; sourceTree = "<group>"; };
+		422C3555184BE09400212999 /* NSMutableDictionary-Merge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary-Merge.h"; sourceTree = "<group>"; };
+		422C3556184BE09400212999 /* NSMutableDictionary-Merge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary-Merge.m"; sourceTree = "<group>"; };
+		422C3558184BE09400212999 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Preferences.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		422C3559184BE09400212999 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Preferences.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		422C355A184BE09400212999 /* PreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferencesController.h; sourceTree = "<group>"; };
+		422C355B184BE09400212999 /* PreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferencesController.m; sourceTree = "<group>"; };
+		422C355C184BE09400212999 /* UserPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPreferences.h; sourceTree = "<group>"; };
+		422C355D184BE09400212999 /* UserPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPreferences.m; sourceTree = "<group>"; };
+		422C355F184BE09400212999 /* TemplateDeployer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateDeployer.h; sourceTree = "<group>"; };
+		422C3560184BE09400212999 /* TemplateDeployer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateDeployer.m; sourceTree = "<group>"; };
+		422C3561184BE09400212999 /* TemplateMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemplateMetadata.h; path = ../TemplateDeployer/TemplateMetadata.h; sourceTree = "<group>"; };
+		422C3562184BE09400212999 /* TemplateMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TemplateMetadata.m; path = ../TemplateDeployer/TemplateMetadata.m; sourceTree = "<group>"; };
+		422C3563184BE09400212999 /* TemplateMetadataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemplateMetadataItem.h; path = ../TemplateDeployer/TemplateMetadataItem.h; sourceTree = "<group>"; };
+		422C3564184BE09400212999 /* TemplateMetadataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TemplateMetadataItem.m; path = ../TemplateDeployer/TemplateMetadataItem.m; sourceTree = "<group>"; };
+		422C3566184BE09400212999 /* CreateNewTemplateHelperWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CreateNewTemplateHelperWindowController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		422C3567184BE09400212999 /* CreateNewTemplateHelperWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateNewTemplateHelperWindowController.m; sourceTree = "<group>"; };
+		422C3568184BE09400212999 /* TemplateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateManager.h; sourceTree = "<group>"; };
+		422C3569184BE09400212999 /* TemplateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateManager.m; sourceTree = "<group>"; };
+		422C356A184BE09400212999 /* TemplateManagerWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TemplateManagerWindow.xib; sourceTree = "<group>"; };
+		422C356B184BE09400212999 /* TemplateSelectorOutlineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplateSelectorOutlineViewController.h; sourceTree = "<group>"; };
+		422C356C184BE09400212999 /* TemplateSelectorOutlineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TemplateSelectorOutlineViewController.m; sourceTree = "<group>"; };
+		422C3589184BE1AF00212999 /* NSString+Extras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Extras.h"; sourceTree = "<group>"; };
+		422C358A184BE1AF00212999 /* NSString+Extras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Extras.m"; sourceTree = "<group>"; };
+		422C358C184BE7CA00212999 /* PreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferencesWindow.xib; sourceTree = "<group>"; };
+		42502A9E1854E4F900F593E9 /* lonkero_icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = lonkero_icon.iconset; sourceTree = "<group>"; };
+		42FD4E421850E4F700FEFB57 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		421783D3181C1CD5000FDB81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				421783DA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		421783F4181C1CD5000FDB81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				421783FA181C1CD5000FDB81 /* Cocoa.framework in Frameworks */,
+				421783F9181C1CD5000FDB81 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		421783CD181C1CD5000FDB81 = {
+			isa = PBXGroup;
+			children = (
+				42502A9E1854E4F900F593E9 /* lonkero_icon.iconset */,
+				42FD4E421850E4F700FEFB57 /* Images.xcassets */,
+				422C3587184BE0A700212999 /* SupportingFiles */,
+				422C3533184BE09400212999 /* Lonkero */,
+				421783D8181C1CD5000FDB81 /* Frameworks */,
+				421783D7181C1CD5000FDB81 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		421783D7181C1CD5000FDB81 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				421783D6181C1CD5000FDB81 /* Lonkero.app */,
+				421783F7181C1CD5000FDB81 /* LonkeroTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		421783D8181C1CD5000FDB81 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				421783D9181C1CD5000FDB81 /* Cocoa.framework */,
+				421783F8181C1CD5000FDB81 /* XCTest.framework */,
+				421783DB181C1CD5000FDB81 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		421783DB181C1CD5000FDB81 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				421783DC181C1CD5000FDB81 /* AppKit.framework */,
+				421783DD181C1CD5000FDB81 /* CoreData.framework */,
+				421783DE181C1CD5000FDB81 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		422C3533184BE09400212999 /* Lonkero */ = {
+			isa = PBXGroup;
+			children = (
+				422C353F184BE09400212999 /* Definitions.h */,
+				422C3540184BE09400212999 /* Definitions.m */,
+				422C3534184BE09400212999 /* AppDelegate.h */,
+				422C3535184BE09400212999 /* AppDelegate.m */,
+				422C3538184BE09400212999 /* DataStructures */,
+				422C3545184BE09400212999 /* LMWindow.h */,
+				422C3546184BE09400212999 /* LMWindow.m */,
+				422C354A184BE09400212999 /* MainWindow */,
+				422C354F184BE09400212999 /* Merge */,
+				422C3557184BE09400212999 /* Prefecences */,
+				422C355E184BE09400212999 /* TemplateDeployer */,
+				422C3565184BE09400212999 /* TemplateManager */,
+			);
+			path = Lonkero;
+			sourceTree = "<group>";
+		};
+		422C3538184BE09400212999 /* DataStructures */ = {
+			isa = PBXGroup;
+			children = (
+				422C3561184BE09400212999 /* TemplateMetadata.h */,
+				422C3562184BE09400212999 /* TemplateMetadata.m */,
+				422C3563184BE09400212999 /* TemplateMetadataItem.h */,
+				422C3564184BE09400212999 /* TemplateMetadataItem.m */,
+				422C3539184BE09400212999 /* FileSystemItem.h */,
+				422C353A184BE09400212999 /* FileSystemItem.m */,
+				422C353B184BE09400212999 /* Template.h */,
+				422C353C184BE09400212999 /* Template.m */,
+				422C353D184BE09400212999 /* TemplateParameter.h */,
+				422C353E184BE09400212999 /* TemplateParameter.m */,
+			);
+			path = DataStructures;
+			sourceTree = "<group>";
+		};
+		422C354A184BE09400212999 /* MainWindow */ = {
+			isa = PBXGroup;
+			children = (
+				422C3536184BE09400212999 /* MainMenu.xib */,
+				422C354B184BE09400212999 /* PathControlHelper.h */,
+				422C354C184BE09400212999 /* PathControlHelper.m */,
+				422C354D184BE09400212999 /* FileBrowserHelper.h */,
+				422C354E184BE09400212999 /* FileBrowserHelper.m */,
+			);
+			path = MainWindow;
+			sourceTree = "<group>";
+		};
+		422C354F184BE09400212999 /* Merge */ = {
+			isa = PBXGroup;
+			children = (
+				422C3550184BE09400212999 /* Merge.h */,
+				422C3551184BE09400212999 /* Merge.m */,
+				422C3552184BE09400212999 /* MergeProtocol.h */,
+				422C3553184BE09400212999 /* NSDictionary-Merge.h */,
+				422C3554184BE09400212999 /* NSDictionary-Merge.m */,
+				422C3555184BE09400212999 /* NSMutableDictionary-Merge.h */,
+				422C3556184BE09400212999 /* NSMutableDictionary-Merge.m */,
+			);
+			path = Merge;
+			sourceTree = "<group>";
+		};
+		422C3557184BE09400212999 /* Prefecences */ = {
+			isa = PBXGroup;
+			children = (
+				422C358C184BE7CA00212999 /* PreferencesWindow.xib */,
+				422C3558184BE09400212999 /* Preferences.h */,
+				422C3559184BE09400212999 /* Preferences.m */,
+				422C355A184BE09400212999 /* PreferencesController.h */,
+				422C355B184BE09400212999 /* PreferencesController.m */,
+				422C355C184BE09400212999 /* UserPreferences.h */,
+				422C355D184BE09400212999 /* UserPreferences.m */,
+			);
+			path = Prefecences;
+			sourceTree = "<group>";
+		};
+		422C355E184BE09400212999 /* TemplateDeployer */ = {
+			isa = PBXGroup;
+			children = (
+				422C355F184BE09400212999 /* TemplateDeployer.h */,
+				422C3560184BE09400212999 /* TemplateDeployer.m */,
+			);
+			path = TemplateDeployer;
+			sourceTree = "<group>";
+		};
+		422C3565184BE09400212999 /* TemplateManager */ = {
+			isa = PBXGroup;
+			children = (
+				422C3566184BE09400212999 /* CreateNewTemplateHelperWindowController.h */,
+				422C3567184BE09400212999 /* CreateNewTemplateHelperWindowController.m */,
+				422C3568184BE09400212999 /* TemplateManager.h */,
+				422C3569184BE09400212999 /* TemplateManager.m */,
+				422C356A184BE09400212999 /* TemplateManagerWindow.xib */,
+				422C356B184BE09400212999 /* TemplateSelectorOutlineViewController.h */,
+				422C356C184BE09400212999 /* TemplateSelectorOutlineViewController.m */,
+			);
+			path = TemplateManager;
+			sourceTree = "<group>";
+		};
+		422C3587184BE0A700212999 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				422C3549184BE09400212999 /* main.m */,
+				422C3547184BE09400212999 /* Lonkero-Info.plist */,
+				422C3588184BE1AF00212999 /* ClassExtension */,
+				422C3548184BE09400212999 /* Lonkero-Prefix.pch */,
+				422C3541184BE09400212999 /* Credits.rtf */,
+				422C3543184BE09400212999 /* InfoPlist.strings */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		422C3588184BE1AF00212999 /* ClassExtension */ = {
+			isa = PBXGroup;
+			children = (
+				420B592B18532BBA00DA0E8B /* CustomView.h */,
+				420B592C18532BBA00DA0E8B /* CustomView.m */,
+				420B592E185330EB00DA0E8B /* CustomViewForWindow.h */,
+				420B592F185330EB00DA0E8B /* CustomViewForWindow.m */,
+				422C3589184BE1AF00212999 /* NSString+Extras.h */,
+				422C358A184BE1AF00212999 /* NSString+Extras.m */,
+			);
+			name = ClassExtension;
+			path = Lonkero/ClassExtension;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		421783D5181C1CD5000FDB81 /* Lonkero */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42178407181C1CD5000FDB81 /* Build configuration list for PBXNativeTarget "Lonkero" */;
+			buildPhases = (
+				421783D2181C1CD5000FDB81 /* Sources */,
+				421783D3181C1CD5000FDB81 /* Frameworks */,
+				421783D4181C1CD5000FDB81 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Lonkero;
+			productName = Kampela;
+			productReference = 421783D6181C1CD5000FDB81 /* Lonkero.app */;
+			productType = "com.apple.product-type.application";
+		};
+		421783F6181C1CD5000FDB81 /* LonkeroTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4217840A181C1CD5000FDB81 /* Build configuration list for PBXNativeTarget "LonkeroTests" */;
+			buildPhases = (
+				421783F3181C1CD5000FDB81 /* Sources */,
+				421783F4181C1CD5000FDB81 /* Frameworks */,
+				421783F5181C1CD5000FDB81 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				421783FC181C1CD5000FDB81 /* PBXTargetDependency */,
+			);
+			name = LonkeroTests;
+			productName = KampelaTests;
+			productReference = 421783F7181C1CD5000FDB81 /* LonkeroTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		421783CE181C1CD5000FDB81 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Kati Haapamäki";
+				TargetAttributes = {
+					421783F6181C1CD5000FDB81 = {
+						TestTargetID = 421783D5181C1CD5000FDB81;
+					};
+				};
+			};
+			buildConfigurationList = 421783D1181C1CD5000FDB81 /* Build configuration list for PBXProject "Lonkero" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 421783CD181C1CD5000FDB81;
+			productRefGroup = 421783D7181C1CD5000FDB81 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				421783D5181C1CD5000FDB81 /* Lonkero */,
+				421783F6181C1CD5000FDB81 /* LonkeroTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		421783D4181C1CD5000FDB81 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				422C358D184BE7CA00212999 /* PreferencesWindow.xib in Resources */,
+				42502A9F1854E4F900F593E9 /* lonkero_icon.iconset in Resources */,
+				422C3576184BE09400212999 /* Lonkero-Info.plist in Resources */,
+				42FD4E431850E4F700FEFB57 /* Images.xcassets in Resources */,
+				422C3585184BE09400212999 /* TemplateManagerWindow.xib in Resources */,
+				422C3574184BE09400212999 /* InfoPlist.strings in Resources */,
+				422C3573184BE09400212999 /* Credits.rtf in Resources */,
+				422C356E184BE09400212999 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		421783F5181C1CD5000FDB81 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		421783D2181C1CD5000FDB81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				422C356D184BE09400212999 /* AppDelegate.m in Sources */,
+				422C3572184BE09400212999 /* Definitions.m in Sources */,
+				422C357B184BE09400212999 /* NSDictionary-Merge.m in Sources */,
+				422C3584184BE09400212999 /* TemplateManager.m in Sources */,
+				422C3582184BE09400212999 /* TemplateMetadataItem.m in Sources */,
+				422C357F184BE09400212999 /* UserPreferences.m in Sources */,
+				422C357A184BE09400212999 /* Merge.m in Sources */,
+				422C3575184BE09400212999 /* LMWindow.m in Sources */,
+				420B592D18532BBA00DA0E8B /* CustomView.m in Sources */,
+				422C3570184BE09400212999 /* Template.m in Sources */,
+				422C3578184BE09400212999 /* PathControlHelper.m in Sources */,
+				422C358B184BE1AF00212999 /* NSString+Extras.m in Sources */,
+				422C3583184BE09400212999 /* CreateNewTemplateHelperWindowController.m in Sources */,
+				420B5930185330EB00DA0E8B /* CustomViewForWindow.m in Sources */,
+				422C356F184BE09400212999 /* FileSystemItem.m in Sources */,
+				422C357C184BE09400212999 /* NSMutableDictionary-Merge.m in Sources */,
+				422C3579184BE09400212999 /* FileBrowserHelper.m in Sources */,
+				422C3577184BE09400212999 /* main.m in Sources */,
+				422C357D184BE09400212999 /* Preferences.m in Sources */,
+				422C3586184BE09400212999 /* TemplateSelectorOutlineViewController.m in Sources */,
+				422C3580184BE09400212999 /* TemplateDeployer.m in Sources */,
+				422C3581184BE09400212999 /* TemplateMetadata.m in Sources */,
+				422C357E184BE09400212999 /* PreferencesController.m in Sources */,
+				422C3571184BE09400212999 /* TemplateParameter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		421783F3181C1CD5000FDB81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		421783FC181C1CD5000FDB81 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 421783D5181C1CD5000FDB81 /* Lonkero */;
+			targetProxy = 421783FB181C1CD5000FDB81 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		422C3536184BE09400212999 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				422C3537184BE09400212999 /* Base */,
+			);
+			name = MainMenu.xib;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		422C3541184BE09400212999 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				422C3542184BE09400212999 /* en */,
+			);
+			name = Credits.rtf;
+			path = Lonkero;
+			sourceTree = "<group>";
+		};
+		422C3543184BE09400212999 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				422C3544184BE09400212999 /* en */,
+			);
+			name = InfoPlist.strings;
+			path = Lonkero;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		42178405181C1CD5000FDB81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.8;
+			};
+			name = Debug;
+		};
+		42178406181C1CD5000FDB81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx10.8;
+			};
+			name = Release;
+		};
+		42178408181C1CD5000FDB81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
+				INFOPLIST_FILE = "Lonkero/Lonkero-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = Lonkero;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		42178409181C1CD5000FDB81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
+				INFOPLIST_FILE = "Lonkero/Lonkero-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = Lonkero;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		4217840B181C1CD5000FDB81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lonkero.app/Contents/MacOS/Lonkero";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LonkeroTests/LonkeroTests-Info.plist";
+				PRODUCT_NAME = LonkeroTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		4217840C181C1CD5000FDB81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lonkero.app/Contents/MacOS/Lonkero";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
+				INFOPLIST_FILE = "LonkeroTests/LonkeroTests-Info.plist";
+				PRODUCT_NAME = LonkeroTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		421783D1181C1CD5000FDB81 /* Build configuration list for PBXProject "Lonkero" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42178405181C1CD5000FDB81 /* Debug */,
+				42178406181C1CD5000FDB81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42178407181C1CD5000FDB81 /* Build configuration list for PBXNativeTarget "Lonkero" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				42178408181C1CD5000FDB81 /* Debug */,
+				42178409181C1CD5000FDB81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4217840A181C1CD5000FDB81 /* Build configuration list for PBXNativeTarget "LonkeroTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4217840B181C1CD5000FDB81 /* Debug */,
+				4217840C181C1CD5000FDB81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 421783CE181C1CD5000FDB81 /* Project object */;
+}
