@@ -20,18 +20,17 @@
 #define METADATA_FILENAME @".Template Metadata.plist"
 #define DEFAULT_ID_LENGTH 12
 #define DEFAULT_GROUP_ID @"000000000000"
-#define TAGCHAR_INNER_1 @"["
-#define TAGCHAR_INNER_2 @"]"
-#define TAGCHAR_OUTER_1 @"{"
-#define TAGCHAR_OUTER_2 @"}"
-#define TAGCHAR_EXTRACTING_INNER_1 @"[!"
-
+#define TAGCHAR_BEGIN @"["
+#define TAGCHAR_END @"]"
+#define TAGCHAR_OUTER_1 @"{" // not in use
+#define TAGCHAR_OUTER_2 @"}" // not in use
+#define TAGCHAR_CONDITIONAL_BEGIN_OLD1 @"[!" // deprecated
+#define TAGCHAR_CONDITIONAL_BEGIN_OLD2 @"[-" // deprecated
 #if DEBUG
 #   define LOG(fmt, ...) NSLog(fmt, ##__VA_ARGS__)
 #else
 #   define LOG(...)
 #endif
-
 
 
 #import <Foundation/Foundation.h>

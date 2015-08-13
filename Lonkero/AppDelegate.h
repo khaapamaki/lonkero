@@ -26,7 +26,7 @@
  *  AppDelegate is also NSTableView data source and delegate for parameter query table
  *
  *  @copyright Kati Haapamäki
- *  @date 2013-2014
+ *  @date 2013-2015
  */
 
 

@@ -143,15 +143,13 @@
     [_idEditorMenuItem setAction:@selector(showOrHideIdEditor)];
     [_idEditorMenuItem setEnabled:YES];
     [_idEditorMenuItem setHidden:NO];
-    
-    
 }
 
 -(void)showOrHideIdEditor {
     [_idEditorBox setHidden:!_idEditorBox.isHidden];
     [_idEditorMenuItem setState:!_idEditorBox.isHidden];
-
 }
+
 -(void)showIdEditor {[_idEditorMenuItem setState:!_idEditorBox.isHidden];
     [_idEditorBox setHidden:NO];
     [_idEditorMenuItem setState:!_idEditorBox.isHidden];

@@ -121,7 +121,7 @@
  */
 
 -(NSString *)stringByRemovingDoubleSpacesAndPunctuation {
-    NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *mySet = [NSMutableCharacterSet whitespaceCharacterSet];
     [mySet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
 
     NSMutableString *result = [NSMutableString stringWithString:@""];
@@ -147,7 +147,7 @@
  */
 
 -(NSString *)stringByRemovingDoubleSpaces {
-    NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *mySet = [NSMutableCharacterSet whitespaceCharacterSet];
     
     NSMutableString *result = [NSMutableString stringWithString:@""];
     NSString *lastCharacter;
@@ -178,11 +178,10 @@
 
 /** Removes spaces and punctuation from the beginning and the end of the string.
  
- 
  */
 
 -(NSString *)stringByTrimmingSpacesAndPunctuation {
-    NSMutableCharacterSet *mySet = [NSCharacterSet whitespaceCharacterSet];
+    NSMutableCharacterSet *mySet = [NSMutableCharacterSet whitespaceCharacterSet];
     [mySet formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
     return [self stringByTrimmingCharactersInSet:mySet];
 }
@@ -225,7 +224,7 @@
  
  */
 -(BOOL)isValidFileName {
-        NSMutableCharacterSet *alphabets= [NSCharacterSet alphanumericCharacterSet];
+        NSMutableCharacterSet *alphabets = [NSMutableCharacterSet alphanumericCharacterSet];
 //        NSMutableCharacterSet *alphabets= [NSCharacterSet lowercaseLetterCharacterSet];
 //        [alphabets formUnionWithCharacterSet:[NSCharacterSet uppercaseLetterCharacterSet]];
 //        [alphabets addCharactersInString:@"0123456789"];
@@ -351,17 +350,50 @@
         items[index] = [string stringByRemovingDoubleSpacesAndPunctuation];
     }
 
-    BOOL firstItemIsEmpty = NO;
-    
-    
-    // remove all empty items but the possible one at index 0
-    if ([items[0] isEqualToString:@""]) firstItemIsEmpty = YES;
-    [items removeEmptyStringItems];
-    if (firstItemIsEmpty) [items insertObject:@"" atIndex:0];
+//    BOOL firstItemIsEmpty = NO;
+//    
+//    // remove all empty items but the possible one at index 0
+//    if ([items[0] isEqualToString:@""]) firstItemIsEmpty = YES;
+//    [items removeEmptyStringItems];
+//    if (firstItemIsEmpty) [items insertObject:@"" atIndex:0];
     
     return [NSArray arrayWithArray:items];
 }
 
+/**
+ *  Returns an arrays of comma separated items of the string
+ *
+ *  @note This method is only to be used for template's combobox defaults. It has speciality that it allows empty string object as first item.
+ *  For other purposes use arrayFromListSeparatedWithCharactersInString:
+ *
+ *  @see arrayFromListSeparatedWithCharactersInString:
+ *
+ *  @return An array of separated strings.
+ */
+
+-(NSArray*)arrayFromCommaSeparatedList {
+    // Parses xx;yy;zz list
+    
+    NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[self componentsSeparatedByString:@","]];
+    for (long index = 0; index < [items count]; index++) {
+        NSString *string = items[index];
+        items[index] = [string stringByRemovingDoubleSpacesAndPunctuation];
+    }
+    
+//    BOOL firstItemIsEmpty = NO;
+//    BOOL lastItemIsEmpty = YES;
+//    // remove all empty items but from the beginning and the end
+//    if ([items[0] isEqualToString:@""]) firstItemIsEmpty = YES;
+//    if ([items[[items count]-1] isEqualToString:@""]) lastItemIsEmpty = YES;
+//    [items removeEmptyStringItems];
+//    if (firstItemIsEmpty) {
+//        [items insertObject:@"" atIndex:0];
+//    } else {
+//        if (lastItemIsEmpty) [items addObject:@""];
+//    }
+    
+    return [NSArray arrayWithArray:items];
+}
 
 /**
  *  Returns single character length substring at index.

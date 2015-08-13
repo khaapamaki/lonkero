@@ -349,7 +349,6 @@
             
             
             
-            
         }
     }
 }
@@ -564,42 +563,6 @@
     
     [self setParameterValuesToDefaults:aTemplate];
     
-    /*
-    for (TemplateParameter *currentParameter in aTemplate.templateParameterSet) {
-        if (!currentParameter.isHidden) {
-            if (currentParameter.parameterType != list) {
-                currentParameter.stringValue = [currentParameter.defaultValue copy];
-            }
-            
-            if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-                currentParameter.stringValue = NSUserName();
-            }
-            
-            if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-                currentParameter.stringValue = NSFullUserName();
-            }
-            if (currentParameter.parameterType == boolean) {
-                
-                if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
-                    currentParameter.booleanValue = NO;
-                } else {
-                    currentParameter.booleanValue = YES;
-                }
-                currentParameter.stringValue = @"";
-            }
-            if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
-            if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
-        }
-    }
-    
-    // load hidden defaults also
-    
-    [self setHiddenParametersToTemplate:aTemplate];
-    */
-    
-    //NSInteger rows = [self numberOfRowsInTableView:_parameterQueryTableView];
-   // [_parameterQueryTableContents removeAllObjects];
-    
     _parameterQueryTableContents = nil; 
     _parameterQueryTableContents = [NSMutableArray array];
     
@@ -611,6 +574,7 @@
             rowIndex++;
         }
     }
+    
     [_parameterQueryTableView reloadData];
     
     [self populateTargetFolderPopUpButton];
@@ -638,34 +602,6 @@
     
     [self setParameterValuesToDefaults:_selectedTemplate];
     
-    /*
-    for (TemplateParameter *currentParameter in _selectedTemplate.templateParameterSet) {
-        if (!currentParameter.isHidden) {
-            if (currentParameter.parameterType != list) {
-                currentParameter.stringValue = [currentParameter.defaultValue copy];
-            }
-            
-            if (currentParameter.parameterType == loginName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-                currentParameter.stringValue = NSUserName();
-            }
-            
-            if (currentParameter.parameterType == userName && ([currentParameter.stringValue isEqualToString:@""] || currentParameter.stringValue == nil) ) {
-                currentParameter.stringValue = NSFullUserName();
-            }
-            if (currentParameter.parameterType == boolean) {
-                
-                if ([currentParameter.stringValue isEqualToString:@""] || currentParameter.defaultValue==nil) {
-                    currentParameter.booleanValue = NO;
-                } else {
-                    currentParameter.booleanValue = YES;
-                }
-                currentParameter.stringValue = @"";
-            }
-            if (currentParameter.stringValue == nil) currentParameter.stringValue = @"";
-            if (currentParameter.dateValue == nil) currentParameter.dateValue = [NSDate date];
-        }
-    }
-    */
     _parameterQueryTableContents = nil;
     _parameterQueryTableContents = [NSMutableArray array];
     
@@ -1671,27 +1607,12 @@
  *  @param comboBox                 NSComboBox object
  *  @param semicolonSeparatedString A string with semicolon separated items
  */
+
 -(void)updateParameterQueryComboBox:(NSComboBox *)comboBox withString:(NSString *)semicolonSeparatedString {
     // Parses xx;yy;zz list
     
     long defaultIndex = 0;
-    
-    /*
-    NSMutableArray *items = [[NSMutableArray alloc] initWithArray:[semicolonSeparatedString componentsSeparatedByString:@";"]];
-    for (long index = 0; index < [items count]; index++) {
-        NSString *string = items[index];
-        items[index] = [string stringByRemovingDoubleSpacesAndPunctuation];
-    }
-    if ([items count] >0) {
-        if ([items[0] isEqualToString:@""]) {
-            defaultIndex = -1;
-        }
-    } else {
-        defaultIndex = -1;
-    }
-    [self removeEmptyStringsFromMutableArray:items];
-     */
-    
+
     
     // checks if there the first item (default value) is occurred later second time
     // action is then to remove the first item an just set combobox's value pointing to index of second occurrence

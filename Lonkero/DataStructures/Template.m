@@ -17,8 +17,8 @@
         for (TemplateParameter *currentParameter in self.templateParameterSet) {
             if ([NSString isNotEmptyString:currentParameter.parentFolderNamingRule]) {
                 NSMutableString *parentName = [NSMutableString stringWithString:currentParameter.parentFolderNamingRule];
-                [parentName replaceOccurrencesOfString:@"[" withString:TAGCHAR_INNER_1 options:0 range:NSMakeRange(0, [parentName length])];
-                [parentName replaceOccurrencesOfString:@"]" withString:TAGCHAR_INNER_2 options:0 range:NSMakeRange(0, [parentName length])];
+                [parentName replaceOccurrencesOfString:@"[" withString:TAGCHAR_BEGIN options:0 range:NSMakeRange(0, [parentName length])];
+                [parentName replaceOccurrencesOfString:@"]" withString:TAGCHAR_END options:0 range:NSMakeRange(0, [parentName length])];
                 currentParameter.parentFolderNamingRule = [parentName copy];
             }
         }

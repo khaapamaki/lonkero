@@ -41,30 +41,26 @@
 
 // this is used for creation of parent folders that doesn't already exist
 -(NSInteger)createFoldersIfNeeded:(NSArray *)folders defaultPermissions:(NSDictionary *)defaultPermissions;
--(NSInteger)copyTemplateContentsToFolder:(FileSystemItem*)folder defaultPermissions:(NSDictionary *)defaultPermissions errString:(NSString**) errStr;
-
+//-(NSInteger)copyTemplateContentsToFolder:(FileSystemItem*)folder defaultPermissions:(NSDictionary *)defaultPermissions errString:(NSString**) errStr;
 -(NSArray *) generateParentFolderArrayWithError:(NSNumber **)err;
 
 
 #pragma mark -
 #pragma mark PARAMETER PARSING
 
-
-
--(NSString*) parseParametersForString:(NSString*)aString;
+-(NSString*) parseParametersForString:(NSString*)aString;  /* the parser */
 -(NSString*) parseSystemParametersForString:(NSString *)aString;
 -(NSString*) parseParametersForPathComponent:(NSString*)filename error:(NSNumber **)err;
 -(NSArray*) parseParametersForPathComponents:(NSArray*)pathComponents error:(NSNumber**)err;
--(NSString*) parseParametersForPath:(NSString *)path;
 
-
+-(NSString*) parseParametersForPath:(NSString *)path; // used by setTargetFolderPopUpToFolder in appdelegate
++(FileSystemItem *) parsePathForFileSystemItem:(FileSystemItem*)aFileSystemItem; // not needed?
 
 /* +(FileSystemItem *)masterFolderForTemplate:(Template*)aTemplate andTargetFolder:(FileSystemItem*)aTargetFolder;
 -(NSString *) masterFolderNameByParsingTags;
 -(FileSystemItem*) generateMasterFolderUsingParentArray:(NSArray*)array;
 +(FileSystemItem *)generateMasterFolderUsingParentArray:(NSArray *)array withTemplate:(Template*)aTemplate withTargetFolder:(FileSystemItem*)targetFolder;
 */
-
 
 
 #pragma mark -

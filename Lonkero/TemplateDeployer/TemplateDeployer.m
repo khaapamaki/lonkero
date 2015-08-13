@@ -27,7 +27,6 @@
 }
 
 
-
 -(NSInteger)rewriteMetadataToTargetFolder:(FileSystemItem*)targetFolder errString:(NSString**)errStr {
     _theTargetFolder = targetFolder;
     NSNumber *errCode = @(0);
@@ -282,7 +281,7 @@
     for (FileSystemItem *item in itemCandidatesToBeCopied) {
         NSNumber *pathComponentErr = nil;
 
-        NSNumber *shouldCopy = @YES;
+        NSNumber *shouldCopy = @YES; // used to store return value
         NSString *relativeParsedPath = [NSString pathWithComponents:[self parseParametersForPathComponents:[item.relativePath pathComponents] shouldUse:&shouldCopy error:&pathComponentErr]];
         
         if ([pathComponentErr integerValue]==0) {
@@ -317,6 +316,8 @@
         }
         
         if (item.shouldCopy) [itemsToBeCopied addObject:item];
+        if (item.shouldCopy) NSLog(@"Include: %@", item.path);
+        if (!item.shouldCopy) NSLog(@"Exclude: %@", item.path);
     }
     
     return [NSArray arrayWithArray:itemsToBeCopied];
@@ -344,45 +345,6 @@
     NSString *templateSettingsPathToBeExcluded = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, TEMPLATE_SETTINGS_FILENAME];
   
     
-    
-    /*
-    // SET COPY PATHS TO "TODO-ARRAY"
-    
-    for (FileSystemItem *item in itemsToBeCopied) {
-        NSNumber *pathComponentErr = nil;
-        if (!item.isDirectory) {
-            
-        }
-        
-        NSNumber *shouldCopy = @YES;
-        NSString *relativeParsedPath = [NSString pathWithComponents:[self parseParametersForPathComponents:[item.relativePath pathComponents] shouldUse:&shouldCopy error:&pathComponentErr]];
-        if ([pathComponentErr integerValue]==0) {
-            NSString *targetPath = [NSString stringWithFormat:@"%@/%@", folder.pathByExpandingTildeInPath, relativeParsedPath];
-            item.pathToCopy = targetPath;
-            BOOL isDir;
-            item.pathToCopyExists = [fm fileExistsAtPath:item.pathToCopy isDirectory:&isDir];
-            item.pathToCopyIsDirectory = isDir;
-            item.shouldCopy = [shouldCopy boolValue];
-            if (isDir == NO && item.pathToCopyExists) errCode = ErrFileExistsAtTarget;
-            totalFileSize += item.fileSize;
-        } else {
-            *errStr = [NSString stringWithString:item.path];
-            return ErrInvalidFileOrFolderName;
-        }
-        
-        if (item.pathToCopyExists && !item.pathToCopyIsDirectory) {
-            *errStr = [NSString stringWithString:item.pathToCopy];
-            return ErrFolderOccupiedByFile;
-        }
-        
-        if (pathComponentErr!=0) {
-            errCode = [pathComponentErr integerValue];
-            *errStr = relativeParsedPath;
-        }
-    }
-    
-    if (errCode != 0) return errCode;
-    */
     
     // CREATE FOLDERS
     for (FileSystemItem *item in items) {
@@ -717,27 +679,32 @@
 -(NSArray*)parseParametersForPathComponents:(NSArray*)pathComponents shouldUse:(NSNumber**)shouldUse error:(NSNumber**)err {
     NSMutableArray *parsedArray = [NSMutableArray array];
     NSNumber *shouldUse1 = @YES;
+    if (shouldUse != NULL) *shouldUse = @YES;
+    
     for (NSString *pathComponent in pathComponents) {
         if ([pathComponent isEqualToString:@"/"]) { // root?
             [parsedArray addObject:pathComponent];
         } else {
             NSNumber *error = nil;
             NSString *parsedPathComponent = [self parseParametersForPathComponent:pathComponent shouldUse:&shouldUse1 error:&error];
-            if (shouldUse!=NULL) *shouldUse = [shouldUse1 copy];
-            if (error!=nil) {
+            if (shouldUse != NULL) {
+                if ([shouldUse1 boolValue] == NO) *shouldUse = [shouldUse1 copy]; // shouldUse1 is return value from previous
+            }
+            if (error != nil) {
                 if (err!=NULL) *err = @([error integerValue]);
             }
             [parsedArray addObject:parsedPathComponent];
             
         }
     }
-    return [NSArray arrayWithArray:parsedArray];}
+    return [NSArray arrayWithArray:parsedArray];
+}
 
 
 -(NSArray*)parseParametersForPathComponents:(NSArray*)pathComponents error:(NSNumber**)err {
     NSNumber *err1 = nil;
-    NSArray *result =  [self parseParametersForPathComponents:pathComponents shouldUse:nil error:&err1];
-    if (err!=NULL) *err = [err1 copy];
+    NSArray *result = [self parseParametersForPathComponents:pathComponents shouldUse:nil error:&err1];
+    if (err != NULL) *err = [err1 copy];
     return result;
 }
 
@@ -763,51 +730,136 @@
  *  @return Parsed string
  */
 
+/* ********* ACTUAL PARSER ******** */
+
 -(NSString *)parseParametersForString:(NSString *)aString shouldUse:(NSNumber**)shouldUse {
-    if (shouldUse!=NULL) *shouldUse = @YES;
+    
+    if (shouldUse != NULL) *shouldUse = @YES;
     NSMutableString *result = [[self parseSystemParametersForString:aString] mutableCopy];
-    long replacesMade = 0;
     
     for (TemplateParameter *currentParameter in _theTemplate.templateParameterSet) {
+
         
-        NSString *tagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_INNER_1, currentParameter.tag, TAGCHAR_INNER_2];
-        NSString *extractingTagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_EXTRACTING_INNER_1, currentParameter.tag, TAGCHAR_INNER_2];
-        NSString *brackets = [NSString stringWithFormat:@"%@%@", TAGCHAR_INNER_1, TAGCHAR_INNER_2];
-        NSString *extractingBrackets = [NSString stringWithFormat:@"%@%@", TAGCHAR_EXTRACTING_INNER_1, TAGCHAR_INNER_2];
-        NSRange tagRange;
-        NSInteger minTagLegth;
+        // make regexp patterns for a tag
+        NSString *pattern1 = [NSString stringWithFormat:@"\\[(%@)((!=|=)([a-zA-Z0-9äöåÄÖÅ_,]*))?\\]", currentParameter.tag]; // looks for tag [tag=something], [tag!=something] or [tag]
+        NSString *pattern2 = [NSString stringWithFormat:@"\\{(%@)((!=|=)([a-zA-Z0-9äöåÄÖÅ_,]*))?\\}", currentParameter.tag]; // looks for tag {tag=something}, {tag!=something} or {tag}
+        NSRegularExpressionOptions regexOptions = NSRegularExpressionCaseInsensitive;
         
-        NSString *extractingTagWithBracketsOldFormat = [NSString stringWithFormat:@"%@%@%@", @"[-", currentParameter.tag, TAGCHAR_INNER_2];
+        NSRegularExpression *regex1 = [[NSRegularExpression alloc] initWithPattern:pattern1 options:regexOptions error:nil];
+        NSRegularExpression *regex2 = [[NSRegularExpression alloc] initWithPattern:pattern2 options:regexOptions error:nil];
+        
+        NSTextCheckingResult *match = nil;
+        BOOL overallMatch = YES;
         
         do {
-            minTagLegth = [brackets length];
-            tagRange = [result rangeOfString:tagWithBrackets options:NSCaseInsensitiveSearch];
+            NSString *before = [result copy];
             
-            // if normal tag is not found, look for special *extracting tag* [!tag]
-            if (tagRange.location == NSNotFound) {
-                tagRange = [result rangeOfString:extractingTagWithBrackets options:NSCaseInsensitiveSearch];
-                if (tagRange.location == NSNotFound) {
-                    tagRange = [result rangeOfString:extractingTagWithBracketsOldFormat options:NSCaseInsensitiveSearch];
-                }
+            BOOL replaceMode = YES;
+            match = [regex1 firstMatchInString:result options:0 range:NSMakeRange(0, [result length])];
+            
+            if (!match) {
+                replaceMode = NO;
+                match = [regex2 firstMatchInString:result options:0 range:NSMakeRange(0, [result length])];
+            }
+            
+            if (match) {
+                NSRange matchRange = [match range];
+                NSRange tagRange = [match rangeAtIndex:1];
+                NSRange operatorRange = [match rangeAtIndex:3];
+                NSRange valueRange = [match rangeAtIndex:4];
+                NSString *extractedTag = nil;
+                
                 if (tagRange.location != NSNotFound) {
-                    if ([NSString isEmptyString:currentParameter.stringValue] && shouldUse!=nil) *shouldUse = @NO;
-                    if (currentParameter.parameterType == boolean && currentParameter.booleanValue == NO) *shouldUse = @NO;
+                    extractedTag = [result substringWithRange:tagRange];
                 }
-                minTagLegth = [extractingBrackets length];
+                NSString *operator = nil;
+                if (operatorRange.location != NSNotFound) {
+                    operator = [result substringWithRange:operatorRange];
+                }
+                NSString *value = nil;
+                if (valueRange.location != NSNotFound) {
+                    value = [result substringWithRange:valueRange];
+                }
+                
+                if ([NSString isNotEmptyString:operator]) {
+                    BOOL valueMatch = NO;
+                    
+                    // extract comma separated values when list given
+
+
+                    if ([operator isEqualToString:@"!="]) {
+                        valueMatch = YES;
+                        NSArray *allValues = [value arrayFromCommaSeparatedList];
+                        for (NSString *thisValue in allValues) {
+                            if ([thisValue.lowercaseString isEqualToString:currentParameter.stringValue.lowercaseString]) valueMatch = NO; // NOT a AND NOT b.. operation
+                        }
+                        //valueMatch = !valueMatch;
+                    } else {
+                        valueMatch = NO;
+                        NSArray *allValues = [value arrayFromCommaSeparatedList];
+                        for (NSString *thisValue in allValues) {
+                            if ([thisValue.lowercaseString isEqualToString:currentParameter.stringValue.lowercaseString]) valueMatch = YES; // OR operation
+                        }
+                    }
+                    
+                    if (!valueMatch) overallMatch = NO; // any single false conditional means shouldCopy status to be false (AND operation)
+                }
+                
+                if (replaceMode) {
+                    Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
+                    [result replaceCharactersInRange:matchRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
+                } else {
+                    [result replaceCharactersInRange:matchRange withString:@""];
+                }
             }
-            if (tagRange.location != NSNotFound) {
-                NSString *extractedTag = [result substringWithRange:NSMakeRange(tagRange.location+minTagLegth-1, tagRange.length-minTagLegth)];
-                Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
-                replacesMade += 1;
-                [result replaceCharactersInRange:tagRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
+            if ([result isEqualToString:before]) {
+                
+                if (match) NSLog(@"Why match when no change?");
+                match = NO;
+            } else {
+                //NSLog(@"%@ -> %@", before, result);
             }
-            
-        } while (tagRange.length > 0);
+        } while (match);
+        
+        if (overallMatch == NO && shouldUse != NULL) {
+             *shouldUse = @NO;
+        }
+    
+        
     }
     
     
     return [NSString stringWithString:[result stringByPerformingFullCleanUp]];
 }
+
+
+//        do {
+//            minTagLegth = [brackets length];
+//            tagRange = [result rangeOfString:tagWithBrackets options:NSCaseInsensitiveSearch]; // search, old version
+//            
+//            // if normal tag is not found, look for special *conditional tag* [!tag]
+//            if (tagRange.location == NSNotFound) {
+//                tagRange = [result rangeOfString:conditionalTagOldFormat1 options:NSCaseInsensitiveSearch];
+//                if (tagRange.location == NSNotFound) {
+//                    tagRange = [result rangeOfString:conditionalTagOldFormat2 options:NSCaseInsensitiveSearch];
+//                }
+//                if (tagRange.location != NSNotFound) {
+//                    if ([NSString isEmptyString:currentParameter.stringValue] && shouldUse!=nil) *shouldUse = @NO;
+//                    if (currentParameter.parameterType == boolean && currentParameter.booleanValue == NO) *shouldUse = @NO;
+//                }
+//                minTagLegth = [extractingBrackets length];
+//            }
+//            if (tagRange.location != NSNotFound) {
+//                NSString *extractedTag = [result substringWithRange:NSMakeRange(tagRange.location+minTagLegth-1, tagRange.length-minTagLegth)];
+//                Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
+//                replacesMade += 1;
+//                [result replaceCharactersInRange:tagRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
+//            }
+//            
+//        } while (tagRange.length > 0);
+
+    
+
 
 /**
  *  Parses factory build system parameters for a string.
@@ -828,7 +880,7 @@
     
     for (NSString *currentTag in [Definitions reservedTags]) {
         
-        NSString *tagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_INNER_1, currentTag, TAGCHAR_INNER_2];
+        NSString *tagWithBrackets = [NSString stringWithFormat:@"%@%@%@", TAGCHAR_BEGIN, currentTag, TAGCHAR_END];
         NSRange tagRange;
         
         do {
@@ -866,7 +918,7 @@
 }
 
 /**
- *  Parses whole path
+ *  Parses whole path (class method)
  *
  *  @param aFileSystemItem A FileSystemItem
  *

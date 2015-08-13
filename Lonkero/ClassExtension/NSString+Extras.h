@@ -31,6 +31,7 @@
 +(NSString*) convertWildCardToRegExp:(NSString *)WildCardString;
 +(NSString*) generateRandomStringOfLength:(short)len;
 -(NSArray*)  arrayFromSemicolonSeparatedList;
+-(NSArray*)  arrayFromCommaSeparatedList;
 -(NSString*) characterStringAtIndex:(NSInteger)index;
 -(NSArray*) arrayOfSubstringsSeparatedWithCharactersInString:(NSString*)separatorCharacters;
 
