@@ -174,7 +174,7 @@
     
     NSString *message = [NSString stringWithFormat:@"%lu missing folder%@. Recreate them?", [missingFolders count], ([missingFolders count]==1 ? @"" : @"s") ];
     
-    NSInteger answer2 = NSRunAlertPanel(message, _selectedTargetFolder.path, @"Continue", @"Cancel", nil);
+    NSInteger answer2 = NSRunAlertPanel(message, @"%@", @"Continue", @"Cancel", nil, _selectedTargetFolder.path);
     if (answer2 == NSCancelButton) return;
     
     // CREATE MISSING FOLDERS
@@ -273,7 +273,7 @@
     
     // check if custom target folder is set and warn user
     if (lastSelectedTargetFolderIndex == -1) {
-        NSInteger answer = NSRunAlertPanel(@"Warning! Custom target folder is set. Are you sure you want to deploy to that folder?", _selectedTargetFolder.path, @"Proceed", @"Cancel", nil);
+        NSInteger answer = NSRunAlertPanel(@"Warning! Custom target folder is set. Are you sure you want to deploy to that folder?", @"%@", @"Proceed", @"Cancel", nil, _selectedTargetFolder.path);
         if (answer == NSCancelButton) return;
     }
     NSString *errString = @"";

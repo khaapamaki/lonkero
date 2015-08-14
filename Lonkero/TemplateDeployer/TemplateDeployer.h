@@ -41,7 +41,6 @@
 
 // this is used for creation of parent folders that doesn't already exist
 -(NSInteger)createFoldersIfNeeded:(NSArray *)folders defaultPermissions:(NSDictionary *)defaultPermissions;
-//-(NSInteger)copyTemplateContentsToFolder:(FileSystemItem*)folder defaultPermissions:(NSDictionary *)defaultPermissions errString:(NSString**) errStr;
 -(NSArray *) generateParentFolderArrayWithError:(NSNumber **)err;
 
 
@@ -55,12 +54,6 @@
 
 -(NSString*) parseParametersForPath:(NSString *)path; // used by setTargetFolderPopUpToFolder in appdelegate
 +(FileSystemItem *) parsePathForFileSystemItem:(FileSystemItem*)aFileSystemItem; // not needed?
-
-/* +(FileSystemItem *)masterFolderForTemplate:(Template*)aTemplate andTargetFolder:(FileSystemItem*)aTargetFolder;
--(NSString *) masterFolderNameByParsingTags;
--(FileSystemItem*) generateMasterFolderUsingParentArray:(NSArray*)array;
-+(FileSystemItem *)generateMasterFolderUsingParentArray:(NSArray *)array withTemplate:(Template*)aTemplate withTargetFolder:(FileSystemItem*)targetFolder;
-*/
 
 
 #pragma mark -
@@ -76,8 +69,6 @@
 
 +(NSArray *)parentFolderParametersInvolved:(Template *)aTemplate;
 +(NSDictionary *)dictionaryWithInvolvedParametersTillLevel:(NSInteger)level withTemplate:(Template *)aTemplate;
-
-
 +(short)combinePosixForTargetFolder:(short)targetPosix andSourceFile:(short)sourcePosix;
 +(short)combinePosixForTargetFolder:(short)targetPosix andSourceFolder:(short)sourcePosix;
 
@@ -85,6 +76,5 @@
 #pragma mark INIT
 
 -(id)initWithTemplate:(Template*)aTemplate;
-
 
 @end

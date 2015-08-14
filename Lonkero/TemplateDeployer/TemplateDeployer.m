@@ -145,18 +145,7 @@
     NSArray *parentFolders = [self generateParentFolderArrayWithError:&err];
     
     FileSystemItem *masterFolder =[parentFolders lastObject];
-    /*
-    if ([parentFolders count]==0) {
-        masterFolder = _theTargetFolder;
-        masterFolder.isMaster = YES;
-        masterFolder.isParent = NO;
-        masterFolder.isTarget = YES;
-    } else {
-        [[parentFolders lastObject] setIsParent:NO];
-        [[parentFolders lastObject] setIsMaster:YES];
-        masterFolder = [parentFolders lastObject];
-    }
-    */
+
 
     // Pitää tsekata onko master folder olemassa JA ONKO SAMAN groupin/templaten nimissä
     if (masterFolder.itemExists && (options & deployTemplate)) {
@@ -741,8 +730,10 @@
 
         
         // make regexp patterns for a tag
-        NSString *pattern1 = [NSString stringWithFormat:@"\\[(%@)((!=|=)([a-zA-Z0-9äöåÄÖÅ_,]*))?\\]", currentParameter.tag]; // looks for tag [tag=something], [tag!=something] or [tag]
-        NSString *pattern2 = [NSString stringWithFormat:@"\\{(%@)((!=|=)([a-zA-Z0-9äöåÄÖÅ_,]*))?\\}", currentParameter.tag]; // looks for tag {tag=something}, {tag!=something} or {tag}
+        // [(%@)((!=|=|\|)([a-zA-Z0-9äöåÄÖÅ_ ,]*))?\]
+        
+        NSString *pattern1 = [NSString stringWithFormat:@"\\[(%@)((!=|=|\\|)([a-zA-Z0-9äöåÄÖÅ_ ,]*))?\\]", currentParameter.tag]; // looks for tag [tag=something], [tag!=something] or [tag]
+        NSString *pattern2 = [NSString stringWithFormat:@"\\{(%@)((!=|=|\\|)([a-zA-Z0-9äöåÄÖÅ_ ,]*))?\\}", currentParameter.tag]; // looks for tag {tag=something}, {tag!=something} or {tag}
         NSRegularExpressionOptions regexOptions = NSRegularExpressionCaseInsensitive;
         
         NSRegularExpression *regex1 = [[NSRegularExpression alloc] initWithPattern:pattern1 options:regexOptions error:nil];
@@ -755,6 +746,7 @@
             NSString *before = [result copy];
             
             BOOL replaceMode = YES;
+            BOOL useDefaultValue = NO;
             match = [regex1 firstMatchInString:result options:0 range:NSMakeRange(0, [result length])];
             
             if (!match) {
@@ -794,22 +786,34 @@
                             if ([thisValue.lowercaseString isEqualToString:currentParameter.stringValue.lowercaseString]) valueMatch = NO; // NOT a AND NOT b.. operation
                         }
                         //valueMatch = !valueMatch;
-                    } else {
+                    } else if ([operator isEqualToString:@"="]) {
                         valueMatch = NO;
                         NSArray *allValues = [value arrayFromCommaSeparatedList];
                         for (NSString *thisValue in allValues) {
                             if ([thisValue.lowercaseString isEqualToString:currentParameter.stringValue.lowercaseString]) valueMatch = YES; // OR operation
                         }
+                    } else {
+                        // operator is pipe (set default value, if value is empty)
+                        valueMatch = YES;
+                        if ([NSString isEmptyString:currentParameter.stringValue]) {
+                            useDefaultValue = YES;
+                            if (value==nil) value = @"";
+                        }
+
                     }
                     
                     if (!valueMatch) overallMatch = NO; // any single false conditional means shouldCopy status to be false (AND operation)
                 }
                 
-                if (replaceMode) {
-                    Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
-                    [result replaceCharactersInRange:matchRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
+                if (useDefaultValue) {
+                     [result replaceCharactersInRange:matchRange withString:value];
                 } else {
-                    [result replaceCharactersInRange:matchRange withString:@""];
+                    if (replaceMode) {
+                        Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
+                        [result replaceCharactersInRange:matchRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
+                    } else {
+                        [result replaceCharactersInRange:matchRange withString:@""];
+                    }
                 }
             }
             if ([result isEqualToString:before]) {
@@ -824,41 +828,11 @@
         if (overallMatch == NO && shouldUse != NULL) {
              *shouldUse = @NO;
         }
-    
-        
     }
-    
     
     return [NSString stringWithString:[result stringByPerformingFullCleanUp]];
 }
 
-
-//        do {
-//            minTagLegth = [brackets length];
-//            tagRange = [result rangeOfString:tagWithBrackets options:NSCaseInsensitiveSearch]; // search, old version
-//            
-//            // if normal tag is not found, look for special *conditional tag* [!tag]
-//            if (tagRange.location == NSNotFound) {
-//                tagRange = [result rangeOfString:conditionalTagOldFormat1 options:NSCaseInsensitiveSearch];
-//                if (tagRange.location == NSNotFound) {
-//                    tagRange = [result rangeOfString:conditionalTagOldFormat2 options:NSCaseInsensitiveSearch];
-//                }
-//                if (tagRange.location != NSNotFound) {
-//                    if ([NSString isEmptyString:currentParameter.stringValue] && shouldUse!=nil) *shouldUse = @NO;
-//                    if (currentParameter.parameterType == boolean && currentParameter.booleanValue == NO) *shouldUse = @NO;
-//                }
-//                minTagLegth = [extractingBrackets length];
-//            }
-//            if (tagRange.location != NSNotFound) {
-//                NSString *extractedTag = [result substringWithRange:NSMakeRange(tagRange.location+minTagLegth-1, tagRange.length-minTagLegth)];
-//                Case caseConversionNeeded = [NSString analyzeCaseConversionBetweenString:currentParameter.tag andString:extractedTag];
-//                replacesMade += 1;
-//                [result replaceCharactersInRange:tagRange withString:[currentParameter.stringValue convertToCase:caseConversionNeeded]];
-//            }
-//            
-//        } while (tagRange.length > 0);
-
-    
 
 
 /**
@@ -902,7 +876,6 @@
                 if ([currentTag isEqualToString:@"creator-fullname"]) {
                     replacement = NSFullUserName();
                 }
-                
                 
                 [result replaceCharactersInRange:tagRange withString:[replacement convertToCase:caseConversionNeeded]];
             }
