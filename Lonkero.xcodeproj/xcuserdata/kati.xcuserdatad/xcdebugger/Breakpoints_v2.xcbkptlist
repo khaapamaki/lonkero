@@ -99,7 +99,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "664"
             endingLineNumber = "664"
-            landmarkName = "-parseParametersForPathComponent:shouldUse:error:"
+            landmarkName = "-parseParametersForPathComponent:error:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -387,8 +387,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "322"
             endingLineNumber = "322"
-            landmarkName = "-generateArrayOfItemsToBeCopiedToFolder:errCode:errString:"
-            landmarkType = "5">
+            landmarkName = "@implementation TemplateDeployer"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -403,8 +403,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "691"
             endingLineNumber = "691"
-            landmarkName = "-parseParametersForPathComponents:shouldUse:error:"
-            landmarkType = "5">
+            landmarkName = "@implementation TemplateDeployer"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

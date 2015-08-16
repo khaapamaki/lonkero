@@ -632,7 +632,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
 				INFOPLIST_FILE = "Lonkero/Lonkero-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Lonkero;
 				SDKROOT = macosx;
@@ -649,7 +649,7 @@
 				GCC_PREFIX_HEADER = "Lonkero/Lonkero-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
 				INFOPLIST_FILE = "Lonkero/Lonkero-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = Lonkero;
 				SDKROOT = macosx;
