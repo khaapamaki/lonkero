@@ -56,7 +56,9 @@
 -(id)initWithLoadingPreferences {
 
     NSString *preferenceFolderPath = [NSString stringWithFormat:@"%@/Library/Preferences/%@", NSHomeDirectory(), APPNAME];
+//    NSString *globalPreferenceFolderPath = [NSString stringWithFormat:@"/Library/Preferences/%@", APPNAME];
     NSString *preferenceFilePath = [NSString stringWithFormat:@"%@/%@", preferenceFolderPath, PREFERENCES_FILENAME];
+//    NSString *globalPreferenceFilePath = [NSString stringWithFormat:@"%@/%@", globalPreferenceFolderPath, PREFERENCES_FILENAME];
     NSFileManager *fm = [[NSFileManager alloc] init];
     // read prefrences if they exists
     if ([fm fileExistsAtPath:preferenceFilePath]) {

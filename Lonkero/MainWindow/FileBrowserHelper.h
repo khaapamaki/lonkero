@@ -64,6 +64,7 @@
 -(id)initWithFolder:(FileSystemItem *)rootFolder andTemplate:(Template *) currentTemplate;
 
 +(BOOL)isURLDirectory:(NSURL *)URL;
+
 -(BOOL)wildCardMatchForString:(NSString*)string searchString:(NSString*)searchString;
 
 @end

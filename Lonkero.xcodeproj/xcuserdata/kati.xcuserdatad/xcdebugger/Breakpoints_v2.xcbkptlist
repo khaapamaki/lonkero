@@ -21,6 +21,8 @@
             continueAfterRunningActions = "No"
             symbolName = "&apos;"
             moduleName = "">
+            <Locations>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -36,7 +38,7 @@
             startingLineNumber = "1332"
             endingLineNumber = "1332"
             landmarkName = "-targetFolderPopUpAction:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -52,7 +54,7 @@
             startingLineNumber = "1152"
             endingLineNumber = "1152"
             landmarkName = "-updateTargetFolderViews"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -68,7 +70,7 @@
             startingLineNumber = "1150"
             endingLineNumber = "1150"
             landmarkName = "-updateTargetFolderViews"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -116,7 +118,7 @@
             startingLineNumber = "1369"
             endingLineNumber = "1369"
             landmarkName = "-contextMenuCopyParameters:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -148,7 +150,7 @@
             startingLineNumber = "371"
             endingLineNumber = "371"
             landmarkName = "-populateTemplatePopUpButton"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -158,11 +160,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/Prefecences/Preferences.m"
-            timestampString = "445435599.235945"
+            timestampString = "461440334.173197"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "-templateSetLocationsByParsingSystemParameters"
             landmarkType = "5">
          </BreakpointContent>
@@ -180,7 +182,7 @@
             startingLineNumber = "547"
             endingLineNumber = "547"
             landmarkName = "-init"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -244,7 +246,7 @@
             startingLineNumber = "150"
             endingLineNumber = "150"
             landmarkName = "-recreateMissingFolders:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -259,7 +261,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "51"
             endingLineNumber = "51"
-            landmarkName = "-parseParametersForString:"
+            landmarkName = "-parseSystemParametersForString:"
             landmarkType = "4">
          </BreakpointContent>
       </BreakpointProxy>
@@ -276,7 +278,7 @@
             startingLineNumber = "252"
             endingLineNumber = "252"
             landmarkName = "-deployFolderStructure:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -292,7 +294,7 @@
             startingLineNumber = "284"
             endingLineNumber = "284"
             landmarkName = "-deployFolderStructure:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -405,6 +407,38 @@
             endingLineNumber = "691"
             landmarkName = "@implementation TemplateDeployer"
             landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/Prefecences/Preferences.m"
+            timestampString = "461440334.173197"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "-initWithLoadingPreferences"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.h"
+            timestampString = "464211033.964876"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "@interface TemplateMetadata"
+            landmarkType = "2">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

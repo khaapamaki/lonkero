@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6250" systemVersion="13F1096" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="TemplateManager">
             <connections>
-                <outlet property="addTemplate" destination="lip-Fx-SEk" id="h1d-Ad-lu2"/>
                 <outlet property="addTemplateButton" destination="lip-Fx-SEk" id="ygi-yT-Y47"/>
                 <outlet property="addTemplateButtonCell" destination="WOD-5I-hqW" id="ac0-Aq-PpE"/>
                 <outlet property="createNewTemplateHelper" destination="jxK-YN-3gR" id="1Jf-El-jQD"/>
@@ -16,10 +15,8 @@
                 <outlet property="dateFormatTextField" destination="qut-Ul-6wk" id="sHy-Jp-Ord"/>
                 <outlet property="groupIdTextField" destination="zW0-GD-NQQ" id="Rcd-oa-70y"/>
                 <outlet property="idEditorBox" destination="rXd-jo-QpB" id="AqD-BV-SAr"/>
-                <outlet property="idEditorPanel" destination="Zfe-Qf-jCb" id="T66-Yx-rLN"/>
                 <outlet property="parameterTableView" destination="0se-1p-Duu" id="0al-iY-cvE"/>
                 <outlet property="parametersArrayController" destination="8EM-MH-o0z" id="7BE-9H-2GE"/>
-                <outlet property="removeTemplate" destination="btC-GJ-cEG" id="4pe-24-m7D"/>
                 <outlet property="targetFoldersArrayController" destination="716-lu-dFR" id="lMB-QC-V18"/>
                 <outlet property="targetFoldersTableView" destination="9zz-mr-K8F" id="dzU-I9-C3Z"/>
                 <outlet property="templateIdtTextField" destination="oDB-or-IX9" id="jZN-1Y-T10"/>
@@ -34,7 +31,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="227" y="614" width="1218" height="556"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
             <view key="contentView" id="Va5-8u-iYj">
                 <rect key="frame" x="0.0" y="0.0" width="1218" height="556"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -114,7 +111,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="U5j-gd-xdm" id="9zz-mr-K8F">
-                                    <rect key="frame" x="0.0" y="0.0" width="755" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="753" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -338,7 +335,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="m16-WJ-C5k">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m16-WJ-C5k">
                         <rect key="frame" x="990" y="163" width="107" height="17"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="Date Formatting" id="gqM-fe-Tvo">
                             <font key="font" metaFont="system"/>
@@ -444,7 +441,7 @@ Gw
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" headerView="7RV-qD-Hs6" id="0se-1p-Duu">
-                                    <rect key="frame" x="0.0" y="0.0" width="978" height="19"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="976" height="19"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -705,7 +702,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" utility="YES" documentModal="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="253" y="584" width="563" height="576"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
             <view key="contentView" id="vK9-ei-GSU">
                 <rect key="frame" x="0.0" y="0.0" width="563" height="576"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -743,11 +740,12 @@ Gw
                             <subviews>
                                 <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JXN-fX-saB">
                                     <rect key="frame" x="29" y="27" width="325" height="246"/>
-                                    <clipView key="contentView" identifier="existingFolderList" ambiguous="YES" misplaced="YES" id="TfW-c8-RJq">
+                                    <clipView key="contentView" identifier="existingFolderList" misplaced="YES" id="TfW-c8-RJq">
                                         <rect key="frame" x="1" y="1" width="323" height="244"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="MAQ-iB-7lf">
+                                                <rect key="frame" x="0.0" y="0.0" width="323" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <size key="intercellSpacing" width="3" height="2"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -906,7 +904,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" utility="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="489" y="896" width="173" height="168"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1418"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="900"/>
             <view key="contentView" id="7co-xV-4rO">
                 <rect key="frame" x="0.0" y="0.0" width="173" height="168"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -920,14 +918,14 @@ Gw
                     </button>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="515.5" y="549"/>
+            <point key="canvasLocation" x="500.5" y="779"/>
         </window>
         <userDefaultsController representsSharedInstance="YES" id="bPR-j2-RH6"/>
     </objects>
     <resources>
-        <image name="NSAddTemplate" width="8" height="8"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSFolder" width="32" height="32"/>
-        <image name="NSRemoveTemplate" width="8" height="8"/>
+        <image name="NSRemoveTemplate" width="11" height="11"/>
         <image name="down_triangle" width="20" height="20"/>
         <image name="up_triangle" width="20" height="20"/>
     </resources>
