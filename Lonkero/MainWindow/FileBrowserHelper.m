@@ -246,7 +246,8 @@
         if (_isFilteringOn) {
             contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"] filteringTemplate:_filteringTemplate];
         } else {
-            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+            // contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:false];
         }
         _directoryContentStorage[[parentFolder URLStylePath]] = contents;
     }
@@ -280,7 +281,8 @@
         if (_isFilteringOn) {
             contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"] filteringTemplate:_filteringTemplate];
         } else {
-            contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+             // contents = [self getFoldersAtFolder:parentFolder readMetadata:[outlineView.identifier isEqualToString:@"targetBrowser"]];
+            contents = [self getFoldersAtFolder:parentFolder readMetadata:false];
         }
     }
     return [contents count];

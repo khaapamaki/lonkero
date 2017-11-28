@@ -165,13 +165,13 @@
                                     <action selector="deployMenuItem:" target="494" id="Scd-3B-DBh"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Rewrite Metadata" id="X05-u7-er3">
+                            <menuItem title="Rewrite Metadata" hidden="YES" enabled="NO" id="X05-u7-er3">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="rewriteMetadataMenuItem:" target="494" id="3vz-4N-GTs"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Recreate All Missing Folders" id="E9E-Zr-Kke">
+                            <menuItem title="Recreate All Missing Folders" hidden="YES" enabled="NO" id="E9E-Zr-Kke">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="recreateMissingFolders:" target="494" id="paz-eg-1tJ"/>
@@ -730,7 +730,7 @@
                         <constraints>
                             <constraint firstAttribute="width" constant="175" id="1sE-w8-MCi"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.10" id="LJp-Tk-nFB">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="v0.10.1" id="LJp-Tk-nFB">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -997,12 +997,12 @@
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="afg-cF-l2x">
+                                    <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="afg-cF-l2x">
                                         <rect key="frame" x="312" y="12" width="77" height="19"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="77" id="NLn-fz-HbA"/>
                                         </constraints>
-                                        <buttonCell key="cell" type="roundRect" title="Filter Off" bezelStyle="roundedRect" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ve9-m5-7Ii">
+                                        <buttonCell key="cell" type="roundRect" title="Filter Off" bezelStyle="roundedRect" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ve9-m5-7Ii">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
                                             <font key="font" metaFont="cellTitle"/>
                                         </buttonCell>
@@ -1370,7 +1370,7 @@ Gw
                         <action selector="showMetadataContextMenuAction:" target="494" id="hoe-KA-hHn"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Copy Parameters From..." id="QlA-zd-piO">
+                <menuItem title="Copy Parameters From..." hidden="YES" enabled="NO" id="QlA-zd-piO">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="contextMenuCopyParameters:" target="494" id="Dpk-lh-EOR"/>

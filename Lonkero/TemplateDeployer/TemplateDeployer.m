@@ -18,7 +18,9 @@
     _theTargetFolder = targetFolder;
     NSNumber *errCode = @(0);
     NSString *errorString = @"";
-    NSInteger options = (deployTemplate | writeMetadata);
+    // DISABLED METADATA WRITING
+    // NSInteger options = (deployTemplate | writeMetadata);
+    NSInteger options = (deployTemplate);
     NSString *deploymentId = [NSString generateRandomStringOfLength:DEFAULT_ID_LENGTH];
 
     [self processWithTargetFolder:targetFolder options:options deploymentId:deploymentId err:&errCode errString:&errorString];

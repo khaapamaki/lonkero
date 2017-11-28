@@ -69,8 +69,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1150"
             endingLineNumber = "1150"
-            landmarkName = "-updateTargetFolderViews"
-            landmarkType = "7">
+            landmarkName = "AppDelegate"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -85,7 +85,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1149"
             endingLineNumber = "1149"
-            landmarkName = "@implementation AppDelegate"
+            landmarkName = "AppDelegate"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -96,28 +96,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461176553.428057"
+            timestampString = "533562758.432566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "664"
-            endingLineNumber = "664"
+            startingLineNumber = "666"
+            endingLineNumber = "666"
             landmarkName = "-parseParametersForPathComponent:error:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lonkero/AppDelegate.m"
-            timestampString = "461167055.97924"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1369"
-            endingLineNumber = "1369"
-            landmarkName = "-contextMenuCopyParameters:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -149,8 +133,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "371"
             endingLineNumber = "371"
-            landmarkName = "-populateTemplatePopUpButton"
-            landmarkType = "7">
+            landmarkName = "AppDelegate"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -197,39 +181,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "524"
             endingLineNumber = "524"
-            landmarkName = "@implementation FileSystemItem"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
-            timestampString = "445438293.467275"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "60"
-            endingLineNumber = "60"
-            landmarkName = "-initWithCoder:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
-            timestampString = "445441227.621246"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "@implementation TemplateMetadata"
+            landmarkName = "FileSystemItem"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -262,7 +214,7 @@
             startingLineNumber = "51"
             endingLineNumber = "51"
             landmarkName = "-parseSystemParametersForString:"
-            landmarkType = "4">
+            landmarkType = "6">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -304,13 +256,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461169806.106672"
+            timestampString = "533562758.432773"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "-processWithTargetFolder:options:deploymentId:err:errString:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -320,13 +272,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461177037.127615"
+            timestampString = "533562758.432836"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "771"
-            endingLineNumber = "771"
+            startingLineNumber = "773"
+            endingLineNumber = "773"
             landmarkName = "-parseParametersForString:shouldUse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -336,13 +288,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461177037.127615"
+            timestampString = "533562758.432902"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "765"
-            endingLineNumber = "765"
+            startingLineNumber = "767"
+            endingLineNumber = "767"
             landmarkName = "-parseParametersForString:shouldUse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -352,13 +304,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461177037.127615"
+            timestampString = "533562758.432957"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "766"
-            endingLineNumber = "766"
+            startingLineNumber = "768"
+            endingLineNumber = "768"
             landmarkName = "-parseParametersForString:shouldUse:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -368,13 +320,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461176009.42679"
+            timestampString = "533562758.433012"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "277"
-            endingLineNumber = "277"
+            startingLineNumber = "279"
+            endingLineNumber = "279"
             landmarkName = "-generateArrayOfItemsToBeCopiedToFolder:errCode:errString:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -384,12 +336,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461176553.428057"
+            timestampString = "533562758.433078"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
-            landmarkName = "@implementation TemplateDeployer"
+            startingLineNumber = "324"
+            endingLineNumber = "324"
+            landmarkName = "TemplateDeployer"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -400,12 +352,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
-            timestampString = "461177867.65899"
+            timestampString = "533562758.433134"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "691"
-            endingLineNumber = "691"
-            landmarkName = "@implementation TemplateDeployer"
+            startingLineNumber = "693"
+            endingLineNumber = "693"
+            landmarkName = "TemplateDeployer"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -437,7 +389,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "27"
             endingLineNumber = "27"
-            landmarkName = "@interface TemplateMetadata"
+            landmarkName = "TemplateMetadata"
             landmarkType = "2">
          </BreakpointContent>
       </BreakpointProxy>
@@ -454,6 +406,102 @@
             startingLineNumber = "33"
             endingLineNumber = "33"
             landmarkName = "-openWindow"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
+            timestampString = "533562758.433233"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "-processWithTargetFolder:options:deploymentId:err:errString:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
+            timestampString = "533562758.433309"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "-writeToFolder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/MainWindow/FileBrowserHelper.m"
+            timestampString = "533562758.433387"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "-readMetadataForFolder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateDeployer.m"
+            timestampString = "533562758.433442"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "-rewriteMetadataToTargetFolder:errString:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
+            timestampString = "533562758.43349"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "-initByReadingFromFolder:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Lonkero/TemplateDeployer/TemplateMetadata.m"
+            timestampString = "533562758.433537"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "-initWithCoder:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
